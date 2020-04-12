@@ -1,9 +1,10 @@
 <template>
   <div class="pattern-editor">
     <div class="side-panel">
-      <div>
+      <h1>
+        <img src="@/assets/wool.png" />
         Stitch Patterns
-      </div>
+      </h1>
 
       <GridControls />
     </div>
@@ -30,9 +31,25 @@ export default {
 .pattern-editor {
   display: flex;
   flex-direction: row;
+  align-items: stretch;
 }
 .side-panel {
   width: 400px;
   border-right: 1px solid grey;
+  padding: 20px;
+}
+.main-panel {
+  padding: 20px;
+  flex: 1;
+  overflow: scroll;
+}
+h1 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+img {
+  height: 40px;
+  margin-right: 10px;;
 }
 </style>

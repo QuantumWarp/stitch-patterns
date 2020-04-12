@@ -43,19 +43,19 @@ export default {
 
       let mirrorPointX = null;
       if (this.drawingSettings.mirrorX) {
-        mirrorPointX = this.dimensions.width - point.x;
+        mirrorPointX = this.dimensions.width - (point.x + 1);
         const mirrorPoint = this.pattern.find((p) => p.x === mirrorPointX && p.y === point.y);
         mirrorPoint.color = this.drawingSettings.color;
       }
 
       let mirrorPointY = null;
       if (this.drawingSettings.mirrorY) {
-        mirrorPointY = this.dimensions.height - point.y;
+        mirrorPointY = this.dimensions.height - (point.y + 1);
         const mirrorPoint = this.pattern.find((p) => p.x === point.x && p.y === mirrorPointY);
         mirrorPoint.color = this.drawingSettings.color;
       }
 
-      if (mirrorPointX && mirrorPointY) {
+      if (mirrorPointX !== null && mirrorPointY !== null) {
         const mirrorPoint = this.pattern.find((p) => p.x === mirrorPointX && p.y === mirrorPointY);
         mirrorPoint.color = this.drawingSettings.color;
       }

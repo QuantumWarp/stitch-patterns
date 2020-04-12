@@ -31,6 +31,11 @@ const actions = {
     commit('setPattern', { pattern, width, height })
   },
   resetPattern({ commit }, patternSettings) {
+    if (patternSettings.width > 100) patternSettings.width = 100;
+    if (patternSettings.height > 100) patternSettings.height = 100;
+    if (patternSettings.width < 1) patternSettings.width = 30;
+    if (patternSettings.height < 1) patternSettings.height = 30;
+
     const pattern = [];
     for (let x = 0; x < patternSettings.width; x++) {
       for (let y = 0; y < patternSettings.height; y++) {

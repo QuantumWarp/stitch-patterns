@@ -21,8 +21,10 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
-</style>
-
-<style scoped>
-
+html, body, #app, .pattern-editor {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
 </style>
