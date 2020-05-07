@@ -25,10 +25,56 @@ const actions = {
 
     commit('setDrawingSettings', Object.assign(state.drawingSettings, drawingSettingsUpdate));
   },
+  adjustDimensions({ commit, getters }, { side, op }) {
+    let newPattern;
+
+    if (op === 'add') {
+      let additions = [];
+
+      switch (side) {
+        case 'left':
+          additions.length = getters.dimensions.height;
+          additions.fill(0);
+          additions = additions.map((val, index) => ({ x: getters.bounds.xMin - 1, y: getters.bounds.yMin + index }));
+          break;
+        case 'right':
+          additions.length = getters.dimensions.height;
+          additions.fill(0);
+          additions = additions.map((val, index) => ({ x: getters.bounds.xMax + 1, y: getters.bounds.yMin + index }));
+          break;
+        case 'top':
+          additions.length = getters.dimensions.width;
+          additions.fill(0);
+          additions = additions.map((val, index) => ({ x: getters.bounds.xMin + index, y: getters.bounds.yMin - 1 }));
+          break;
+        case 'bottom':
+          additions.length = getters.dimensions.width;
+          additions.fill(0);
+          additions = additions.map((val, index) => ({ x: getters.bounds.xMin + index, y: getters.bounds.yMax + 1 }));
+          break;
+      }
+      additions.forEach((point) => point.color = getters.drawingSettings.color);
+      newPattern = getters.pattern.concat(additions);
+    } else if (op === 'remove') {
+      switch (side) {
+        case 'left':
+          newPattern = getters.pattern.filter((point) => point.x !== getters.bounds.xMin);
+          break;
+        case 'right':
+          newPattern = getters.pattern.filter((point) => point.x !== getters.bounds.xMax);
+          break;
+        case 'top':
+          newPattern = getters.pattern.filter((point) => point.y !== getters.bounds.yMin);
+          break;
+        case 'bottom':
+          newPattern = getters.pattern.filter((point) => point.y !== getters.bounds.yMax);
+          break;
+      }
+    }
+    commit('setPattern', newPattern);
+  },
   updatePattern({ commit }, pattern) {
-    const height = Math.max(...pattern.map((point) => point.y)) + 1;
-    const width = Math.max(...pattern.map((point) => point.x)) + 1;
-    commit('setPattern', { pattern, width, height })
+    commit('setPattern', pattern)
   },
   resetPattern({ commit }, patternSettings) {
     if (patternSettings.width > 100) patternSettings.width = 100;
@@ -46,17 +92,15 @@ const actions = {
         });
       }
     }
-    commit('setPattern', { pattern, width: patternSettings.width, height: patternSettings.height })
+    commit('setPattern', pattern);
   },
 };
 
 const mutations = {
-  setPattern(state, { pattern, height, width }) {
+  setPattern(state, pattern) {
     state.pattern = pattern;
-    state.dimensions = { height, width };
   },
   setDrawingSettings(state, drawingSettings) {
-    drawingSettings.previousColor = state.drawingSettings.color;
     state.drawingSettings = drawingSettings;
   },
   addToColorPalette(state, colors) {
@@ -71,7 +115,22 @@ const getters = {
   colorPalette(state) { return state.colorPalette; },
   drawingSettings(state) { return state.drawingSettings; },
   pattern(state) { return state.pattern; },
-  dimensions(state) { return state.dimensions; },
+  bounds(state) {
+    const xPoints = state.pattern.map((point) => point.x);
+    const yPoints = state.pattern.map((point) => point.y);
+    return {
+      xMax: Math.max(...xPoints),
+      xMin: Math.min(...xPoints),
+      yMax: Math.max(...yPoints),
+      yMin: Math.min(...yPoints),
+    };
+  },
+  dimensions(state, getters) {
+    return {
+      height: getters.bounds.yMax - getters.bounds.yMin + 1,
+      width: getters.bounds.xMax - getters.bounds.xMin + 1,
+    };
+  },
 };
 
 export default new Vuex.Store({

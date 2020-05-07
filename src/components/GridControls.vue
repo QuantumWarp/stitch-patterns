@@ -31,8 +31,12 @@
 
     <div class="controls">
       <h2>Color Palette</h2>
-
       <ColorPalette />
+    </div>
+    
+    <div class="controls">
+      <h2>Dimensions</h2>
+      <RowColumnAdjuster />
     </div>
 
     <div>
@@ -51,11 +55,13 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import ColorPalette from '../controls/ColorPalette.vue';
+import RowColumnAdjuster from '../controls/RowColumnAdjuster.vue';
 import FileHelper from '../file-helper';
 
 export default {
   components: {
     ColorPalette,
+    RowColumnAdjuster,
   },
   data: () => ({
     name: `Pattern ${Date.now()}`,

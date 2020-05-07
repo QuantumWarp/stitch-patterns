@@ -1,13 +1,18 @@
 <template>
   <div class="grid-pattern">
     <div
-      v-for="point in pattern"
-      :key="`${point.x}-${point.y}`"
-      class="grid-square"
-      :style="getStyle(point)"
-      @mousedown="colorPoint($event, point)"
-      @mouseover="colorPoint($event, point)"
-    />
+      class="render-area"
+      :style="gridStyle"
+    >
+      <div
+        v-for="point in pattern"
+        :key="`${point.x}-${point.y}`"
+        class="grid-square"
+        :style="getPointStyle(point)"
+        @mousedown="colorPoint($event, point)"
+        @mouseover="colorPoint($event, point)"
+      />
+    </div>
   </div>
 </template>
 
@@ -22,12 +27,19 @@ export default {
   computed: {
     ...mapGetters([
       'pattern',
+      'bounds',
       'dimensions',
       'drawingSettings',
     ]),
+    gridStyle() {
+      return {
+        top: `${this.squareDimensions.height * -this.bounds.yMin}px`,
+        left: `${this.squareDimensions.width * -this.bounds.xMin}px`,
+      };
+    },
   },
   methods: {
-    getStyle(point) {
+    getPointStyle(point) {
       return {
         backgroundColor: point.color,
         top: `${this.squareDimensions.height * point.y}px`,
@@ -67,6 +79,9 @@ export default {
 <style scoped>
 .grid-pattern {
   position: relative;
+}
+.render-area {
+  position: absolute;
 }
 .grid-square {
   position: absolute;
