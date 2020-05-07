@@ -15,13 +15,6 @@
         <label for="height">Height</label>
         <input id="height" type="number" v-model="patternSettings.height" />
       </div>
-
-      <div class="row">
-        <label for="refreshColor">Refresh Color</label>
-        <input id="refreshColor" type="color" v-model="patternSettings.refreshColor" />
-
-        <button @click="resetPattern(patternSettings)">Refresh</button>
-      </div>
     </div>
 
     <div class="controls">
@@ -34,13 +27,12 @@
         <label for="mirrory">Mirror Y</label>
         <input id="mirrory" type="checkbox" :value="drawingSettings.mirrorY" @input="updateDrawingSettings({ mirrorY: $event })" />
       </div>
+    </div>
 
-      <div class="row">
-        <label for="color">Color</label>
-        <input id="color" type="color" :value="drawingSettings.color" @input="updateDrawingSettings({ color: $event.target.value })" />
+    <div class="controls">
+      <h2>Color Palette</h2>
 
-        <button @click="togglePreviousColor">Previous Color</button>
-      </div>
+      <ColorPalette />
     </div>
 
     <div>
@@ -58,11 +50,16 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import ColorPalette from '../controls/ColorPalette.vue';
 import FileHelper from '../file-helper';
 
 export default {
+  components: {
+    ColorPalette,
+  },
   data: () => ({
     name: `Pattern ${Date.now()}`,
+    pickerColor: '#000000',
     patternSettings: {
       refreshColor: '#FFFFFF',
       width: 30,
@@ -87,7 +84,6 @@ export default {
   },
   methods: {
     ...mapActions([
-      'togglePreviousColor',
       'updateDrawingSettings',
       'updatePattern',
       'resetPattern',

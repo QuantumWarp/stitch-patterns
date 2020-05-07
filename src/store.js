@@ -8,21 +8,21 @@ const state = {
   dimensions: {},
   drawingSettings: {
     color: '#000000',
-    previousColor: '#FFFFFF',
     mirrorX: false,
     mirrorY: false,
   },
+  colorPalette: [
+    '#000000',
+    '#FFFFFF',
+  ],
 };
 
 const actions = {
-  togglePreviousColor({ commit, state }) {
-    commit('setDrawingSettings', {
-      ...state.drawingSettings,
-      color: state.drawingSettings.previousColor,
-      previousColor: state.drawingSettings.color,
-    });
-  },
   updateDrawingSettings({ commit, state }, drawingSettingsUpdate) {
+    if (drawingSettingsUpdate.color) {
+      commit('addToColorPalette', [drawingSettingsUpdate.color]);
+    }
+
     commit('setDrawingSettings', Object.assign(state.drawingSettings, drawingSettingsUpdate));
   },
   updatePattern({ commit }, pattern) {
@@ -59,9 +59,16 @@ const mutations = {
     drawingSettings.previousColor = state.drawingSettings.color;
     state.drawingSettings = drawingSettings;
   },
+  addToColorPalette(state, colors) {
+    state.colorPalette = colors
+      .concat(state.colorPalette)
+      .filter((val, index, self) => self.indexOf(val) === index)
+      .slice(0, 10);
+  },
 };
 
 const getters = {
+  colorPalette(state) { return state.colorPalette; },
   drawingSettings(state) { return state.drawingSettings; },
   pattern(state) { return state.pattern; },
   dimensions(state) { return state.dimensions; },
