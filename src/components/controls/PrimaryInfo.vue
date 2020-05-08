@@ -10,8 +10,10 @@
     <div class="buttons">
       <PanelButton
         class="save-button"
+        :danger="isOverwrite"
+        @click="savePattern"
       >
-        Save
+        {{ isOverwrite ? 'Overwrite' : 'Save' }}
       </PanelButton>
 
       <PanelButton
@@ -41,7 +43,13 @@ export default {
     },
   }),
   computed: {
-    ...mapGetters(['patternDetails']),
+    ...mapGetters([
+      'patternDetails',
+      'savedPatterns',
+    ]),
+    isOverwrite() {
+      return Boolean(this.savedPatterns.find((x) => x.name === this.patternDetails.name));
+    },
   },
   watch: {
     patternDetails: {
@@ -53,6 +61,7 @@ export default {
   },
   methods: {
     ...mapActions([
+      'savePattern',
       'reinitialise',
       'updatePatternDetails',
     ]),

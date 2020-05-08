@@ -1,4 +1,4 @@
-import persistanceHelper from '../../helpers/persistance-helper';
+import PersistanceHelper from '../../helpers/persistance-helper';
 
 let saveSessionTimeout;
 
@@ -9,51 +9,61 @@ export default {
   import() {
 
   },
-  initialise() {
-
-  },
-  save() {
-
-  },
-  load() {
-
-  },
-  delete() {
-
-  },
-
-  saveSessionDebounce({ dispatch }) {
-    clearTimeout(saveSessionTimeout);
-    saveSessionTimeout = setTimeout(() => dispatch('saveSession'), 500);
-  },
-  // Save and load session
-  saveSession({ getters }) {
-    const sessionData = {
-      metadata: {
-        ...getters.patternDetails,
-        saveDate: new Date(),
-      },
-      compressedPattern: persistanceHelper.compressPattern(getters.pattern),
-    };
-    localStorage.setItem('session', JSON.stringify(sessionData));
-  },
-  loadSession({ commit, dispatch }) {
-    const sessionDataString = localStorage.getItem('session');
+  initialiseFromSessionData({ commit, dispatch }, sessionDataString) {
     if (sessionDataString) {
       const sessionData = JSON.parse(sessionDataString);
-      if (sessionData.compressedPattern) {
-        try {
-          commit('setPatternDetails', { name: sessionData.metadata.name });
-          commit('setPattern', sessionData.compressedPattern);
-          dispatch('resetSettings');
-          return;
-        } catch {
-          // eslint-disable-next-line no-console
-          console.warn('Failed loading session state');
-        }
+
+      try {
+        commit('setPatternDetails', sessionData.patternDetails);
+        commit('setPattern', sessionData.compressedPattern);
+        dispatch('resetSettings');
+        dispatch('saveSessionDebounce');
+        return;
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.warn('Failed loading session state');
       }
     }
 
     dispatch('reinitialise');
+  },
+
+  // Overall persistance
+  loadIndex({ commit }) {
+    let index = localStorage.getItem('index');
+    index = index ? JSON.parse(index) : [];
+    commit('setSavedPatterns', index);
+  },
+  savePattern({ commit, getters }) {
+    const sessionData = PersistanceHelper.createSaveInfo(getters);
+    const indexData = PersistanceHelper.createIndexInfo(getters);
+    const updatedIndex = getters.savedPatterns
+      .filter((x) => x.name !== indexData.name)
+      .concat([indexData]);
+    commit('setSavedPatterns', updatedIndex);
+    localStorage.setItem(`pattern: ${indexData.name}`, JSON.stringify(sessionData));
+    localStorage.setItem('index', JSON.stringify(updatedIndex));
+  },
+  loadPattern({ dispatch }, name) {
+    const sessionDataString = localStorage.getItem(`pattern: ${name}`);
+    dispatch('initialiseFromSessionData', sessionDataString);
+  },
+  deletePattern({ commit, getters }, name) {
+    localStorage.removeItem(`pattern: ${name}`);
+    commit('setSavedPatterns', getters.savedPatterns.filter((x) => x.name !== name));
+  },
+
+  // Session persistance
+  saveSessionDebounce({ dispatch }) {
+    clearTimeout(saveSessionTimeout);
+    saveSessionTimeout = setTimeout(() => dispatch('saveSession'), 500);
+  },
+  saveSession({ getters }) {
+    const sessionData = PersistanceHelper.createSaveInfo(getters);
+    localStorage.setItem('session', JSON.stringify(sessionData));
+  },
+  loadSession({ dispatch }) {
+    const sessionDataString = localStorage.getItem('session');
+    dispatch('initialiseFromSessionData', sessionDataString);
   },
 };

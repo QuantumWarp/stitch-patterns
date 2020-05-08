@@ -8,6 +8,7 @@
       <div
         v-for="pattern in savedPatterns"
         :key="pattern.name"
+        @click="loadPattern(pattern.name)"
       >
         {{ pattern.name }}
       </div>
@@ -44,8 +45,15 @@ export default {
   computed: {
     ...mapGetters(['savedPatterns']),
   },
+  created() {
+    this.loadIndex();
+  },
   methods: {
-    ...mapActions(['updateSettings']),
+    ...mapActions([
+      'loadIndex',
+      'loadPattern',
+      'updateSettings',
+    ]),
     async importRaw(e) {
       const { name, pattern } = await FileHelper.importRaw(e);
       this.name = name;

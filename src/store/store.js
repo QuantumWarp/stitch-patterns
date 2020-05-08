@@ -8,11 +8,11 @@ import settingsStore from './settings/state';
 Vue.use(Vuex);
 
 const actions = {
-  reinitialise({ dispatch, getters }) {
+  reinitialise({ dispatch }) {
     const pattern = [];
     for (let x = 0; x < 30; x += 1) {
       for (let y = 0; y < 30; y += 1) {
-        pattern.push({ x, y, color: getters.colorPalette[1] });
+        pattern.push({ x, y, color: '#ffffff' });
       }
     }
     dispatch('resetSettings');
