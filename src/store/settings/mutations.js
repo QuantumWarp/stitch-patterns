@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 export default {
-  setDrawingSettings(state, drawingSettings) {
-    state.drawingSettings = drawingSettings;
+  setSettings(state, settings) {
+    state.settings = settings;
   },
   addToColorPalette(state, colors) {
     state.colorPalette = colors

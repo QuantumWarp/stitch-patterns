@@ -12,14 +12,20 @@
       label="Width"
     />
 
-    <PanelButton>
-      Apply
-    </PanelButton>
+    <div class="buttons">
+      <PanelButton @click="adjustDimensions(form)">
+        Apply
+      </PanelButton>
+
+      <PanelButton @click="adjustDimensions({ height: 30, width: 30 })">
+        Reset
+      </PanelButton>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import PanelButton from '../inputs/PanelButton.vue';
 import PanelInput from '../inputs/PanelInput.vue';
 
@@ -30,8 +36,8 @@ export default {
   },
   data: () => ({
     form: {
-      height: '',
-      width: '',
+      height: 30,
+      width: 30,
     },
   }),
   computed: {
@@ -46,6 +52,9 @@ export default {
       },
     },
   },
+  methods: {
+    ...mapActions(['adjustDimensions']),
+  },
 };
 </script>
 
@@ -57,5 +66,13 @@ export default {
 }
 .dimension-adjuster > *:not(:last-child) {
   margin-bottom: 10px;
+}
+.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.buttons :first-child {
+  margin-right: 6px;
 }
 </style>

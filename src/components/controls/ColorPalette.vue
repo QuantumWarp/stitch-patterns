@@ -1,6 +1,6 @@
 <template>
   <div class="color-palette">
-    <div class="picker-div">
+    <div class="options-div">
       <PanelButton @click="$refs.colorpicker.click()">
         New Color
       </PanelButton>
@@ -9,8 +9,12 @@
         ref="colorpicker"
         v-model="pickerColor"
         type="color"
-        @change="updateDrawingSettings({ color: pickerColor })"
+        @change="updateSettings({ color: pickerColor })"
       >
+
+      <PanelButton @click="fillPattern">
+        Fill
+      </PanelButton>
     </div>
 
     <div class="palette">
@@ -19,16 +23,14 @@
         :key="index + color"
         class="palette-box"
       >
-        <div
+        <ArrowDownwardIcon
           v-if="index === 0"
           class="selected-pointer"
-        >
-          ^
-        </div>
+        />
 
         <button
           :style="{ backgroundColor: color }"
-          @click="updateDrawingSettings({ color })"
+          @click="updateSettings({ color })"
         />
       </div>
     </div>
@@ -37,11 +39,13 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import ArrowDownwardIcon from 'vue-material-design-icons/ArrowDown.vue';
 import PanelButton from '../inputs/PanelButton.vue';
 
 export default {
   components: {
     PanelButton,
+    ArrowDownwardIcon,
   },
   data: () => ({
     pickerColor: '#000000',
@@ -57,7 +61,10 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['updateDrawingSettings']),
+    ...mapActions([
+      'updateSettings',
+      'fillPattern',
+    ]),
   },
 };
 </script>
@@ -76,17 +83,17 @@ export default {
   flex-direction: row;
   flex-wrap: wrap;
 }
-.picker-div {
+.options-div {
   position: relative;
-  width: 50%;
-  padding: 5px;
 }
-.picker-div > * {
-  width: 100%;
+.options-div :first-child {
+  margin-right: 6px;
 }
 input {
   visibility: hidden;
   position: absolute;
+  left: 0px;
+  bottom: 0;
 }
 .palette-box {
   position: relative;
@@ -108,7 +115,7 @@ input {
   position: absolute;
   font-size: 40px;
   left: 50%;
-  top: -33px;
-  transform: rotate(180deg) translate(50%);
+  top: -26px;
+  transform: translateX(-50%);
 }
 </style>

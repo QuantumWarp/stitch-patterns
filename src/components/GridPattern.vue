@@ -29,13 +29,13 @@ export default {
       'pattern',
       'bounds',
       'dimensions',
-      'drawingSettings',
+      'settings',
     ]),
     gridStyle() {
       return {
         top: `${this.squareDimensions.height * -this.bounds.yMin}px`,
         left: `${this.squareDimensions.width * -this.bounds.xMin}px`,
-        transform: this.drawingSettings.rotate
+        transform: this.settings.rotate
           ? `rotate(90deg)
             translateX(${(this.squareDimensions.height * this.bounds.yMin) - (this.squareDimensions.width * this.bounds.xMin)}px)
             translateY(${(this.squareDimensions.width * -this.bounds.xMin) - (this.squareDimensions.height * (this.dimensions.height + this.bounds.yMin))}px)`
@@ -57,25 +57,25 @@ export default {
       if (e.buttons !== 1) return;
 
       // eslint-disable-next-line no-param-reassign
-      point.color = this.drawingSettings.color;
+      point.color = this.settings.color;
 
       let mirrorPointX = null;
-      if (this.drawingSettings.mirrorX) {
+      if (this.settings.mirrorX) {
         mirrorPointX = this.dimensions.width - (point.x + 1);
         const mirrorPoint = this.pattern.find((p) => p.x === mirrorPointX && p.y === point.y);
-        mirrorPoint.color = this.drawingSettings.color;
+        mirrorPoint.color = this.settings.color;
       }
 
       let mirrorPointY = null;
-      if (this.drawingSettings.mirrorY) {
+      if (this.settings.mirrorY) {
         mirrorPointY = this.dimensions.height - (point.y + 1);
         const mirrorPoint = this.pattern.find((p) => p.x === point.x && p.y === mirrorPointY);
-        mirrorPoint.color = this.drawingSettings.color;
+        mirrorPoint.color = this.settings.color;
       }
 
       if (mirrorPointX !== null && mirrorPointY !== null) {
         const mirrorPoint = this.pattern.find((p) => p.x === mirrorPointX && p.y === mirrorPointY);
-        mirrorPoint.color = this.drawingSettings.color;
+        mirrorPoint.color = this.settings.color;
       }
     },
   },

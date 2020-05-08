@@ -2,26 +2,42 @@ export default {
   updatePattern({ commit }, pattern) {
     commit('setPattern', pattern);
   },
-  resetPattern({ commit }, patternSettings) {
-    const newPatternSettings = { ...patternSettings };
-    if (newPatternSettings.width > 100) newPatternSettings.width = 100;
-    if (newPatternSettings.height > 100) newPatternSettings.height = 100;
-    if (newPatternSettings.width < 1) newPatternSettings.width = 30;
-    if (newPatternSettings.height < 1) newPatternSettings.height = 30;
-
+  initialisePattern({ commit, getters }) {
     const pattern = [];
-    for (let x = 0; x < newPatternSettings.width; x += 1) {
-      for (let y = 0; y < newPatternSettings.height; y += 1) {
-        pattern.push({
-          x,
-          y,
-          color: newPatternSettings.refreshColor,
-        });
+    for (let x = 0; x < 30; x += 1) {
+      for (let y = 0; y < 30; y += 1) {
+        pattern.push({ x, y, color: getters.colorPalette[1] });
       }
     }
     commit('setPattern', pattern);
   },
-  adjustDimensions({ commit, getters }, { side, op }) {
+  fillPattern({ commit, getters }) {
+    const pattern = [];
+    for (let x = 0; x < getters.dimensions.width; x += 1) {
+      for (let y = 0; y < getters.dimensions.height; y += 1) {
+        pattern.push({ x, y, color: getters.settings.color });
+      }
+    }
+    commit('setPattern', pattern);
+  },
+  adjustDimensions({ dispatch, getters }, dimensions) {
+    let newHeight = dimensions.height > 80 ? 80 : dimensions.height;
+    newHeight = dimensions.height < 1 ? 30 : dimensions.height;
+    let newWidth = dimensions.width > 80 ? 80 : dimensions.width;
+    newWidth = dimensions.width < 1 ? 30 : dimensions.width;
+
+    const heightDiff = getters.dimensions.height - newHeight;
+    const widthDiff = getters.dimensions.width - newWidth;
+
+    for (let y = 0; y < Math.abs(heightDiff); y += 1) {
+      dispatch('incrementDimension', { side: 'bottom', op: heightDiff < 0 ? 'add' : 'remove' });
+    }
+
+    for (let x = 0; x < Math.abs(widthDiff); x += 1) {
+      dispatch('incrementDimension', { side: 'right', op: widthDiff < 0 ? 'add' : 'remove' });
+    }
+  },
+  incrementDimension({ commit, getters }, { side, op }) {
     let newPattern;
 
     if (op === 'add') {
@@ -65,7 +81,7 @@ export default {
       }
       additions = additions.map((point) => ({
         ...point,
-        color: getters.drawingSettings.color,
+        color: getters.settings.color,
       }));
       newPattern = getters.pattern.concat(additions);
     } else if (op === 'remove') {

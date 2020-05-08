@@ -9,12 +9,11 @@ button {
   background-color: white;
   border: none;
   color: white;
-  padding: 10px 28px;
+  padding: 10px 20px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-  margin: 4px 2px;
   transition-duration: 0.2s;
   cursor: pointer;
   border: 2px solid #4CAF50;

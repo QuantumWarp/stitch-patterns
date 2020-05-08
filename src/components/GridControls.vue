@@ -1,11 +1,6 @@
 <template>
   <div>
-    <div class="name">
-      <PanelInput
-        v-model="name"
-        label="Name"
-      />
-    </div>
+    <PrimaryInfo />
 
     <SectionPanel
       name="Color Palette"
@@ -14,15 +9,15 @@
       <ColorPalette />
     </SectionPanel>
 
-    <SectionPanel name="General Settings">
-      <GeneralSettings />
-    </SectionPanel>
-
     <SectionPanel name="Dimensions">
       <div class="row">
         <DimensionAdjuster />
         <RowColumnAdjuster />
       </div>
+    </SectionPanel>
+
+    <SectionPanel name="General Settings">
+      <GeneralSettings />
     </SectionPanel>
 
     <SectionPanel name="Import and Export">
@@ -48,8 +43,8 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import PanelInput from './inputs/PanelInput.vue';
+import { mapActions } from 'vuex';
+import PrimaryInfo from './controls/PrimaryInfo.vue';
 import ColorPalette from './controls/ColorPalette.vue';
 import GeneralSettings from './controls/GeneralSettings.vue';
 import DimensionAdjuster from './controls/DimensionAdjuster.vue';
@@ -59,38 +54,18 @@ import FileHelper from '../helpers/file-helper';
 
 export default {
   components: {
-    PanelInput,
+    PrimaryInfo,
     ColorPalette,
     GeneralSettings,
     DimensionAdjuster,
     RowColumnAdjuster,
     SectionPanel,
   },
-  data: () => ({
-    name: `Pattern ${Date.now()}`,
-    pickerColor: '#000000',
-    patternSettings: {
-      refreshColor: '#FFFFFF',
-      width: 30,
-      height: 30,
-    },
-  }),
-  computed: {
-    ...mapGetters([
-      'dimensions',
-      'drawingSettings',
-      'pattern',
-    ]),
-  },
   created() {
-    this.resetPattern(this.patternSettings);
+    this.initialisePattern();
   },
   methods: {
-    ...mapActions([
-      'updateDrawingSettings',
-      'updatePattern',
-      'resetPattern',
-    ]),
+    ...mapActions(['initialisePattern']),
     async importRaw(e) {
       const { name, pattern } = await FileHelper.importRaw(e);
       this.name = name;

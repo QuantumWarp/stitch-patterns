@@ -1,9 +1,9 @@
 export default {
-  updateDrawingSettings({ commit, state }, drawingSettingsUpdate) {
-    if (drawingSettingsUpdate.color) {
-      commit('addToColorPalette', [drawingSettingsUpdate.color]);
+  updateSettings({ commit, state }, settingsUpdate) {
+    if (settingsUpdate.color) {
+      commit('addToColorPalette', [settingsUpdate.color]);
     }
 
-    commit('setDrawingSettings', { ...state.drawingSettings, ...drawingSettingsUpdate });
+    commit('setSettings', { ...state.settings, ...settingsUpdate });
   },
 };

@@ -47,9 +47,9 @@ import { mapActions } from 'vuex';
 
 export default {
   methods: {
-    ...mapActions(['adjustDimensions']),
+    ...mapActions(['incrementDimension']),
     adjust(side, op) {
-      this.adjustDimensions({ side, op });
+      this.incrementDimension({ side, op });
     },
   },
 };

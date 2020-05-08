@@ -1,4 +1,4 @@
 export default {
   colorPalette(state) { return state.colorPalette; },
-  drawingSettings(state) { return state.drawingSettings; },
+  settings(state) { return state.settings; },
 };

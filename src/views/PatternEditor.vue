@@ -1,10 +1,10 @@
 <template>
   <div class="pattern-editor">
     <div class="side-panel">
-      <h1>
+      <div class="app-header">
         <img src="@/assets/wool.png">
         Stitch Patterns
-      </h1>
+      </div>
 
       <GridControls />
     </div>
@@ -36,16 +36,22 @@ export default {
 .side-panel {
   width: 400px;
   border-right: 1px solid grey;
+  box-shadow: 3px 0px 10px lightgray;
 }
 .main-panel {
-  padding: 20px;
+  padding: 25px;
   flex: 1;
   overflow: scroll;
 }
-h1 {
+.app-header {
   display: flex;
   flex-direction: row;
+  justify-content: center;
   align-items: center;
+  padding: 20px;
+  font-size: 40px;
+  font-weight: bold;
+  border-bottom: 2px solid grey;
 }
 img {
   height: 40px;

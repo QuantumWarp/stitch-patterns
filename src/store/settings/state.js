@@ -3,7 +3,7 @@ import getters from './getters';
 import mutations from './mutations';
 
 const state = {
-  drawingSettings: {
+  settings: {
     color: '#000000',
     rotate: false,
     mirrorX: false,
