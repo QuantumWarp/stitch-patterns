@@ -35,6 +35,11 @@ export default {
       return {
         top: `${this.squareDimensions.height * -this.bounds.yMin}px`,
         left: `${this.squareDimensions.width * -this.bounds.xMin}px`,
+        transform: this.drawingSettings.rotate 
+          ? `rotate(90deg)
+            translateX(${(this.squareDimensions.height * this.bounds.yMin) - (this.squareDimensions.width * this.bounds.xMin)}px)
+            translateY(${(this.squareDimensions.width * -this.bounds.xMin) - (this.squareDimensions.height * (this.dimensions.height + this.bounds.yMin))}px)`
+          : 'none',
       };
     },
   },

@@ -8,6 +8,7 @@ const state = {
   dimensions: {},
   drawingSettings: {
     color: '#000000',
+    rotate: false,
     mirrorX: false,
     mirrorY: false,
   },
@@ -22,8 +23,29 @@ const actions = {
     if (drawingSettingsUpdate.color) {
       commit('addToColorPalette', [drawingSettingsUpdate.color]);
     }
+console.log(drawingSettingsUpdate);
+    commit('setDrawingSettings', Object.assign({ ...state.drawingSettings }, drawingSettingsUpdate));
+  },
+  updatePattern({ commit }, pattern) {
+    commit('setPattern', pattern)
+  },
+  resetPattern({ commit }, patternSettings) {
+    if (patternSettings.width > 100) patternSettings.width = 100;
+    if (patternSettings.height > 100) patternSettings.height = 100;
+    if (patternSettings.width < 1) patternSettings.width = 30;
+    if (patternSettings.height < 1) patternSettings.height = 30;
 
-    commit('setDrawingSettings', Object.assign(state.drawingSettings, drawingSettingsUpdate));
+    const pattern = [];
+    for (let x = 0; x < patternSettings.width; x++) {
+      for (let y = 0; y < patternSettings.height; y++) {
+        pattern.push({
+          x: x,
+          y: y,
+          color: patternSettings.refreshColor,
+        });
+      }
+    }
+    commit('setPattern', pattern);
   },
   adjustDimensions({ commit, getters }, { side, op }) {
     let newPattern;
@@ -72,27 +94,6 @@ const actions = {
       }
     }
     commit('setPattern', newPattern);
-  },
-  updatePattern({ commit }, pattern) {
-    commit('setPattern', pattern)
-  },
-  resetPattern({ commit }, patternSettings) {
-    if (patternSettings.width > 100) patternSettings.width = 100;
-    if (patternSettings.height > 100) patternSettings.height = 100;
-    if (patternSettings.width < 1) patternSettings.width = 30;
-    if (patternSettings.height < 1) patternSettings.height = 30;
-
-    const pattern = [];
-    for (let x = 0; x < patternSettings.width; x++) {
-      for (let y = 0; y < patternSettings.height; y++) {
-        pattern.push({
-          x: x,
-          y: y,
-          color: patternSettings.refreshColor,
-        });
-      }
-    }
-    commit('setPattern', pattern);
   },
 };
 

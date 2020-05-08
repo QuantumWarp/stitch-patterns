@@ -36,7 +36,6 @@ export default {
 .side-panel {
   width: 400px;
   border-right: 1px solid grey;
-  padding: 20px;
 }
 .main-panel {
   padding: 20px;
