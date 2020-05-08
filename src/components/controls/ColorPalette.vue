@@ -85,6 +85,7 @@ export default {
 }
 .options-div {
   position: relative;
+  margin-bottom: 8px;
 }
 .options-div :first-child {
   margin-right: 6px;

@@ -1,24 +1,29 @@
 export default {
-  updatePattern({ commit }, pattern) {
+  updatePointColor({ commit, dispatch, getters }, point) {
+    dispatch('saveSessionDebounce');
+    commit('updatePoint', { ...point, color: getters.settings.color });
+  },
+  updatePattern({ commit, dispatch }, pattern) {
+    dispatch('saveSessionDebounce');
     commit('setPattern', pattern);
   },
-  initialisePattern({ commit, getters }) {
+  initialisePattern({ dispatch, getters }) {
     const pattern = [];
     for (let x = 0; x < 30; x += 1) {
       for (let y = 0; y < 30; y += 1) {
         pattern.push({ x, y, color: getters.colorPalette[1] });
       }
     }
-    commit('setPattern', pattern);
+    dispatch('updatePattern', pattern);
   },
-  fillPattern({ commit, getters }) {
+  fillPattern({ dispatch, getters }) {
     const pattern = [];
     for (let x = 0; x < getters.dimensions.width; x += 1) {
       for (let y = 0; y < getters.dimensions.height; y += 1) {
         pattern.push({ x, y, color: getters.settings.color });
       }
     }
-    commit('setPattern', pattern);
+    dispatch('updatePattern', pattern);
   },
   adjustDimensions({ dispatch, getters }, dimensions) {
     let newHeight = dimensions.height > 80 ? 80 : dimensions.height;
@@ -37,7 +42,7 @@ export default {
       dispatch('incrementDimension', { side: 'right', op: widthDiff < 0 ? 'add' : 'remove' });
     }
   },
-  incrementDimension({ commit, getters }, { side, op }) {
+  incrementDimension({ dispatch, getters }, { side, op }) {
     let newPattern;
 
     if (op === 'add') {
@@ -102,6 +107,6 @@ export default {
           throw new Error('Invalid side');
       }
     }
-    commit('setPattern', newPattern);
+    dispatch('updatePattern', newPattern);
   },
 };

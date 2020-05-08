@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   data: () => ({
@@ -44,6 +44,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['updatePointColor']),
     getPointStyle(point) {
       return {
         backgroundColor: point.color,
@@ -56,26 +57,25 @@ export default {
     colorPoint(e, point) {
       if (e.buttons !== 1) return;
 
-      // eslint-disable-next-line no-param-reassign
-      point.color = this.settings.color;
+      this.updatePointColor(point);
 
       let mirrorPointX = null;
       if (this.settings.mirrorX) {
         mirrorPointX = this.dimensions.width - (point.x + 1);
         const mirrorPoint = this.pattern.find((p) => p.x === mirrorPointX && p.y === point.y);
-        mirrorPoint.color = this.settings.color;
+        this.updatePointColor(mirrorPoint);
       }
 
       let mirrorPointY = null;
       if (this.settings.mirrorY) {
         mirrorPointY = this.dimensions.height - (point.y + 1);
         const mirrorPoint = this.pattern.find((p) => p.x === point.x && p.y === mirrorPointY);
-        mirrorPoint.color = this.settings.color;
+        this.updatePointColor(mirrorPoint);
       }
 
       if (mirrorPointX !== null && mirrorPointY !== null) {
         const mirrorPoint = this.pattern.find((p) => p.x === mirrorPointX && p.y === mirrorPointY);
-        mirrorPoint.color = this.settings.color;
+        this.updatePointColor(mirrorPoint);
       }
     },
   },

@@ -58,6 +58,6 @@ export default {
   transition: max-height 0.2s;
 }
 .content {
-  padding: 10px 20px;
+  padding: 15px 20px;
 }
 </style>
