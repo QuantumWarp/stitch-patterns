@@ -55,7 +55,7 @@ import GeneralSettings from './controls/GeneralSettings.vue';
 import DimensionAdjuster from './controls/DimensionAdjuster.vue';
 import RowColumnAdjuster from './controls/RowColumnAdjuster.vue';
 import SectionPanel from './controls/SectionPanel.vue';
-import FileHelper from '../file-helper';
+import FileHelper from '../helpers/file-helper';
 
 export default {
   components: {

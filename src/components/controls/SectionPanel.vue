@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ open }">
+  <section :class="{ open }">
     <div
       class="heading"
       @click="open = !open"
@@ -18,7 +18,7 @@
         <slot />
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>

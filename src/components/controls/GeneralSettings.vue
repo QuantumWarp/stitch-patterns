@@ -1,21 +1,18 @@
 <template>
-  <div class="row">
+  <div class="general-settings">
     <PanelCheckbox
+      v-model="form.mirrorX"
       label="Mirror X"
-      :value="drawingSettings.mirrorX"
-      @input="updateDrawingSettings({ mirrorX: $event })"
     />
 
     <PanelCheckbox
+      v-model="form.mirrorY"
       label="Mirror Y"
-      :value="drawingSettings.mirrorY"
-      @input="updateDrawingSettings({ mirrorY: $event })"
     />
 
     <PanelCheckbox
+      v-model="form.rotate"
       label="Rotate"
-      :value="drawingSettings.rotate"
-      @input="updateDrawingSettings({ rotate: $event })"
     />
   </div>
 </template>
@@ -27,5 +24,19 @@ export default {
   components: {
     PanelCheckbox,
   },
+  data: () => ({
+    form: {
+      mirrorX: false,
+      mirrorY: false,
+      rotate: false,
+    },
+  }),
 };
 </script>
+
+<style scoped>
+.general-settings {
+  display: flex;
+  justify-content: space-between;
+}
+</style>

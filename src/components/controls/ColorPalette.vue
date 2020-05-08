@@ -1,9 +1,9 @@
 <template>
   <div class="color-palette">
     <div class="picker-div">
-      <button @click="$refs.colorpicker.click()">
+      <PanelButton @click="$refs.colorpicker.click()">
         New Color
-      </button>
+      </PanelButton>
 
       <input
         ref="colorpicker"
@@ -37,8 +37,12 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import PanelButton from '../inputs/PanelButton.vue';
 
 export default {
+  components: {
+    PanelButton,
+  },
   data: () => ({
     pickerColor: '#000000',
   }),
@@ -91,7 +95,7 @@ input {
   box-sizing: border-box;
   padding: 5px;
 }
-button {
+.palette button {
   width: 100%;
   height: 35px;
   outline: none;
