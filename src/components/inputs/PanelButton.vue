@@ -20,7 +20,7 @@ button {
   background-color: white;
   border: none;
   color: white;
-  padding: 10px 15px;
+  padding: 10px 8px;
   text-align: center;
   text-decoration: none;
   display: inline-block;

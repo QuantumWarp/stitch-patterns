@@ -37,6 +37,8 @@ export default {
   width: 400px;
   border-right: 1px solid grey;
   box-shadow: 3px 0px 10px lightgray;
+  display: flex;
+  flex-direction: column;
 }
 .main-panel {
   padding: 25px;

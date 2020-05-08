@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="grid-controls">
     <PrimaryInfo />
 
     <SectionPanel
@@ -20,8 +20,8 @@
       <GeneralSettings />
     </SectionPanel>
 
-    <SectionPanel name="Saved Patterns">
-      <SaveLoadPanel />
+    <SectionPanel name="Load &amp; Import">
+      <LoadImportPanel />
     </SectionPanel>
   </div>
 </template>
@@ -33,7 +33,7 @@ import ColorPalette from './controls/ColorPalette.vue';
 import GeneralSettings from './controls/GeneralSettings.vue';
 import DimensionAdjuster from './controls/DimensionAdjuster.vue';
 import RowColumnAdjuster from './controls/RowColumnAdjuster.vue';
-import SaveLoadPanel from './controls/SaveLoadPanel.vue';
+import LoadImportPanel from './controls/LoadImportPanel.vue';
 import SectionPanel from './controls/SectionPanel.vue';
 
 export default {
@@ -43,7 +43,7 @@ export default {
     GeneralSettings,
     DimensionAdjuster,
     RowColumnAdjuster,
-    SaveLoadPanel,
+    LoadImportPanel,
     SectionPanel,
   },
   created() {
@@ -62,6 +62,10 @@ export default {
   align-items: center;
 }
 .row > * {
+  flex: 1;
+}
+.grid-controls {
+  overflow-y: scroll;
   flex: 1;
 }
 </style>
