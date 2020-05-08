@@ -1,8 +1,19 @@
 <template>
   <div class="color-palette">
     <div class="options-div">
-      <PanelButton @click="$refs.colorpicker.click()">
+      <PanelButton
+        class="new-button"
+        @click="$refs.colorpicker.click()"
+      >
         New Color
+      </PanelButton>
+
+      <PanelButton
+        class="fill-button"
+        danger
+        @click="fillPattern"
+      >
+        Fill
       </PanelButton>
 
       <input
@@ -11,10 +22,6 @@
         type="color"
         @change="updateSettings({ color: pickerColor })"
       >
-
-      <PanelButton @click="fillPattern">
-        Fill
-      </PanelButton>
     </div>
 
     <div class="palette">
@@ -89,6 +96,12 @@ export default {
 }
 .options-div :first-child {
   margin-right: 6px;
+}
+.new-button {
+  width: 120px;
+}
+.fill-button {
+  width: 80px;
 }
 input {
   visibility: hidden;

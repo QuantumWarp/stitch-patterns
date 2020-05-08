@@ -15,6 +15,10 @@ export default {
 </script>
 
 <style>
+:root {
+  --safe-color: #4CAF50;
+  --danger-color: rgb(255, 83, 83);
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

@@ -13,11 +13,17 @@
     />
 
     <div class="buttons">
-      <PanelButton @click="adjustDimensions(form)">
+      <PanelButton
+        :danger="potentiallyDangerous"
+        @click="adjustDimensions(form)"
+      >
         Apply
       </PanelButton>
 
-      <PanelButton @click="adjustDimensions({ height: 30, width: 30 })">
+      <PanelButton
+        danger
+        @click="adjustDimensions({ height: 30, width: 30 })"
+      >
         Reset
       </PanelButton>
     </div>
@@ -42,6 +48,10 @@ export default {
   }),
   computed: {
     ...mapGetters(['dimensions']),
+    potentiallyDangerous() {
+      return this.form.height < this.dimensions.height
+        || this.form.width < this.dimensions.width;
+    },
   },
   watch: {
     dimensions: {

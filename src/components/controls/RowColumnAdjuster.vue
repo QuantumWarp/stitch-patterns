@@ -71,8 +71,18 @@ export default {
   flex-direction: column;
   justify-content: center;
 }
+.row-adjuster :first-child:hover,
+.column-adjuster :first-child:hover {
+  background-color: var(--safe-color);
+}
+.row-adjuster :last-child:hover,
+.column-adjuster :last-child:hover {
+  background-color:var(--danger-color);
+}
 button {
+  margin: 1px;
   border-radius: 50%;
+  transition: background-color 0.2s;
   height: 30px;
   width: 30px;
   cursor: pointer;

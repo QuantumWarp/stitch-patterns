@@ -1,4 +1,5 @@
 export default {
+  patternDetails(state) { return state.patternDetails; },
   pattern(state) { return state.pattern; },
   bounds(state) {
     const xPoints = state.pattern.map((point) => point.x);

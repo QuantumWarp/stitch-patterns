@@ -3,6 +3,12 @@ export default {
   setSettings(state, settings) {
     state.settings = settings;
   },
+  resetColorPalette(state) {
+    state.colorPalette = [
+      '#000000',
+      '#ffffff',
+    ];
+  },
   addToColorPalette(state, colors) {
     state.colorPalette = colors
       .concat(state.colorPalette)

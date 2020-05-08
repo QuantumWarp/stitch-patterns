@@ -30,7 +30,7 @@ export default {
   saveSession({ getters }) {
     const sessionData = {
       metadata: {
-        name: getters.patternName,
+        ...getters.patternDetails,
         saveDate: new Date(),
       },
       compressedPattern: persistanceHelper.compressPattern(getters.pattern),
@@ -43,7 +43,9 @@ export default {
       const sessionData = JSON.parse(sessionDataString);
       if (sessionData.compressedPattern) {
         try {
+          commit('setPatternDetails', { name: sessionData.metadata.name });
           commit('setPattern', sessionData.compressedPattern);
+          dispatch('resetSettings');
           return;
         } catch {
           // eslint-disable-next-line no-console
@@ -52,6 +54,6 @@ export default {
       }
     }
 
-    dispatch('initialisePattern');
+    dispatch('reinitialise');
   },
 };

@@ -9,10 +9,7 @@ const state = {
     mirrorX: false,
     mirrorY: false,
   },
-  colorPalette: [
-    '#000000',
-    '#ffffff',
-  ],
+  colorPalette: [],
 };
 
 export default {

@@ -1,20 +1,15 @@
 export default {
-  updatePointColor({ commit, dispatch, getters }, point) {
+  updatePatternDetails({ commit, dispatch, state }, details) {
+    commit('setPatternDetails', { ...state.patternDetails, ...details });
     dispatch('saveSessionDebounce');
+  },
+  updatePointColor({ commit, dispatch, getters }, point) {
     commit('updatePoint', { ...point, color: getters.settings.color });
+    dispatch('saveSessionDebounce');
   },
   updatePattern({ commit, dispatch }, pattern) {
-    dispatch('saveSessionDebounce');
     commit('setPattern', pattern);
-  },
-  initialisePattern({ dispatch, getters }) {
-    const pattern = [];
-    for (let x = 0; x < 30; x += 1) {
-      for (let y = 0; y < 30; y += 1) {
-        pattern.push({ x, y, color: getters.colorPalette[1] });
-      }
-    }
-    dispatch('updatePattern', pattern);
+    dispatch('saveSessionDebounce');
   },
   fillPattern({ dispatch, getters }) {
     const pattern = [];
