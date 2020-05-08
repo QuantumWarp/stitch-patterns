@@ -3,6 +3,16 @@
     <label>{{ label }}</label>
 
     <input
-      type="checkbox" :value="drawingSettings.mirrorX" @input="updateDrawingSettings({ mirrorX: $event.target.checked })" />
+      :value="value"
+      @input="$emit('input', $event.target.checked)"
+    >
   </div>
 </template>
+
+<script>
+export default {
+  props: {
+    value: { type: Boolean, default: false },
+  },
+};
+</script>

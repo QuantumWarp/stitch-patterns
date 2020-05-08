@@ -6,7 +6,7 @@
 
 <style scoped>
 button {
-  background-color: white; 
+  background-color: white;
   border: none;
   color: white;
   padding: 10px 28px;

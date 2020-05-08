@@ -38,7 +38,7 @@ export default {
     ...mapGetters(['dimensions']),
   },
   watch: {
-    dimensions:{
+    dimensions: {
       immediate: true,
       handler(val) {
         this.form.height = val.height;

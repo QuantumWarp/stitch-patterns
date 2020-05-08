@@ -1,27 +1,43 @@
 <template>
   <div class="row-column-adjuster">
     <div class="row-adjuster">
-      <button @click="adjust('top', 'add')">+</button>
-      <button @click="adjust('top', 'remove')">-</button>
+      <button @click="adjust('top', 'add')">
+        +
+      </button>
+      <button @click="adjust('top', 'remove')">
+        -
+      </button>
     </div>
 
     <div class="column-adjusters">
       <div class="column-adjuster">
-        <button @click="adjust('left', 'add')">+</button>
-        <button @click="adjust('left', 'remove')">-</button>
+        <button @click="adjust('left', 'add')">
+          +
+        </button>
+        <button @click="adjust('left', 'remove')">
+          -
+        </button>
       </div>
 
-      <div class="center"></div>
-      
+      <div class="center" />
+
       <div class="column-adjuster">
-        <button @click="adjust('right', 'add')">+</button>
-        <button @click="adjust('right', 'remove')">-</button>
+        <button @click="adjust('right', 'add')">
+          +
+        </button>
+        <button @click="adjust('right', 'remove')">
+          -
+        </button>
       </div>
     </div>
-    
+
     <div class="row-adjuster">
-      <button @click="adjust('bottom', 'add')">+</button>
-      <button @click="adjust('bottom', 'remove')">-</button>
+      <button @click="adjust('bottom', 'add')">
+        +
+      </button>
+      <button @click="adjust('bottom', 'remove')">
+        -
+      </button>
     </div>
   </div>
 </template>

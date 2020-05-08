@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import PatternEditor from './views/PatternEditor.vue'
+import PatternEditor from './views/PatternEditor.vue';
 
 export default {
   components: {

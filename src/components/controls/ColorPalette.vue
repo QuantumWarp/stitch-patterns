@@ -1,14 +1,16 @@
 <template>
   <div class="color-palette">
     <div class="picker-div">
-      <button @click="$refs.colorpicker.click()">New Color</button>
+      <button @click="$refs.colorpicker.click()">
+        New Color
+      </button>
 
       <input
         ref="colorpicker"
-        type="color"
         v-model="pickerColor"
+        type="color"
         @change="updateDrawingSettings({ color: pickerColor })"
-      />
+      >
     </div>
 
     <div class="palette">
@@ -20,7 +22,9 @@
         <div
           v-if="index === 0"
           class="selected-pointer"
-        >^</div>
+        >
+          ^
+        </div>
 
         <button
           :style="{ backgroundColor: color }"
@@ -46,7 +50,7 @@ export default {
         palette.push('#ffffff');
       }
       return palette;
-    }
+    },
   },
   methods: {
     ...mapActions(['updateDrawingSettings']),

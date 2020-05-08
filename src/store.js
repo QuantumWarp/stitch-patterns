@@ -1,3 +1,7 @@
+/* eslint-disable max-len */
+/* eslint-disable default-case */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-shadow */
 import Vue from 'vue';
 import Vuex from 'vuex';
 
@@ -23,11 +27,11 @@ const actions = {
     if (drawingSettingsUpdate.color) {
       commit('addToColorPalette', [drawingSettingsUpdate.color]);
     }
-console.log(drawingSettingsUpdate);
-    commit('setDrawingSettings', Object.assign({ ...state.drawingSettings }, drawingSettingsUpdate));
+
+    commit('setDrawingSettings', { ...state.drawingSettings, ...drawingSettingsUpdate });
   },
   updatePattern({ commit }, pattern) {
-    commit('setPattern', pattern)
+    commit('setPattern', pattern);
   },
   resetPattern({ commit }, patternSettings) {
     if (patternSettings.width > 100) patternSettings.width = 100;
@@ -36,11 +40,11 @@ console.log(drawingSettingsUpdate);
     if (patternSettings.height < 1) patternSettings.height = 30;
 
     const pattern = [];
-    for (let x = 0; x < patternSettings.width; x++) {
-      for (let y = 0; y < patternSettings.height; y++) {
+    for (let x = 0; x < patternSettings.width; x += 1) {
+      for (let y = 0; y < patternSettings.height; y += 1) {
         pattern.push({
-          x: x,
-          y: y,
+          x,
+          y,
           color: patternSettings.refreshColor,
         });
       }
@@ -75,7 +79,7 @@ console.log(drawingSettingsUpdate);
           additions = additions.map((val, index) => ({ x: getters.bounds.xMin + index, y: getters.bounds.yMax + 1 }));
           break;
       }
-      additions.forEach((point) => point.color = getters.drawingSettings.color);
+      additions.forEach((point) => { point.color = getters.drawingSettings.color; });
       newPattern = getters.pattern.concat(additions);
     } else if (op === 'remove') {
       switch (side) {

@@ -2,7 +2,7 @@
   <div class="pattern-editor">
     <div class="side-panel">
       <h1>
-        <img src="@/assets/wool.png" />
+        <img src="@/assets/wool.png">
         Stitch Patterns
       </h1>
 

@@ -7,13 +7,17 @@
       />
     </div>
 
-    <SectionPanel name="Color Palette" start-open>
+    <SectionPanel
+      name="Color Palette"
+      start-open
+    >
       <ColorPalette />
     </SectionPanel>
 
     <SectionPanel name="General Settings">
+      <GeneralSettings />
     </SectionPanel>
-    
+
     <SectionPanel name="Dimensions">
       <div class="row">
         <DimensionAdjuster />
@@ -22,12 +26,23 @@
     </SectionPanel>
 
     <SectionPanel name="Import and Export">
-      <button onclick="document.getElementById('importInput').click();">Import</button>
-      <input style="display: none;" id="importInput" @change="importRaw" type="file" />
+      <button onclick="document.getElementById('importInput').click();">
+        Import
+      </button>
+      <input
+        id="importInput"
+        style="display: none;"
+        type="file"
+        @change="importRaw"
+      >
 
-      <button @click="exportRaw()">Export</button>
+      <button @click="exportRaw()">
+        Export
+      </button>
 
-      <button @click="exportToKnit()">Export To Knit</button>
+      <button @click="exportToKnit()">
+        Export To Knit
+      </button>
     </SectionPanel>
   </div>
 </template>
@@ -36,6 +51,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import PanelInput from './inputs/PanelInput.vue';
 import ColorPalette from './controls/ColorPalette.vue';
+import GeneralSettings from './controls/GeneralSettings.vue';
 import DimensionAdjuster from './controls/DimensionAdjuster.vue';
 import RowColumnAdjuster from './controls/RowColumnAdjuster.vue';
 import SectionPanel from './controls/SectionPanel.vue';
@@ -45,6 +61,7 @@ export default {
   components: {
     PanelInput,
     ColorPalette,
+    GeneralSettings,
     DimensionAdjuster,
     RowColumnAdjuster,
     SectionPanel,
@@ -77,9 +94,9 @@ export default {
     async importRaw(e) {
       const { name, pattern } = await FileHelper.importRaw(e);
       this.name = name;
-      this.updatePattern(pattern);      
+      this.updatePattern(pattern);
     },
-    exportRaw() { FileHelper.exportRaw(this.name, this.pattern) },
+    exportRaw() { FileHelper.exportRaw(this.name, this.pattern); },
     exportToKnit() { FileHelper.exportToKnit(this.name, this.pattern); },
   },
 };

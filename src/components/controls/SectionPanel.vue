@@ -9,7 +9,7 @@
 
     <div
       class="container"
-      :style="{ maxHeight: open ? this.maxHeightOpen : 0 }"
+      :style="{ maxHeight: open ? maxHeightOpen : 0 }"
     >
       <div
         ref="content"
@@ -33,7 +33,7 @@ export default {
   }),
   mounted() {
     this.open = this.startOpen;
-    this.maxHeightOpen = this.$refs.content.getBoundingClientRect().height + 'px';
+    this.maxHeightOpen = `${this.$refs.content.getBoundingClientRect().height}px`;
   },
 };
 </script>

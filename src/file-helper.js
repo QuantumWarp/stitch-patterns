@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 class FileHelper {
   exportRaw(name, pattern) {
     this.download(`${name}.json`, JSON.stringify(pattern));
@@ -13,18 +14,18 @@ class FileHelper {
         resolve({ name, pattern });
       };
       reader.readAsText(file);
-    })
+    });
   }
 
   exportToKnit(name, pattern) {
     let text = `-------- ${name} --------\r\n\r\n`;
     const height = Math.max(...pattern.map((point) => point.y)) + 1;
 
-    for (let y = 0; y < height; y++) {
+    for (let y = 0; y < height; y += 1) {
       text += this.exportToKnitRow(
         y,
         pattern.filter((point) => point.y === (height - 1 - y)),
-        y % 2
+        y % 2,
       );
     }
 
@@ -32,7 +33,7 @@ class FileHelper {
   }
 
   exportToKnitRow(row, points, reversed) {
-    let text = `-------- Row ${row + 1} --------${reversed ? ' (Reversed)' : ''}\r\n`
+    let text = `-------- Row ${row + 1} --------${reversed ? ' (Reversed)' : ''}\r\n`;
     let count = 1;
     const r = reversed ? -1 : 1;
     points
@@ -53,7 +54,7 @@ class FileHelper {
 
   download(filename, text) {
     const element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(text)}`);
     element.setAttribute('download', filename);
     element.style.display = 'none';
     document.body.appendChild(element);

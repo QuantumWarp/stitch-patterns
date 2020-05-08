@@ -6,7 +6,7 @@
       :value="value"
       :type="type"
       @change="$emit('input', $event.target.value)"
-    />
+    >
   </div>
 </template>
 
@@ -17,7 +17,7 @@ export default {
     type: { type: String, default: 'text' },
     label: { type: String, default: null },
   },
-}
+};
 </script>
 
 <style scoped>

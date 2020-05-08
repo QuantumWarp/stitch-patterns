@@ -1,12 +1,31 @@
 <template>
   <div class="row">
-    <label for="mirrorx">Mirror X</label>
-    <input id="mirrorx" type="checkbox" :value="drawingSettings.mirrorX" @input="updateDrawingSettings({ mirrorX: $event.target.checked })" />
+    <PanelCheckbox
+      label="Mirror X"
+      :value="drawingSettings.mirrorX"
+      @input="updateDrawingSettings({ mirrorX: $event })"
+    />
 
-    <label for="mirrory">Mirror Y</label>
-    <input id="mirrory" type="checkbox" :value="drawingSettings.mirrorY" @input="updateDrawingSettings({ mirrorY: $event.target.checked })" />
+    <PanelCheckbox
+      label="Mirror Y"
+      :value="drawingSettings.mirrorY"
+      @input="updateDrawingSettings({ mirrorY: $event })"
+    />
 
-    <label for="rotate">Rotate</label>
-    <input id="rotate" type="checkbox" :value="drawingSettings.rotate" @input="updateDrawingSettings({ rotate: $event.target.checked })" />
+    <PanelCheckbox
+      label="Rotate"
+      :value="drawingSettings.rotate"
+      @input="updateDrawingSettings({ rotate: $event })"
+    />
   </div>
 </template>
+
+<script>
+import PanelCheckbox from '../inputs/PanelCheckbox.vue';
+
+export default {
+  components: {
+    PanelCheckbox,
+  },
+};
+</script>
