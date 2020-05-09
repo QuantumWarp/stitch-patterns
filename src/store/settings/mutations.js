@@ -3,6 +3,9 @@ export default {
   setSettings(state, settings) {
     state.settings = settings;
   },
+  setColorPalette(state, colorPalette) {
+    state.colorPalette = colorPalette.slice(0, 10);
+  },
   resetColorPalette(state) {
     state.colorPalette = [
       '#000000',

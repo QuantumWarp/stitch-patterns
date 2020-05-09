@@ -5,7 +5,7 @@
         class="new-button"
         @click="$refs.colorpicker.click()"
       >
-        New Color
+        New Colour
       </PanelButton>
 
       <PanelButton

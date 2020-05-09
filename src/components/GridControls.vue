@@ -3,7 +3,7 @@
     <PrimaryInfo />
 
     <SectionPanel
-      name="Color Palette"
+      name="Colour Palette"
       start-open
     >
       <ColorPalette />

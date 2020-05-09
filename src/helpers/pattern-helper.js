@@ -17,6 +17,19 @@ class PatternHelper {
       height: lastPoint.y - firstPoint.y + 1,
     };
   }
+
+  static countColorsForPalette(pattern) {
+    const colorDict = {};
+    pattern.forEach((point) => {
+      if (!colorDict[point.color]) {
+        colorDict[point.color] = 0;
+      }
+      colorDict[point.color] += 1;
+    });
+    const orderedColors = Object.keys(colorDict)
+      .sort((a, b) => (colorDict[a] < colorDict[b] ? 1 : -1));
+    return orderedColors;
+  }
 }
 
 export default PatternHelper;

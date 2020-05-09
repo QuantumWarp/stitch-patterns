@@ -1,9 +1,5 @@
 /* eslint-disable class-methods-use-this */
 class FileHelper {
-  exportRaw(name, pattern) {
-    this.download(`${name}.json`, JSON.stringify(pattern));
-  }
-
   async importRaw(e) {
     return new Promise((resolve) => {
       const file = e.target.files[0];

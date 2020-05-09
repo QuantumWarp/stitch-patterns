@@ -1,17 +1,16 @@
 import PatternHelper from './pattern-helper';
 
 class PersistanceHelper {
-  static createSaveInfo(getters) {
+  static createSessionData(details, sortedPattern) {
     return {
-      saveDate: new Date(),
-      detail: getters.patternDetails,
-      pattern: PersistanceHelper.compressPattern(getters.sortedPattern),
+      details,
+      pattern: PersistanceHelper.compressPattern(sortedPattern),
     };
   }
 
-  static createIndexInfo(getters) {
+  static createIndexInfo(details) {
     return {
-      ...getters.patternDetails,
+      ...details,
       saveDate: new Date(),
     };
   }

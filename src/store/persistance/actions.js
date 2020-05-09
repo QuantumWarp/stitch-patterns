@@ -1,12 +1,15 @@
+import FileHelper from '../../helpers/file-helper';
 import PersistanceHelper from '../../helpers/persistance-helper';
+import PatternHelper from '../../helpers/pattern-helper';
 
 let saveSessionTimeout;
 
 export default {
-  download() {
-
+  downloadPattern(context, name) {
+    const sessionDataString = localStorage.getItem(`pattern: ${name}`);
+    FileHelper.download(`${name}.json`, sessionDataString);
   },
-  import() {
+  importPattern() {
 
   },
   initialiseFromSessionData({ commit, dispatch }, sessionDataString) {
@@ -15,9 +18,11 @@ export default {
 
       try {
         const pattern = PersistanceHelper.decompressPattern(sessionData.pattern);
-        commit('setPatternDetails', sessionData.detail);
+        const palette = PatternHelper.countColorsForPalette(pattern);
+        commit('setPatternDetails', sessionData.details);
         commit('setPattern', pattern);
         dispatch('resetSettings');
+        commit('setColorPalette', palette);
         dispatch('saveSessionDebounce');
         return;
       } catch (e) {
@@ -35,15 +40,15 @@ export default {
     index = index ? JSON.parse(index) : [];
     commit('setSavedPatterns', index);
   },
-  savePattern({ commit, getters }) {
-    const sessionData = PersistanceHelper.createSaveInfo(getters);
-    const indexData = PersistanceHelper.createIndexInfo(getters);
+  savePattern({ commit, dispatch, getters }) {
+    const indexData = PersistanceHelper.createIndexInfo(getters.patternDetails);
     const updatedIndex = getters.savedPatterns
       .filter((x) => x.name !== indexData.name)
       .concat([indexData]);
     commit('setSavedPatterns', updatedIndex);
-    localStorage.setItem(`pattern: ${indexData.name}`, JSON.stringify(sessionData));
+    localStorage.setItem(`pattern: ${indexData.name}`, JSON.stringify(getters.sessionData));
     localStorage.setItem('index', JSON.stringify(updatedIndex));
+    dispatch('downloadPattern', indexData.name);
   },
   loadPattern({ dispatch }, name) {
     const sessionDataString = localStorage.getItem(`pattern: ${name}`);
@@ -60,8 +65,7 @@ export default {
     saveSessionTimeout = setTimeout(() => dispatch('saveSession'), 500);
   },
   saveSession({ getters }) {
-    const sessionData = PersistanceHelper.createSaveInfo(getters);
-    localStorage.setItem('session', JSON.stringify(sessionData));
+    localStorage.setItem('session', JSON.stringify(getters.sessionData));
   },
   loadSession({ dispatch }) {
     const sessionDataString = localStorage.getItem('session');

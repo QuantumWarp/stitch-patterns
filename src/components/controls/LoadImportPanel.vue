@@ -29,7 +29,7 @@
         >
           <DownloadIcon
             title="Export"
-            @click="exportRaw()"
+            @click="downloadPattern(pattern.name)"
           />
 
           <FontDownloadIcon
@@ -73,6 +73,7 @@ export default {
     ...mapActions([
       'loadIndex',
       'loadPattern',
+      'downloadPattern',
       'deletePattern',
       'updateSettings',
     ]),
@@ -81,7 +82,6 @@ export default {
       this.name = name;
       this.updatePattern(pattern);
     },
-    exportRaw() { FileHelper.exportRaw(this.name, this.pattern); },
     exportToKnit() { FileHelper.exportToKnit(this.name, this.pattern); },
   },
 };
