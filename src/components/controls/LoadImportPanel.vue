@@ -8,10 +8,18 @@
 
       <PanelButton
         class="import-button"
-        @click="importRaw()"
+        danger
+        @click="$refs.importInput.click()"
       >
         Import
       </PanelButton>
+
+      <input
+        ref="importInput"
+        style="display: none;"
+        type="file"
+        @change="importPattern"
+      >
     </div>
 
     <div class="saved-patterns">
@@ -34,7 +42,7 @@
 
           <FontDownloadIcon
             title="Export Knit"
-            @click="exportToKnit()"
+            @click="exportToKnit(pattern.name)"
           />
 
           <DeleteIcon
@@ -74,14 +82,10 @@ export default {
       'loadIndex',
       'loadPattern',
       'downloadPattern',
+      'importPattern',
       'deletePattern',
       'updateSettings',
     ]),
-    async importRaw(e) {
-      const { name, pattern } = await FileHelper.importRaw(e);
-      this.name = name;
-      this.updatePattern(pattern);
-    },
     exportToKnit() { FileHelper.exportToKnit(this.name, this.pattern); },
   },
 };

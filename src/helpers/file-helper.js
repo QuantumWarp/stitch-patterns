@@ -5,9 +5,7 @@ class FileHelper {
       const file = e.target.files[0];
       const reader = new FileReader();
       reader.onload = (evt) => {
-        const name = file.name.replace(/\.json/g, '');
-        const pattern = JSON.parse(evt.target.result);
-        resolve({ name, pattern });
+        resolve(evt.target.result);
       };
       reader.readAsText(file);
     });

@@ -9,8 +9,10 @@ export default {
     const sessionDataString = localStorage.getItem(`pattern: ${name}`);
     FileHelper.download(`${name}.json`, sessionDataString);
   },
-  importPattern() {
-
+  async importPattern({ dispatch }, e) {
+    const sessionDataString = await FileHelper.importRaw(e);
+    dispatch('initialiseFromSessionData', sessionDataString);
+    dispatch('savePattern');
   },
   initialiseFromSessionData({ commit, dispatch }, sessionDataString) {
     if (sessionDataString) {
@@ -40,7 +42,7 @@ export default {
     index = index ? JSON.parse(index) : [];
     commit('setSavedPatterns', index);
   },
-  savePattern({ commit, dispatch, getters }) {
+  savePattern({ commit, getters }) {
     const indexData = PersistanceHelper.createIndexInfo(getters.patternDetails);
     const updatedIndex = getters.savedPatterns
       .filter((x) => x.name !== indexData.name)
@@ -48,7 +50,6 @@ export default {
     commit('setSavedPatterns', updatedIndex);
     localStorage.setItem(`pattern: ${indexData.name}`, JSON.stringify(getters.sessionData));
     localStorage.setItem('index', JSON.stringify(updatedIndex));
-    dispatch('downloadPattern', indexData.name);
   },
   loadPattern({ dispatch }, name) {
     const sessionDataString = localStorage.getItem(`pattern: ${name}`);

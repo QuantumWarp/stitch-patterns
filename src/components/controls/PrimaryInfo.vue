@@ -11,7 +11,7 @@
       <PanelButton
         class="save-button"
         :danger="isOverwrite"
-        @click="savePattern"
+        @click="save"
       >
         {{ isOverwrite ? 'Overwrite' : 'Save' }}
       </PanelButton>
@@ -65,6 +65,10 @@ export default {
       'reinitialise',
       'updatePatternDetails',
     ]),
+    save() {
+      this.savePattern();
+      this.downloadPattern(this.form.name);
+    },
   },
 };
 </script>
