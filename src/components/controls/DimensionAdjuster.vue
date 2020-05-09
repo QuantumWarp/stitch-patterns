@@ -72,7 +72,7 @@ export default {
 .dimension-adjuster {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
 }
 .dimension-adjuster > *:not(:last-child) {
   margin-bottom: 10px;
@@ -81,6 +81,9 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: center;
+}
+.buttons > * {
+  width: 40%;
 }
 .buttons :first-child {
   margin-right: 6px;

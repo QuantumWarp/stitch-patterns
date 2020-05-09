@@ -20,6 +20,10 @@
       <GeneralSettings />
     </SectionPanel>
 
+    <SectionPanel name="Knitting">
+      <KnitSession />
+    </SectionPanel>
+
     <SectionPanel name="Load &amp; Import">
       <LoadImportPanel />
     </SectionPanel>
@@ -33,6 +37,7 @@ import ColorPalette from './controls/ColorPalette.vue';
 import GeneralSettings from './controls/GeneralSettings.vue';
 import DimensionAdjuster from './controls/DimensionAdjuster.vue';
 import RowColumnAdjuster from './controls/RowColumnAdjuster.vue';
+import KnitSession from './controls/KnitSession.vue';
 import LoadImportPanel from './controls/LoadImportPanel.vue';
 import SectionPanel from './controls/SectionPanel.vue';
 
@@ -43,6 +48,7 @@ export default {
     GeneralSettings,
     DimensionAdjuster,
     RowColumnAdjuster,
+    KnitSession,
     LoadImportPanel,
     SectionPanel,
   },
