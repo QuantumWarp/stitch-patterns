@@ -1,6 +1,14 @@
+import PatternHelper from '../../helpers/pattern-helper';
+
 export default {
   patternDetails(state) { return state.patternDetails; },
   pattern(state) { return state.pattern; },
+  sortedPattern(state) {
+    return state.pattern.sort((a, b) => {
+      if (a.x === b.x) return a.y > b.y ? 1 : -1;
+      return a.x > b.x ? 1 : -1;
+    });
+  },
   bounds(state) {
     const xPoints = state.pattern.map((point) => point.x);
     const yPoints = state.pattern.map((point) => point.y);
@@ -12,9 +20,6 @@ export default {
     };
   },
   dimensions(state, getters) {
-    return {
-      height: getters.bounds.yMax - getters.bounds.yMin + 1,
-      width: getters.bounds.xMax - getters.bounds.xMin + 1,
-    };
+    return PatternHelper.getDimensionsFromSortedPatten(getters.sortedPattern);
   },
 };

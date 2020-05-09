@@ -1,3 +1,5 @@
+import PatternHelper from '../../helpers/pattern-helper';
+
 export default {
   updatePatternDetails({ commit, dispatch, state }, details) {
     commit('setPatternDetails', { ...state.patternDetails, ...details });
@@ -12,12 +14,7 @@ export default {
     dispatch('saveSessionDebounce');
   },
   fillPattern({ dispatch, getters }) {
-    const pattern = [];
-    for (let x = 0; x < getters.dimensions.width; x += 1) {
-      for (let y = 0; y < getters.dimensions.height; y += 1) {
-        pattern.push({ x, y, color: getters.settings.color });
-      }
-    }
+    const pattern = PatternHelper.createFilledPattern(getters.dimensions, getters.settings.color);
     dispatch('updatePattern', pattern);
   },
   adjustDimensions({ dispatch, getters }, dimensions) {

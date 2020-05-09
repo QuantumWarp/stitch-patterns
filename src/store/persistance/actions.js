@@ -14,8 +14,9 @@ export default {
       const sessionData = JSON.parse(sessionDataString);
 
       try {
-        commit('setPatternDetails', sessionData.patternDetails);
-        commit('setPattern', sessionData.compressedPattern);
+        const pattern = PersistanceHelper.decompressPattern(sessionData.pattern);
+        commit('setPatternDetails', sessionData.detail);
+        commit('setPattern', pattern);
         dispatch('resetSettings');
         dispatch('saveSessionDebounce');
         return;
