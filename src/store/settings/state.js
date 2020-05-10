@@ -10,6 +10,7 @@ const state = {
     mirrorY: false,
   },
   colorPalette: [],
+  openPanels: [],
 };
 
 export default {

@@ -2,7 +2,7 @@
   <section :class="{ open }">
     <div
       class="heading"
-      @click="open = !open"
+      @click="$emit('update:open', !open)"
     >
       <span>{{ name }}</span>
     </div>
@@ -25,25 +25,25 @@
 export default {
   props: {
     name: { type: String, required: true },
-    startOpen: { type: Boolean, default: false },
+    open: { type: Boolean, default: false },
   },
   data: () => ({
-    open: false,
     maxHeightOpen: '0',
   }),
   mounted() {
-    this.open = this.startOpen;
     this.maxHeightOpen = `${this.$refs.content.getBoundingClientRect().height}px`;
   },
 };
 </script>
 
 <style scoped>
+section {
+  border-top: 2px solid grey;
+}
 .heading {
   display: flex;
   justify-content: center;
   font-size: 20px;
-  border-top: 2px solid grey;
   padding: 5px;
   background-color: lightgray;
   user-select: none;

@@ -4,37 +4,54 @@
 
     <SectionPanel
       name="Colour Palette"
-      start-open
+      :open="openPanels.includes('color')"
+      @update:open="updatePanelState({ panel: 'color', open: $event})"
     >
       <ColorPalette />
     </SectionPanel>
 
-    <SectionPanel name="Dimensions">
+    <SectionPanel
+      name="Dimensions"
+      :open="openPanels.includes('dimensions')"
+      @update:open="updatePanelState({ panel: 'dimensions', open: $event})"
+    >
       <div class="row">
         <DimensionAdjuster />
         <RowColumnAdjuster />
       </div>
     </SectionPanel>
 
-    <SectionPanel name="General Settings">
+    <SectionPanel
+      name="General Settings"
+      :open="openPanels.includes('general')"
+      @update:open="updatePanelState({ panel: 'general', open: $event})"
+    >
       <GeneralSettings />
     </SectionPanel>
 
-    <SectionPanel name="Knitting">
+    <SectionPanel
+      name="Knitting"
+      :open="openPanels.includes('knitting')"
+      @update:open="updatePanelState({ panel: 'knitting', open: $event})"
+    >
       <div class="row">
         <KnitSession />
         <KnitStitchPanel />
       </div>
     </SectionPanel>
 
-    <SectionPanel name="Load &amp; Import">
+    <SectionPanel
+      name="Load &amp; Import"
+      :open="openPanels.includes('loadImport')"
+      @update:open="updatePanelState({ panel: 'loadImport', open: $event})"
+    >
       <LoadImportPanel />
     </SectionPanel>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import PrimaryInfo from './controls/PrimaryInfo.vue';
 import ColorPalette from './controls/ColorPalette.vue';
 import GeneralSettings from './controls/GeneralSettings.vue';
@@ -57,11 +74,17 @@ export default {
     LoadImportPanel,
     SectionPanel,
   },
+  computed: {
+    ...mapGetters(['openPanels']),
+  },
   created() {
     this.loadSession();
   },
   methods: {
-    ...mapActions(['loadSession']),
+    ...mapActions([
+      'loadSession',
+      'updatePanelState',
+    ]),
   },
 };
 </script>
@@ -76,7 +99,10 @@ export default {
   flex: 1;
 }
 .grid-controls {
-  overflow-y: scroll;
+  overflow-y: auto;
   flex: 1;
+}
+section:last-child {
+  border-bottom: 2px solid grey;
 }
 </style>

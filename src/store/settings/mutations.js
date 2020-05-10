@@ -1,5 +1,8 @@
 /* eslint-disable no-param-reassign */
 export default {
+  setOpenPanels(state, openPanels) {
+    state.openPanels = openPanels;
+  },
   setSettings(state, settings) {
     state.settings = settings;
   },
