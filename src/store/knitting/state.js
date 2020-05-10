@@ -10,6 +10,7 @@ const state = {
     doubleStitch: true,
   },
   time: 0,
+  startStitch: 0,
   selectedStitch: null,
 };
 

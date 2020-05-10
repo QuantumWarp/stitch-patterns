@@ -2,35 +2,36 @@
   <div class="knit-session">
     <div class="knit-timer">
       <div class="row-count">
-        Total - {{ rowCount }}
+        Total - {{ trackedRowCount }}
       </div>
 
       <PanelTimer
-        v-model="time"
+        :value="time"
+        @input="updateTime"
       />
     </div>
 
     <div class="knit-options">
       <PanelCheckbox
-        :value="form.fromTop"
+        :value="knitSettings.fromTop"
         label="From Top"
         @input="updateKnitSettings({ fromTop: $event })"
       />
 
       <PanelCheckbox
-        :value="form.fromRight"
+        :value="knitSettings.fromRight"
         label="From Right"
         @input="updateKnitSettings({ fromRight: $event })"
       />
 
       <PanelCheckbox
-        :value="form.reverseEven"
+        :value="knitSettings.reverseEven"
         label="Reverse Even"
         @input="updateKnitSettings({ reverseEven: $event })"
       />
 
       <PanelCheckbox
-        :value="form.doubleStitch"
+        :value="knitSettings.doubleStitch"
         label="Double Stitch"
         @input="updateKnitSettings({ doubleStitch: $event })"
       />
@@ -63,34 +64,21 @@ export default {
     PanelCheckbox,
     PanelTimer,
   },
-  data: () => ({
-    form: {
-      fromTop: false,
-      fromRight: false,
-      reverseEven: true,
-      doubleStitch: true,
-    },
-    rowCount: 0,
-    time: 0,
-  }),
   computed: {
-    ...mapGetters(['knitSettings']),
+    ...mapGetters([
+      'time',
+      'knitSettings',
+      'trackedRowCount',
+    ]),
     stitches() {
       return this.knitPattern[this.selectedRow];
-    },
-  },
-  watch: {
-    knitSettings: {
-      immediate: true,
-      handler(val) {
-        this.form = { ...val };
-      },
     },
   },
   methods: {
     ...mapActions([
       'resetKnitSession',
       'updateKnitSettings',
+      'updateTime',
     ]),
   },
 };

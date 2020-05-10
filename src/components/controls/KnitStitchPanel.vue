@@ -60,14 +60,16 @@ export default {
       'knitPattern',
       'selectedRow',
       'selectedStitch',
+      'stitchIndex',
+      'isStartStitch',
+      'isEndStitch',
+      'rowIndex',
+      'isStartRow',
+      'isEndRow',
     ]),
-    currentRow() { return this.knitPattern[this.currentRowIndex]; },
-    stitchIndex() { return this.selectedRow.indexOf(this.selectedStitch); },
-    isStartStitch() { return this.stitchIndex === 0; },
-    isEndStitch() { return this.stitchIndex === this.selectedRow.length - 1; },
-    rowIndex() { return this.knitPattern.indexOf(this.selectedRow); },
-    isStartRow() { return this.rowIndex === 0; },
-    isEndRow() { return this.rowIndex === this.knitPattern.length - 1; },
+    currentRow() {
+      return this.knitPattern[this.currentRowIndex];
+    },
   },
   watch: {
     selectedStitch() {

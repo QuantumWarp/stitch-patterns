@@ -1,6 +1,9 @@
 export default {
-  updateTime() {
-
+  updateTime({ commit, getters }, time) {
+    if (getters.time === 0) {
+      commit('setStartStitch', getters.selectedStitch);
+    }
+    commit('setTime', time);
   },
   updateKnitSettings({ commit, state }, settingsUpdate) {
     commit('setKnitSettings', { ...state.knitSettings, ...settingsUpdate });
