@@ -24,15 +24,15 @@
       />
 
       <PanelCheckbox
-        :value="form.reverseOdd"
-        label="Reverse Odd"
-        @input="updateKnitSettings({ fromRight: $event })"
+        :value="form.reverseEven"
+        label="Reverse Even"
+        @input="updateKnitSettings({ reverseEven: $event })"
       />
 
       <PanelCheckbox
         :value="form.doubleStitch"
         label="Double Stitch"
-        @input="updateKnitSettings({ fromRight: $event })"
+        @input="updateKnitSettings({ doubleStitch: $event })"
       />
     </div>
 
@@ -67,7 +67,7 @@ export default {
     form: {
       fromTop: false,
       fromRight: false,
-      reverseOdd: true,
+      reverseEven: true,
       doubleStitch: true,
     },
     rowCount: 0,

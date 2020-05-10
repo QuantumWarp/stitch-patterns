@@ -31,8 +31,26 @@ class PatternHelper {
     return orderedColors;
   }
 
-  static applyReducePatternSettings(reducedPattern) {
-    return reducedPattern;
+  static applyReducePatternSettings(reducedPattern, {
+    fromTop,
+    fromRight,
+    reverseEven,
+    doubleStitch,
+  }) {
+    let finalPattern = [...reducedPattern];
+    if (fromTop) {
+      finalPattern = finalPattern.reverse();
+    }
+    if (fromRight) {
+      finalPattern = finalPattern.map((row) => [...row].reverse());
+    }
+    if (reverseEven) {
+      finalPattern = finalPattern.map((row, index) => (index % 2 === 1 ? [...row].reverse() : row));
+    }
+    if (doubleStitch) {
+      finalPattern = finalPattern.map((row) => [...row].map((x) => ({ ...x, count: x.count * 2 })));
+    }
+    return finalPattern;
   }
 
   static reducePattern(pattern) {
@@ -57,7 +75,7 @@ class PatternHelper {
     const groupedRows = PatternHelper.groupBy(pattern, (pt) => pt.y);
     return Object.keys(groupedRows)
       .map((x) => groupedRows[x])
-      .sort((a, b) => (a[0].y > b[0].y ? 1 : -1))
+      .sort((a, b) => (a[0].y > b[0].y ? -1 : 1))
       .map((row) => row.sort((a, b) => (a.x > b.x ? 1 : -1)));
   }
 

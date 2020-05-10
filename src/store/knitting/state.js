@@ -6,7 +6,7 @@ const state = {
   knitSettings: {
     fromTop: false,
     fromRight: false,
-    reverseOdd: true,
+    reverseEven: true,
     doubleStitch: true,
   },
   time: 0,

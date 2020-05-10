@@ -8,7 +8,7 @@
     <input
       ref="checkbox"
       type="checkbox"
-      :value="value"
+      :checked="value"
       @click="$event.stopPropagation()"
       @input="$emit('input', $event.target.checked)"
     >

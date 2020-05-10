@@ -3,7 +3,7 @@ export default {
 
   },
   updateKnitSettings({ commit, state }, settingsUpdate) {
-    commit('setSettings', { ...state.knitSettings, ...settingsUpdate });
+    commit('setKnitSettings', { ...state.knitSettings, ...settingsUpdate });
   },
   resetKnitSession({ commit, getters }) {
     const firstStitch = getters.knitPattern[0][0];

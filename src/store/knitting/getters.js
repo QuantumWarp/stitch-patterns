@@ -4,7 +4,10 @@ export default {
   knitSettings(state) { return state.knitSettings; },
   time(state) { return state.time; },
   knitPattern(state, getters) {
-    return PatternHelper.applyReducePatternSettings(getters.defaultKnitPattern);
+    return PatternHelper.applyReducePatternSettings(
+      getters.defaultKnitPattern,
+      getters.knitSettings,
+    );
   },
   selectedStitch(state) { return state.selectedStitch; },
   selectedRow(state, getters) {
