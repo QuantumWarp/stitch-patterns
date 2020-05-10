@@ -133,6 +133,6 @@ export default {
   flex: 1;
 }
 .buttons > :first-child {
-  margin-right: 10px;
+  margin-right: 5px;
 }
 </style>

@@ -1,43 +1,45 @@
 <template>
   <div class="row-column-adjuster">
-    <div class="row-adjuster">
-      <button @click="adjust('top', 'add')">
-        +
-      </button>
-      <button @click="adjust('top', 'remove')">
-        -
-      </button>
-    </div>
-
-    <div class="column-adjusters">
-      <div class="column-adjuster">
-        <button @click="adjust('left', 'add')">
+    <div>
+      <div class="row-adjuster">
+        <button @click="adjust('top', 'add')">
           +
         </button>
-        <button @click="adjust('left', 'remove')">
+        <button @click="adjust('top', 'remove')">
           -
         </button>
       </div>
 
-      <div class="center" />
+      <div class="column-adjusters">
+        <div class="column-adjuster">
+          <button @click="adjust('left', 'add')">
+            +
+          </button>
+          <button @click="adjust('left', 'remove')">
+            -
+          </button>
+        </div>
 
-      <div class="column-adjuster">
-        <button @click="adjust('right', 'add')">
+        <div class="center" />
+
+        <div class="column-adjuster">
+          <button @click="adjust('right', 'add')">
+            +
+          </button>
+          <button @click="adjust('right', 'remove')">
+            -
+          </button>
+        </div>
+      </div>
+
+      <div class="row-adjuster">
+        <button @click="adjust('bottom', 'add')">
           +
         </button>
-        <button @click="adjust('right', 'remove')">
+        <button @click="adjust('bottom', 'remove')">
           -
         </button>
       </div>
-    </div>
-
-    <div class="row-adjuster">
-      <button @click="adjust('bottom', 'add')">
-        +
-      </button>
-      <button @click="adjust('bottom', 'remove')">
-        -
-      </button>
     </div>
   </div>
 </template>
@@ -56,6 +58,12 @@ export default {
 </script>
 
 <style scoped>
+.row-column-adjuster {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
 .column-adjusters {
   display: flex;
   flex-direction: row;

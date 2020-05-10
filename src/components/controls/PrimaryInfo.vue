@@ -84,8 +84,8 @@ export default {
   display: flex;
   justify-content: center;
 }
-.buttons > :not(:last-child) {
-  margin-right: 10px;
+.buttons > :first-child {
+  margin-right: 5px;
 }
 .save-button {
   width: 120px;

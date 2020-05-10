@@ -21,7 +21,10 @@
     </SectionPanel>
 
     <SectionPanel name="Knitting">
-      <KnitSession />
+      <div class="row">
+        <KnitSession />
+        <KnitStitchPanel />
+      </div>
     </SectionPanel>
 
     <SectionPanel name="Load &amp; Import">
@@ -38,6 +41,7 @@ import GeneralSettings from './controls/GeneralSettings.vue';
 import DimensionAdjuster from './controls/DimensionAdjuster.vue';
 import RowColumnAdjuster from './controls/RowColumnAdjuster.vue';
 import KnitSession from './controls/KnitSession.vue';
+import KnitStitchPanel from './controls/KnitStitchPanel.vue';
 import LoadImportPanel from './controls/LoadImportPanel.vue';
 import SectionPanel from './controls/SectionPanel.vue';
 
@@ -49,6 +53,7 @@ export default {
     DimensionAdjuster,
     RowColumnAdjuster,
     KnitSession,
+    KnitStitchPanel,
     LoadImportPanel,
     SectionPanel,
   },
@@ -65,7 +70,7 @@ export default {
 .row {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: stretch;
 }
 .row > * {
   flex: 1;

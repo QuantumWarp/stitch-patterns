@@ -42,9 +42,7 @@ export default {
     settings: {
       immediate: true,
       handler(val) {
-        this.form.mirrorX = val.mirrorX;
-        this.form.mirrorY = val.mirrorY;
-        this.form.rotate = val.rotate;
+        this.form = { ...val };
       },
     },
   },

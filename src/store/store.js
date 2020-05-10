@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
+import knittingStore from './knitting/state';
 import patternStore from './pattern/state';
 import persistanceStore from './persistance/state';
 import settingsStore from './settings/state';
@@ -20,6 +21,7 @@ const actions = {
 export default new Vuex.Store({
   actions,
   modules: {
+    knitting: knittingStore,
     pattern: patternStore,
     persistance: persistanceStore,
     settings: settingsStore,
