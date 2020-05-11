@@ -62,6 +62,11 @@ export default {
         time %= 60000;
         const seconds = Math.floor(time / 1000);
         this.breakdown.seconds = seconds < 10 ? `0${seconds}` : seconds;
+
+        if (this.value === 0) {
+          clearTimeout(this.timeout);
+          this.stopped = true;
+        }
       },
     },
   },

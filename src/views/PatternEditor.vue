@@ -7,6 +7,10 @@
       </div>
 
       <GridControls />
+
+      <div class="app-footer">
+        <a href="https://quantumwss.com">© 2020 - John Lowther</a>
+      </div>
     </div>
 
     <div class="main-panel">
@@ -54,6 +58,15 @@ export default {
   font-size: 40px;
   font-weight: bold;
   border-bottom: 2px solid grey;
+}
+.app-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 30px;
+}
+.app-footer a {
+  text-decoration: none;
 }
 img {
   height: 40px;
