@@ -1,12 +1,18 @@
 <template>
   <div
-    :class="{ readonly: openPanels.includes('knitting') }"
+    :class="{ readonly: isKnitting }"
     class="grid-pattern"
   >
     <div
       class="render-area"
       :style="gridStyle"
     >
+      <div
+        v-if="isKnitting && knitSettings.highlightRow"
+        class="selected-row-overlay"
+        :style="selectedRowStyle"
+      />
+
       <div
         v-for="point in pattern"
         :key="`${point.x}-${point.y}`"
@@ -34,6 +40,8 @@ export default {
       'dimensions',
       'settings',
       'openPanels',
+      'knitSettings',
+      'selectedStitchInfo',
     ]),
     gridStyle() {
       return {
@@ -45,6 +53,19 @@ export default {
             translateY(${(this.squareDimensions.width * -this.bounds.xMin) - (this.squareDimensions.height * (this.dimensions.height + this.bounds.yMin))}px)`
           : 'none',
       };
+    },
+    selectedRowStyle() {
+      const index = this.knitSettings.fromTop
+        ? this.selectedStitchInfo.rowIndex
+        : this.dimensions.height - this.selectedStitchInfo.rowIndex - 1;
+      return {
+        top: `${this.squareDimensions.height * index}px`,
+        height: `${this.squareDimensions.height + 1}px`,
+        width: `${this.squareDimensions.width * this.dimensions.width + 2}px`,
+      };
+    },
+    isKnitting() {
+      return this.openPanels.includes('knitting');
     },
   },
   methods: {
@@ -105,5 +126,10 @@ export default {
   position: absolute;
   border: 1px solid grey;
   user-select: none;
+}
+.selected-row-overlay {
+  position: absolute;
+  z-index: 1;
+  box-shadow: 0px 0px 120px 50px #bbb;
 }
 </style>

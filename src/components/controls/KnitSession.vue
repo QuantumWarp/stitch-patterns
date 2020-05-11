@@ -13,24 +13,35 @@
 
     <div class="knit-options">
       <PanelCheckbox
+        :disabled="time !== 0"
+        :value="knitSettings.highlightRow"
+        label="Highlight Row"
+        @input="updateKnitSettings({ highlightRow: $event })"
+      />
+
+      <PanelCheckbox
+        :disabled="time !== 0"
         :value="knitSettings.fromTop"
         label="From Top"
         @input="updateKnitSettings({ fromTop: $event })"
       />
 
       <PanelCheckbox
+        :disabled="time !== 0"
         :value="knitSettings.fromRight"
         label="From Right"
         @input="updateKnitSettings({ fromRight: $event })"
       />
 
       <PanelCheckbox
+        :disabled="time !== 0"
         :value="knitSettings.reverseEven"
         label="Reverse Even"
         @input="updateKnitSettings({ reverseEven: $event })"
       />
 
       <PanelCheckbox
+        :disabled="time !== 0"
         :value="knitSettings.doubleStitch"
         label="Double Stitch"
         @input="updateKnitSettings({ doubleStitch: $event })"
@@ -44,7 +55,7 @@
 
       <PanelButton
         danger
-        @click="resetKnitSession"
+        @click="resetKnitSession()"
       >
         Reset Knit
       </PanelButton>

@@ -1,5 +1,8 @@
 /* eslint-disable no-param-reassign */
 export default {
+  setDirty(state, dirty) {
+    state.dirty = dirty;
+  },
   setPatternDetails(state, patternDetails) {
     state.patternDetails = patternDetails;
   },

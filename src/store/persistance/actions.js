@@ -22,6 +22,7 @@ export default {
     dispatch('resetSettings');
     commit('setColorPalette', palette);
     dispatch('updateSettings', { color: palette[0] });
+    commit('setDirty', false);
   },
 
   // Overall persistance
@@ -37,6 +38,7 @@ export default {
     localStorage.setItem(`pattern: ${getters.patternIndexData.name}`, JSON.stringify(getters.patternData));
     localStorage.setItem('index', JSON.stringify(updatedIndex));
     commit('setSavedPatterns', updatedIndex);
+    commit('setDirty', false);
   },
   loadPattern({ dispatch }, name) {
     const patternDataString = localStorage.getItem(`pattern: ${name}`);

@@ -12,7 +12,7 @@ export default {
     PatternEditor,
   },
   created() {
-    const mutationTypes = [
+    const sessionMutationTypes = [
       'setTime',
       'setStartStitch',
       'setKnitSettings',
@@ -25,7 +25,7 @@ export default {
     ];
     let saveSessionTimeout;
     this.$store.subscribe((mutation) => {
-      if (mutationTypes.includes(mutation.type)) {
+      if (sessionMutationTypes.includes(mutation.type)) {
         clearTimeout(saveSessionTimeout);
         saveSessionTimeout = setTimeout(() => {
           this.$store.dispatch('saveSession');

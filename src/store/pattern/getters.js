@@ -1,6 +1,7 @@
 import PatternHelper from '../../helpers/pattern-helper';
 
 export default {
+  dirty(state) { return state.dirty; },
   patternDetails(state) { return state.patternDetails; },
   pattern(state) { return state.pattern; },
   sortedPattern(state) {

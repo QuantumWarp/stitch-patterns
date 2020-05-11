@@ -154,8 +154,8 @@ export default {
 }
 .knit-content {
   overflow-y: scroll;
-  height: 342px;
-  max-height: 342px;
+  height: 382px;
+  max-height: 382px;
 }
 .knit-content.completed {
   background-color: lightgreen;

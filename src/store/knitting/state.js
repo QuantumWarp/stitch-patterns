@@ -4,6 +4,7 @@ import mutations from './mutations';
 
 const state = {
   knitSettings: {
+    highlightRow: false,
     fromTop: false,
     fromRight: false,
     reverseEven: true,

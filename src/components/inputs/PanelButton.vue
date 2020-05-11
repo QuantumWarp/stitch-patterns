@@ -20,16 +20,16 @@ button {
   background-color: white;
   border: none;
   color: white;
-  padding: 10px 8px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-  transition-duration: 0.2s;
   cursor: pointer;
   border: 2px solid var(--safe-color);
   color: black;
   outline: none;
+  user-select: none;
+  transition: color 0.2s, background-color 0.2s;
 }
 button:hover {
   background-color: var(--safe-color);
@@ -40,5 +40,11 @@ button.danger {
 }
 button.danger:hover {
   background-color: var(--danger-color);
+}
+button {
+  padding: 10px 8px;
+}
+button:active {
+  padding: 10px 7px 10px 9px;
 }
 </style>;

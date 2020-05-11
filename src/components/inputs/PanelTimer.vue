@@ -74,6 +74,7 @@ export default {
     start() {
       this.valueAtLastStart = this.value;
       this.lastStartDate = Date.now();
+      this.$emit('input', this.value + 1);
       this.setupNextTick(this.value);
       this.stopped = false;
     },

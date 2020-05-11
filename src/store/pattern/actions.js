@@ -6,9 +6,11 @@ export default {
   },
   updatePointColor({ commit, getters }, point) {
     commit('updatePoint', { ...point, color: getters.settings.color });
+    commit('setDirty', true);
   },
   updatePattern({ commit }, pattern) {
     commit('setPattern', pattern);
+    commit('setDirty', true);
   },
   fillPattern({ dispatch, getters }) {
     const pattern = PatternHelper.createFilledPattern(getters.dimensions, getters.settings.color);

@@ -9,16 +9,29 @@
 
     <div class="buttons">
       <PanelButton
-        class="save-button"
-        :danger="isOverwrite"
-        @click="save"
+        v-if="dirty"
+        :danger="patternExists"
+        @click="savePattern"
       >
-        {{ isOverwrite ? 'Overwrite' : 'Save' }}
+        Save
+      </PanelButton>
+
+      <PanelButton
+        v-if="patternExists && dirty"
+        danger
+        @click="loadPattern(form.name)"
+      >
+        Reload
+      </PanelButton>
+
+      <PanelButton
+        @click="exportSavedPattern(form.name)"
+      >
+        Backup
       </PanelButton>
 
       <PanelButton
         danger
-        class="reset-button"
         @click="reinitialise"
       >
         Reset
@@ -44,10 +57,11 @@ export default {
   }),
   computed: {
     ...mapGetters([
+      'dirty',
       'patternDetails',
       'savedPatterns',
     ]),
-    isOverwrite() {
+    patternExists() {
       return Boolean(this.savedPatterns.find((x) => x.name === this.patternDetails.name));
     },
   },
@@ -62,14 +76,11 @@ export default {
   methods: {
     ...mapActions([
       'savePattern',
+      'loadPattern',
       'exportSavedPattern',
       'reinitialise',
       'updatePatternDetails',
     ]),
-    save() {
-      this.savePattern();
-      this.exportSavedPattern(this.form.name);
-    },
   },
 };
 </script>
@@ -85,13 +96,7 @@ export default {
   display: flex;
   justify-content: center;
 }
-.buttons > :first-child {
+.buttons > :not(:last-child) {
   margin-right: 5px;
-}
-.save-button {
-  width: 120px;
-}
-.reset-button {
-  width: 80px;
 }
 </style>
