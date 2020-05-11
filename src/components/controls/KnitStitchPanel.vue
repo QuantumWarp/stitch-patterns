@@ -25,6 +25,7 @@
       <div
         v-for="(stitch, index) in currentRow"
         :key="Object.values(stitch).concat([index]).join('-')"
+        ref="stitchEntries"
         :class="stitchClass(stitch)"
         class="stitch-entry"
         @click="selectStitch(stitch)"
@@ -79,22 +80,30 @@ export default {
   methods: {
     ...mapActions(['selectStitch']),
     keyDownHandler(event) {
-      switch (event.keyCode) {
-        case 39: this.nextRow(); break;
-        case 37: this.previousRow(); break;
-        case 40: this.nextStitch(); break;
-        case 38: this.previousStitch(); break;
-        default: break;
+      if (event.ctrlKey) {
+        switch (event.keyCode) {
+          case 39: this.nextRow(); break;
+          case 37: this.previousRow(); break;
+          default: break;
+        }
+      } else {
+        switch (event.keyCode) {
+          case 40: this.nextStitch(); break;
+          case 38: this.previousStitch(); break;
+          default: break;
+        }
       }
     },
     nextRow() {
       if (this.selectedStitchInfo.isEndRow) return;
       this.selectStitch(this.knitPattern[this.selectedStitchInfo.rowIndex + 1][0]);
+      this.scrollStitchIntoView();
     },
     previousRow() {
       if (this.selectedStitchInfo.isStartRow) return;
       const previousRow = this.knitPattern[this.selectedStitchInfo.rowIndex - 1];
       this.selectStitch(previousRow[previousRow.length - 1]);
+      this.scrollStitchIntoView();
     },
     nextStitch() {
       if (this.selectedStitchInfo.isEndStitch && this.selectedStitchInfo.isEndRow) return;
@@ -103,6 +112,7 @@ export default {
       } else {
         this.selectStitch(this.selectedStitchInfo.row[this.selectedStitchInfo.stitchIndex + 1]);
       }
+      this.scrollStitchIntoView();
     },
     previousStitch() {
       if (this.selectedStitchInfo.isStartStitch && this.selectedStitchInfo.isStartRow) return;
@@ -112,6 +122,7 @@ export default {
       } else {
         this.selectStitch(this.selectedStitchInfo.row[this.selectedStitchInfo.stitchIndex - 1]);
       }
+      this.scrollStitchIntoView();
     },
     stitchClass(stitch) {
       return {
@@ -120,6 +131,14 @@ export default {
           || (this.currentRowIndex === this.selectedStitchInfo.rowIndex
             && this.selectedStitchInfo.row.indexOf(stitch) < this.selectedStitchInfo.stitchIndex),
       };
+    },
+    scrollStitchIntoView() {
+      this.$nextTick(() => {
+        const stitchEl = this.$refs.stitchEntries.find((x) => x.classList.contains('selected'));
+        if (stitchEl) {
+          stitchEl.scrollIntoView({ block: 'center' });
+        }
+      });
     },
   },
 };
@@ -178,6 +197,7 @@ export default {
 .stitch-entry {
   height: 18px;
   padding: 10px 20px;
+  font-size: 22px;
   display: flex;
   align-items: center;
   user-select: none;
