@@ -4,15 +4,9 @@ export default {
   knitSettings(state) { return state.knitSettings; },
   time(state) { return state.time; },
   trackedRowCount(state, getters) {
-    if (getters.time === 0) return 0;
-    const startRow = getters.knitPattern.find(
-      (row) => Boolean(row.find(
-        (stitch) => stitch === state.startStitch,
-      )),
-    );
-    const startRowIndex = getters.knitPattern.indexOf(startRow);
-    const difference = getters.rowIndex - startRowIndex;
-    return difference >= 0 ? difference : 0;
+    if (getters.time === 0) return 1;
+    const difference = getters.selectedStitchInfo.rowIndex - getters.startStitchInfo.rowIndex;
+    return difference >= 0 ? difference + 1 : 1;
   },
   knitPattern(state, getters) {
     return PatternHelper.applyReducePatternSettings(
@@ -24,19 +18,30 @@ export default {
     return PatternHelper.reducePattern(getters.pattern);
   },
 
-  // Selected stitch
-  selectedStitch(state) { return state.selectedStitch; },
-  selectedRow(state, getters) {
-    return getters.knitPattern.find(
-      (row) => Boolean(row.find(
-        (stitch) => stitch === getters.selectedStitch,
-      )),
-    );
+  startStitch(state) { return state.startStitch; },
+  startStitchInfo(state, getters) {
+    return PatternHelper.createStitchInfo(getters.knitPattern, getters.startStitch);
   },
-  stitchIndex(state, getters) { return getters.selectedRow.indexOf(getters.selectedStitch); },
-  isStartStitch(state, getters) { return getters.stitchIndex === 0; },
-  isEndStitch(state, getters) { return getters.stitchIndex === getters.selectedRow.length - 1; },
-  rowIndex(state, getters) { return getters.knitPattern.indexOf(getters.selectedRow); },
-  isStartRow(state, getters) { return getters.rowIndex === 0; },
-  isEndRow(state, getters) { return getters.rowIndex === getters.knitPattern.length - 1; },
+
+  selectedStitch(state, getters) {
+    return state.selectedStitch || getters.knitPattern[0][0];
+  },
+  selectedStitchInfo(state, getters) {
+    return PatternHelper.createStitchInfo(getters.knitPattern, getters.selectedStitch);
+  },
+
+  knitData(state, getters) {
+    return {
+      selectedStitch: {
+        rowIndex: getters.selectedStitchInfo.rowIndex,
+        stitchIndex: getters.selectedStitchInfo.stitchIndex,
+      },
+      startStitch: getters.time === 0 ? null : {
+        rowIndex: getters.startStitchInfo.rowIndex,
+        stitchIndex: getters.startStitchInfo.stitchIndex,
+      },
+      time: getters.time,
+      settings: getters.knitSettings,
+    };
+  },
 };

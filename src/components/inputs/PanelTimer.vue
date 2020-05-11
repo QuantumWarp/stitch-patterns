@@ -47,28 +47,22 @@ export default {
       seconds: '00',
     },
   }),
-  computed: {
-    daysString() {
-      switch (this.breakdown.days) {
-        case 0: return '';
-        case 1: return '1 Day';
-        default: return `${this.breakdown.days} Days`;
-      }
-    },
-  },
   watch: {
-    value() {
-      let time = this.value;
-      this.breakdown.days = Math.floor(time / 86400000);
-      time %= 86400000;
-      const hours = Math.floor(time / 3600000);
-      this.breakdown.hours = hours < 10 ? `0${hours}` : hours;
-      time %= 3600000;
-      const minutes = Math.floor(time / 60000);
-      this.breakdown.minutes = minutes < 10 ? `0${minutes}` : minutes;
-      time %= 60000;
-      const seconds = Math.floor(time / 1000);
-      this.breakdown.seconds = seconds < 10 ? `0${seconds}` : seconds;
+    value: {
+      immediate: true,
+      handler() {
+        let time = this.value;
+        this.breakdown.days = Math.floor(time / 86400000);
+        time %= 86400000;
+        const hours = Math.floor(time / 3600000);
+        this.breakdown.hours = hours < 10 ? `0${hours}` : hours;
+        time %= 3600000;
+        const minutes = Math.floor(time / 60000);
+        this.breakdown.minutes = minutes < 10 ? `0${minutes}` : minutes;
+        time %= 60000;
+        const seconds = Math.floor(time / 1000);
+        this.breakdown.seconds = seconds < 10 ? `0${seconds}` : seconds;
+      },
     },
   },
   methods: {

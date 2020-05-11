@@ -19,7 +19,7 @@
     </div>
 
     <div
-      :class="{ completed: currentRowIndex < rowIndex }"
+      :class="{ completed: currentRowIndex < selectedStitchInfo.rowIndex }"
       class="knit-content"
     >
       <div
@@ -58,14 +58,8 @@ export default {
   computed: {
     ...mapGetters([
       'knitPattern',
-      'selectedRow',
       'selectedStitch',
-      'stitchIndex',
-      'isStartStitch',
-      'isEndStitch',
-      'rowIndex',
-      'isStartRow',
-      'isEndRow',
+      'selectedStitchInfo',
     ]),
     currentRow() {
       return this.knitPattern[this.currentRowIndex];
@@ -73,7 +67,7 @@ export default {
   },
   watch: {
     selectedStitch() {
-      this.currentRowIndex = this.rowIndex;
+      this.currentRowIndex = this.selectedStitchInfo.rowIndex;
     },
   },
   created() {
@@ -94,37 +88,37 @@ export default {
       }
     },
     nextRow() {
-      if (this.isEndRow) return;
-      this.selectStitch(this.knitPattern[this.rowIndex + 1][0]);
+      if (this.selectedStitchInfo.isEndRow) return;
+      this.selectStitch(this.knitPattern[this.selectedStitchInfo.rowIndex + 1][0]);
     },
     previousRow() {
-      if (this.isStartRow) return;
-      const previousRow = this.knitPattern[this.rowIndex - 1];
+      if (this.selectedStitchInfo.isStartRow) return;
+      const previousRow = this.knitPattern[this.selectedStitchInfo.rowIndex - 1];
       this.selectStitch(previousRow[previousRow.length - 1]);
     },
     nextStitch() {
-      if (this.isEndStitch && this.isEndRow) return;
-      if (this.isEndStitch) {
-        this.selectStitch(this.knitPattern[this.rowIndex + 1][0]);
+      if (this.selectedStitchInfo.isEndStitch && this.selectedStitchInfo.isEndRow) return;
+      if (this.selectedStitchInfo.isEndStitch) {
+        this.selectStitch(this.knitPattern[this.selectedStitchInfo.rowIndex + 1][0]);
       } else {
-        this.selectStitch(this.selectedRow[this.stitchIndex + 1]);
+        this.selectStitch(this.selectedStitchInfo.row[this.selectedStitchInfo.stitchIndex + 1]);
       }
     },
     previousStitch() {
-      if (this.isStartStitch && this.isStartRow) return;
-      if (this.isStartStitch) {
-        const previousRow = this.knitPattern[this.rowIndex - 1];
+      if (this.selectedStitchInfo.isStartStitch && this.selectedStitchInfo.isStartRow) return;
+      if (this.selectedStitchInfo.isStartStitch) {
+        const previousRow = this.knitPattern[this.selectedStitchInfo.rowIndex - 1];
         this.selectStitch(previousRow[previousRow.length - 1]);
       } else {
-        this.selectStitch(this.selectedRow[this.stitchIndex - 1]);
+        this.selectStitch(this.selectedStitchInfo.row[this.selectedStitchInfo.stitchIndex - 1]);
       }
     },
     stitchClass(stitch) {
       return {
         selected: this.selectedStitch === stitch,
-        complete: this.currentRowIndex < this.rowIndex
-          || (this.currentRowIndex === this.rowIndex
-            && this.selectedRow.indexOf(stitch) < this.stitchIndex),
+        complete: this.currentRowIndex < this.selectedStitchInfo.rowIndex
+          || (this.currentRowIndex === this.selectedStitchInfo.rowIndex
+            && this.selectedStitchInfo.row.indexOf(stitch) < this.selectedStitchInfo.stitchIndex),
       };
     },
   },

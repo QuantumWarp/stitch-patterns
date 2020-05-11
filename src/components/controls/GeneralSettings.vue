@@ -2,19 +2,19 @@
   <div class="general-settings">
     <PanelCheckbox
       label="Mirror X"
-      :value="form.mirrorX"
+      :value="settings.mirrorX"
       @input="updateSettings({ mirrorX: $event })"
     />
 
     <PanelCheckbox
       label="Mirror Y"
-      :value="form.mirrorY"
+      :value="settings.mirrorY"
       @input="updateSettings({ mirrorY: $event })"
     />
 
     <PanelCheckbox
       label="Rotate"
-      :value="form.rotate"
+      :value="settings.rotate"
       @input="updateSettings({ rotate: $event })"
     />
   </div>
@@ -28,23 +28,8 @@ export default {
   components: {
     PanelCheckbox,
   },
-  data: () => ({
-    form: {
-      mirrorX: false,
-      mirrorY: false,
-      rotate: false,
-    },
-  }),
   computed: {
     ...mapGetters(['settings']),
-  },
-  watch: {
-    settings: {
-      immediate: true,
-      handler(val) {
-        this.form = { ...val };
-      },
-    },
   },
   methods: {
     ...mapActions(['updateSettings']),

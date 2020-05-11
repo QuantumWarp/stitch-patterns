@@ -62,12 +62,13 @@ export default {
   methods: {
     ...mapActions([
       'savePattern',
+      'exportSavedPattern',
       'reinitialise',
       'updatePatternDetails',
     ]),
     save() {
       this.savePattern();
-      this.downloadPattern(this.form.name);
+      this.exportSavedPattern(this.form.name);
     },
   },
 };

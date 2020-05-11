@@ -15,10 +15,11 @@
       </PanelButton>
 
       <input
+        v-if="runImport"
         ref="importInput"
         style="display: none;"
         type="file"
-        @change="importPattern"
+        @change="runImport"
       >
     </div>
 
@@ -37,12 +38,12 @@
         >
           <DownloadIcon
             title="Export"
-            @click="downloadPattern(pattern.name)"
+            @click="exportSavedPattern(pattern.name)"
           />
 
           <FontDownloadIcon
             title="Export Knit"
-            @click="exportToKnit(pattern.name)"
+            @click="exportSavedKnitPattern(pattern.name)"
           />
 
           <DeleteIcon
@@ -62,7 +63,6 @@ import DeleteIcon from 'vue-material-design-icons/Delete.vue';
 import DownloadIcon from 'vue-material-design-icons/Download.vue';
 import FontDownloadIcon from 'vue-material-design-icons/FountainPen.vue';
 import PanelButton from '../inputs/PanelButton.vue';
-import FileHelper from '../../helpers/file-helper';
 
 export default {
   components: {
@@ -71,6 +71,9 @@ export default {
     DownloadIcon,
     FontDownloadIcon,
   },
+  data: () => ({
+    uploadReady: true,
+  }),
   computed: {
     ...mapGetters(['savedPatterns']),
   },
@@ -81,12 +84,16 @@ export default {
     ...mapActions([
       'loadIndex',
       'loadPattern',
-      'downloadPattern',
       'importPattern',
       'deletePattern',
       'updateSettings',
+      'exportSavedKnitPattern',
     ]),
-    exportToKnit() { FileHelper.exportToKnit(this.name, this.pattern); },
+    async runImport(e) {
+      await this.importPattern(e);
+      this.$refs.importInput.type = 'text';
+      this.$refs.importInput.type = 'file';
+    },
   },
 };
 </script>

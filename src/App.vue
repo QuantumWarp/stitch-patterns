@@ -11,6 +11,28 @@ export default {
   components: {
     PatternEditor,
   },
+  created() {
+    const mutationTypes = [
+      'setTime',
+      'setStartStitch',
+      'setKnitSettings',
+      'setSelectedStitch',
+      'setPatternDetails',
+      'setPattern',
+      'updatePoint',
+      'setOpenPanels',
+      'setSettings',
+    ];
+    let saveSessionTimeout;
+    this.$store.subscribe((mutation) => {
+      if (mutationTypes.includes(mutation.type)) {
+        clearTimeout(saveSessionTimeout);
+        saveSessionTimeout = setTimeout(() => {
+          this.$store.dispatch('saveSession');
+        }, 500);
+      }
+    });
+  },
 };
 </script>
 

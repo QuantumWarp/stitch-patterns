@@ -38,7 +38,7 @@
     </div>
 
     <div class="knit-buttons">
-      <PanelButton>
+      <PanelButton @click="exportKnitPattern()">
         Export
       </PanelButton>
 
@@ -68,10 +68,17 @@ export default {
     ...mapGetters([
       'time',
       'knitSettings',
+      'pattern',
+      'knitPattern',
       'trackedRowCount',
     ]),
-    stitches() {
-      return this.knitPattern[this.selectedRow];
+  },
+  watch: {
+    pattern() {
+      this.resetKnitSession();
+    },
+    knitPattern() {
+      this.resetKnitSession({ resetTime: false });
     },
   },
   methods: {
@@ -79,6 +86,8 @@ export default {
       'resetKnitSession',
       'updateKnitSettings',
       'updateTime',
+      'exportKnitPattern',
+      'resetKnitSession',
     ]),
   },
 };

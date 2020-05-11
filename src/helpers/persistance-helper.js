@@ -1,18 +1,27 @@
 import PatternHelper from './pattern-helper';
 
 class PersistanceHelper {
-  static createSessionData(details, sortedPattern) {
-    return {
-      details,
-      pattern: PersistanceHelper.compressPattern(sortedPattern),
-    };
+  static colorString(color) {
+    switch (color) {
+      case '#ffffff': return 'White';
+      case '#000000': return 'Black';
+      default: return color;
+    }
   }
 
-  static createIndexInfo(details) {
-    return {
-      ...details,
-      saveDate: new Date(),
-    };
+  static createKnitString(name, reducedPatternWithSettings) {
+    let text = `-------- ${name} --------\r\n\r\n`;
+
+    reducedPatternWithSettings.forEach((row, index) => {
+      const isEven = (index + 1) % 2 === 0;
+      text += `-------- Row ${index + 1} --------${(isEven) ? ' (Even)' : ''}\r\n`;
+      row.forEach((entry) => {
+        text += `Knit ${entry.count}: ${this.colorString(entry.color)}\r\n`;
+      });
+      text += '\r\n';
+    });
+
+    return text;
   }
 
   static compressPattern(sortedPattern) {

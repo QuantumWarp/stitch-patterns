@@ -1,14 +1,6 @@
 export default {
-  updatePanelState({ commit, getters }, { panel, open }) {
-    const panelOpen = getters.openPanels.includes(panel);
-    if (open) {
-      commit('setOpenPanels', [panel]);
-      return;
-    }
-    if (panelOpen === open) return;
-    const newPanels = open
-      ? [...getters.openPanels, panel]
-      : getters.openPanels.filter((x) => x !== panel);
+  updatePanelState({ commit }, { panel, open }) {
+    const newPanels = open ? [panel] : [];
     commit('setOpenPanels', newPanels);
   },
   resetSettings({ commit }) {

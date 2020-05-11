@@ -1,5 +1,8 @@
 <template>
-  <div class="grid-pattern">
+  <div
+    :class="{ readonly: openPanels.includes('knitting') }"
+    class="grid-pattern"
+  >
     <div
       class="render-area"
       :style="gridStyle"
@@ -30,6 +33,7 @@ export default {
       'bounds',
       'dimensions',
       'settings',
+      'openPanels',
     ]),
     gridStyle() {
       return {
@@ -85,9 +89,17 @@ export default {
 <style scoped>
 .grid-pattern {
   position: relative;
+  width: 100%;
+  height: 100%;
+}
+.grid-pattern.readonly {
+  cursor: not-allowed;
 }
 .render-area {
   position: absolute;
+}
+.grid-pattern.readonly > .render-area {
+  pointer-events: none;
 }
 .grid-square {
   position: absolute;

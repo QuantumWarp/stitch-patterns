@@ -26,9 +26,35 @@ class PatternHelper {
       }
       colorDict[point.color] += 1;
     });
-    const orderedColors = Object.keys(colorDict)
+    let orderedColors = Object.keys(colorDict)
       .sort((a, b) => (colorDict[a] < colorDict[b] ? 1 : -1));
+
+    if (orderedColors.length === 1) {
+      const newColor = orderedColors[0] === '#ffffff' ? '#000000' : '#ffffff';
+      orderedColors = [newColor, ...orderedColors];
+    }
+
     return orderedColors;
+  }
+
+  static createStitchInfo(knitPattern, targetStitch) {
+    const selectedRow = knitPattern.find(
+      (row) => Boolean(row.find(
+        (stitch) => stitch === targetStitch,
+      )),
+    );
+    if (!selectedRow) return {};
+    const stitchIndex = selectedRow.indexOf(targetStitch);
+    const rowIndex = knitPattern.indexOf(selectedRow);
+    return {
+      row: selectedRow,
+      stitchIndex,
+      isStartStitch: stitchIndex === 0,
+      isEndStitch: stitchIndex === selectedRow.length - 1,
+      rowIndex,
+      isStartRow: rowIndex === 0,
+      isEndRow: rowIndex === knitPattern.length - 1,
+    };
   }
 
   static applyReducePatternSettings(reducedPattern, {

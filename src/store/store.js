@@ -15,6 +15,7 @@ const actions = {
     dispatch('resetSettings');
     dispatch('updatePatternDetails', { name: 'New Pattern' });
     dispatch('updatePattern', pattern);
+    dispatch('updatePanelState', { panel: 'color', open: true });
   },
 };
 

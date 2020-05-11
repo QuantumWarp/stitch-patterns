@@ -36,8 +36,7 @@ label {
   user-select: none;
   cursor: pointer;
 }
-input
-{
+input {
   margin: 12px;
   transform: scale(2);
   cursor: pointer;

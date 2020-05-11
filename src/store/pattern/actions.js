@@ -1,17 +1,14 @@
 import PatternHelper from '../../helpers/pattern-helper';
 
 export default {
-  updatePatternDetails({ commit, dispatch, state }, details) {
+  updatePatternDetails({ commit, state }, details) {
     commit('setPatternDetails', { ...state.patternDetails, ...details });
-    dispatch('saveSessionDebounce');
   },
-  updatePointColor({ commit, dispatch, getters }, point) {
+  updatePointColor({ commit, getters }, point) {
     commit('updatePoint', { ...point, color: getters.settings.color });
-    dispatch('saveSessionDebounce');
   },
-  updatePattern({ commit, dispatch }, pattern) {
+  updatePattern({ commit }, pattern) {
     commit('setPattern', pattern);
-    dispatch('saveSessionDebounce');
   },
   fillPattern({ dispatch, getters }) {
     const pattern = PatternHelper.createFilledPattern(getters.dimensions, getters.settings.color);
@@ -19,9 +16,9 @@ export default {
   },
   adjustDimensions({ dispatch, getters }, dimensions) {
     let newHeight = dimensions.height > 80 ? 80 : dimensions.height;
-    newHeight = dimensions.height < 1 ? 30 : dimensions.height;
+    newHeight = newHeight < 1 ? 30 : newHeight;
     let newWidth = dimensions.width > 80 ? 80 : dimensions.width;
-    newWidth = dimensions.width < 1 ? 30 : dimensions.width;
+    newWidth = newWidth < 1 ? 30 : newWidth;
 
     const heightDiff = getters.dimensions.height - newHeight;
     const widthDiff = getters.dimensions.width - newWidth;
@@ -42,6 +39,7 @@ export default {
 
       switch (side) {
         case 'left':
+          if (getters.dimensions.width >= 80) return;
           additions.length = getters.dimensions.height;
           additions.fill(0);
           additions = additions.map((val, index) => ({
@@ -50,6 +48,7 @@ export default {
           }));
           break;
         case 'right':
+          if (getters.dimensions.width >= 80) return;
           additions.length = getters.dimensions.height;
           additions.fill(0);
           additions = additions.map((val, index) => ({
@@ -58,6 +57,7 @@ export default {
           }));
           break;
         case 'top':
+          if (getters.dimensions.height >= 80) return;
           additions.length = getters.dimensions.width;
           additions.fill(0);
           additions = additions.map((val, index) => ({
@@ -66,6 +66,7 @@ export default {
           }));
           break;
         case 'bottom':
+          if (getters.dimensions.height >= 80) return;
           additions.length = getters.dimensions.width;
           additions.fill(0);
           additions = additions.map((val, index) => ({
@@ -84,15 +85,19 @@ export default {
     } else if (op === 'remove') {
       switch (side) {
         case 'left':
+          if (getters.dimensions.width <= 1) return;
           newPattern = getters.pattern.filter((point) => point.x !== getters.bounds.xMin);
           break;
         case 'right':
+          if (getters.dimensions.width <= 1) return;
           newPattern = getters.pattern.filter((point) => point.x !== getters.bounds.xMax);
           break;
         case 'top':
+          if (getters.dimensions.height <= 1) return;
           newPattern = getters.pattern.filter((point) => point.y !== getters.bounds.yMin);
           break;
         case 'bottom':
+          if (getters.dimensions.height <= 1) return;
           newPattern = getters.pattern.filter((point) => point.y !== getters.bounds.yMax);
           break;
         default:
