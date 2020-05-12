@@ -57,9 +57,10 @@ export default {
     selectedRowStyle() {
       const index = this.knitSettings.fromTop
         ? this.selectedStitchInfo.rowIndex
-        : this.dimensions.height - this.selectedStitchInfo.rowIndex - 1;
+        : this.dimensions.height - this.selectedStitchInfo.rowIndex + this.bounds.yMin - 1;
       return {
         top: `${this.squareDimensions.height * index}px`,
+        left: `${this.squareDimensions.width * this.bounds.xMin}px`,
         height: `${this.squareDimensions.height + 1}px`,
         width: `${this.squareDimensions.width * this.dimensions.width + 2}px`,
       };
