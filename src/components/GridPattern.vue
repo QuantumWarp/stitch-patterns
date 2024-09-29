@@ -26,23 +26,39 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { storeToRefs } from 'pinia';
+import { usePatternStore } from '@/store/pattern/state';
+import { useSettingsStore } from '@/store/settings/state';
+import { useKnittingStore } from '@/store/knitting/state';
 
 export default {
+  setup() {
+    const patternStore = usePatternStore();
+    const { pattern, bounds, dimensions } = storeToRefs(patternStore);
+    const { updatePointColor } = patternStore;
+
+    const settingsStore = useSettingsStore();
+    const { settings, openPanels } = storeToRefs(settingsStore);
+
+    const knittingStore = useKnittingStore();
+    const { knitSettings, selectedStitchInfo } = storeToRefs(knittingStore);
+
+    return {
+      pattern,
+      bounds,
+      dimensions,
+      settings,
+      openPanels,
+      knitSettings,
+      selectedStitchInfo,
+      updatePointColor,
+    };
+  },
   data: () => ({
     mouseDown: false,
     squareDimensions: { width: 25, height: 20 },
   }),
   computed: {
-    ...mapGetters([
-      'pattern',
-      'bounds',
-      'dimensions',
-      'settings',
-      'openPanels',
-      'knitSettings',
-      'selectedStitchInfo',
-    ]),
     gridStyle() {
       return {
         top: `${this.squareDimensions.height * -this.bounds.yMin}px`,
@@ -70,7 +86,6 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['updatePointColor']),
     getPointStyle(point) {
       return {
         backgroundColor: point.color,
@@ -114,20 +129,25 @@ export default {
   width: 100%;
   height: 100%;
 }
+
 .grid-pattern.readonly {
   cursor: not-allowed;
 }
+
 .render-area {
   position: absolute;
 }
-.grid-pattern.readonly > .render-area {
+
+.grid-pattern.readonly>.render-area {
   pointer-events: none;
 }
+
 .grid-square {
   position: absolute;
   border: 1px solid grey;
   user-select: none;
 }
+
 .selected-row-overlay {
   position: absolute;
   z-index: 1;

@@ -1,47 +1,46 @@
 import PatternHelper from '../../helpers/pattern-helper';
+import { usePatternStore } from '../pattern/state.js';
 
 export default {
-  knitSettings(state) { return state.knitSettings; },
-  time(state) { return state.time; },
-  trackedRowCount(state, getters) {
-    if (getters.time === 0) return 1;
-    const difference = getters.selectedStitchInfo.rowIndex - getters.startStitchInfo.rowIndex;
+  trackedRowCount() {
+    if (this.time === 0) return 1;
+    const difference = this.selectedStitchInfo.rowIndex - this.startStitchInfo.rowIndex;
     return difference >= 0 ? difference + 1 : 1;
   },
-  knitPattern(state, getters) {
+  knitPattern() {
     return PatternHelper.applyReducePatternSettings(
-      getters.defaultKnitPattern,
-      getters.knitSettings,
+      this.defaultKnitPattern,
+      this.knitSettings,
     );
   },
-  defaultKnitPattern(state, getters) {
-    return PatternHelper.reducePattern(getters.pattern);
+  defaultKnitPattern() {
+    const patternStore = usePatternStore();
+    return PatternHelper.reducePattern(patternStore.pattern);
   },
 
-  startStitch(state) { return state.startStitch; },
-  startStitchInfo(state, getters) {
-    return PatternHelper.createStitchInfo(getters.knitPattern, getters.startStitch);
+  startStitchInfo() {
+    return PatternHelper.createStitchInfo(this.knitPattern, this.startStitch);
   },
 
-  selectedStitch(state, getters) {
-    return state.selectedStitch || getters.knitPattern[0][0];
+  selectedStitch() {
+    return this.selectedStitchState || this.knitPattern[0][0];
   },
-  selectedStitchInfo(state, getters) {
-    return PatternHelper.createStitchInfo(getters.knitPattern, getters.selectedStitch);
+  selectedStitchInfo() {
+    return PatternHelper.createStitchInfo(this.knitPattern, this.selectedStitch);
   },
 
-  knitData(state, getters) {
+  knitData() {
     return {
       selectedStitch: {
-        rowIndex: getters.selectedStitchInfo.rowIndex,
-        stitchIndex: getters.selectedStitchInfo.stitchIndex,
+        rowIndex: this.selectedStitchInfo.rowIndex,
+        stitchIndex: this.selectedStitchInfo.stitchIndex,
       },
-      startStitch: getters.time === 0 ? null : {
-        rowIndex: getters.startStitchInfo.rowIndex,
-        stitchIndex: getters.startStitchInfo.stitchIndex,
+      startStitch: this.time === 0 ? null : {
+        rowIndex: this.startStitchInfo.rowIndex,
+        stitchIndex: this.startStitchInfo.stitchIndex,
       },
-      time: getters.time,
-      settings: getters.knitSettings,
+      time: this.time,
+      settings: this.knitSettings,
     };
   },
 };

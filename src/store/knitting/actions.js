@@ -1,22 +1,22 @@
 export default {
-  updateTime({ commit, getters }, time) {
-    if (getters.time === 0) {
-      commit('setStartStitch', getters.selectedStitch);
+  updateTime(time) {
+    if (this.time === 0) {
+      this.startStitch = this.selectedStitch;
     }
-    commit('setTime', time);
+    this.time = time;
   },
-  updateKnitSettings({ commit, state }, settingsUpdate) {
-    commit('setKnitSettings', { ...state.knitSettings, ...settingsUpdate });
+  updateKnitSettings(settingsUpdate) {
+    this.knitSettings = { ...this.knitSettings, ...settingsUpdate };
   },
-  resetKnitSession({ commit, getters }, { resetTime } = { resetTime: true }) {
-    const firstStitch = getters.knitPattern[0][0];
-    commit('setStartStitch', firstStitch);
-    commit('setSelectedStitch', firstStitch);
+  resetKnitSession({ resetTime } = { resetTime: true }) {
+    const firstStitch = this.knitPattern[0][0];
+    this.startStitch = firstStitch;
+    this.selectedStitchState = firstStitch;
     if (resetTime) {
-      commit('setTime', 0);
+      this.time = 0;
     }
   },
-  selectStitch({ commit }, stitch) {
-    commit('setSelectedStitch', stitch);
+  selectStitch(stitch) {
+    this.selectedStitchState = stitch;
   },
 };

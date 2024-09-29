@@ -12,6 +12,7 @@ export default {
   props: {
     danger: { type: Boolean, default: false },
   },
+  emits: ['click'],
 };
 </script>
 

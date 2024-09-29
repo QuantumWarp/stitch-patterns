@@ -24,9 +24,7 @@
         Reload
       </PanelButton>
 
-      <PanelButton
-        @click="exportSavedPattern(form.name)"
-      >
+      <PanelButton @click="exportSavedPattern(form.name)">
         Backup
       </PanelButton>
 
@@ -41,7 +39,10 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { storeToRefs } from 'pinia';
+import { useRootStore } from '@/store/store';
+import { usePatternStore } from '@/store/pattern/state';
+import { usePersistanceStore } from '@/store/persistance/state';
 import PanelButton from '../inputs/PanelButton.vue';
 import PanelInput from '../inputs/PanelInput.vue';
 
@@ -50,17 +51,35 @@ export default {
     PanelButton,
     PanelInput,
   },
+  setup() {
+    const rootStore = useRootStore();
+    const { reinitialise } = rootStore;
+
+    const patternStore = usePatternStore();
+    const { dirty, patternDetails } = storeToRefs(patternStore);
+    const { updatePatternDetails } = patternStore;
+
+    const persistanceStore = usePersistanceStore();
+    const { savedPatterns } = storeToRefs(persistanceStore);
+    const { savePattern, loadPattern, exportSavedPattern } = persistanceStore;
+
+    return {
+      dirty,
+      patternDetails,
+      savedPatterns,
+      savePattern,
+      loadPattern,
+      exportSavedPattern,
+      reinitialise,
+      updatePatternDetails,
+    };
+  },
   data: () => ({
     form: {
       name: '',
     },
   }),
   computed: {
-    ...mapGetters([
-      'dirty',
-      'patternDetails',
-      'savedPatterns',
-    ]),
     patternExists() {
       return Boolean(this.savedPatterns.find((x) => x.name === this.patternDetails.name));
     },
@@ -73,15 +92,6 @@ export default {
       },
     },
   },
-  methods: {
-    ...mapActions([
-      'savePattern',
-      'loadPattern',
-      'exportSavedPattern',
-      'reinitialise',
-      'updatePatternDetails',
-    ]),
-  },
 };
 </script>
 
@@ -91,12 +101,14 @@ export default {
   display: flex;
   flex-direction: column;
 }
+
 .buttons {
   margin-top: 10px;
   display: flex;
   justify-content: center;
 }
-.buttons > :not(:last-child) {
+
+.buttons> :not(:last-child) {
   margin-right: 5px;
 }
 </style>

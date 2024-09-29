@@ -30,10 +30,12 @@
         :key="index + color"
         class="palette-box"
       >
-        <ArrowDownwardIcon
-          v-if="index === 0"
-          class="selected-pointer"
-        />
+        <div class="selected-pointer">
+          <font-awesome-icon
+            v-if="index === 0"
+            :icon="['fas', 'arrow-down']"
+          />
+        </div>
 
         <button
           :style="{ backgroundColor: color }"
@@ -45,20 +47,34 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import ArrowDownwardIcon from 'vue-material-design-icons/ArrowDown.vue';
+import { storeToRefs } from 'pinia';
+import { useSettingsStore } from '@/store/settings/state';
+import { usePatternStore } from '@/store/pattern/state';
+
 import PanelButton from '../inputs/PanelButton.vue';
 
 export default {
   components: {
     PanelButton,
-    ArrowDownwardIcon,
+  },
+  setup() {
+    const patternStore = usePatternStore();
+    const { fillPattern } = patternStore;
+
+    const settingsStore = useSettingsStore();
+    const { colorPalette } = storeToRefs(settingsStore);
+    const { updateSettings } = settingsStore;
+
+    return {
+      colorPalette,
+      updateSettings,
+      fillPattern,
+    };
   },
   data: () => ({
     pickerColor: '#000000',
   }),
   computed: {
-    ...mapGetters(['colorPalette']),
     colorPaletteTen() {
       const palette = this.colorPalette;
       while (palette.length < 10) {
@@ -66,12 +82,6 @@ export default {
       }
       return palette;
     },
-  },
-  methods: {
-    ...mapActions([
-      'updateSettings',
-      'fillPattern',
-    ]),
   },
 };
 </script>
@@ -84,31 +94,38 @@ export default {
   align-items: center;
   position: relative;
 }
+
 .palette {
   width: 100%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
+
 .options-div {
   position: relative;
   margin-bottom: 8px;
 }
+
 .options-div :first-child {
   margin-right: 6px;
 }
+
 .new-button {
   width: 120px;
 }
+
 .fill-button {
   width: 80px;
 }
+
 input {
   visibility: hidden;
   position: absolute;
   left: 0px;
   bottom: 0;
 }
+
 .palette-box {
   position: relative;
   min-width: 20%;
@@ -116,6 +133,7 @@ input {
   box-sizing: border-box;
   padding: 5px;
 }
+
 .palette button {
   width: 100%;
   height: 35px;
@@ -125,11 +143,12 @@ input {
   padding: 5px;
   cursor: pointer;
 }
+
 .selected-pointer {
   position: absolute;
   font-size: 40px;
   left: 50%;
-  top: -26px;
+  top: -100%;
   transform: translateX(-50%);
 }
 </style>

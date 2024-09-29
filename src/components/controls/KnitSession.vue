@@ -64,7 +64,11 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { storeToRefs } from 'pinia';
+import { useKnittingStore } from '@/store/knitting/state';
+import { usePatternStore } from '@/store/pattern/state';
+import { usePersistanceStore } from '@/store/persistance/state';
+
 import PanelButton from '../inputs/PanelButton.vue';
 import PanelCheckbox from '../inputs/PanelCheckbox.vue';
 import PanelTimer from '../inputs/PanelTimer.vue';
@@ -75,14 +79,28 @@ export default {
     PanelCheckbox,
     PanelTimer,
   },
-  computed: {
-    ...mapGetters([
-      'time',
-      'knitSettings',
-      'pattern',
-      'knitPattern',
-      'trackedRowCount',
-    ]),
+  setup() {
+    const knittingStore = useKnittingStore();
+    const { time, knitSettings, knitPattern, trackedRowCount } = storeToRefs(knittingStore);
+    const { resetKnitSession, updateKnitSettings, updateTime } = knittingStore;
+
+    const patternStore = usePatternStore();
+    const { pattern } = storeToRefs(patternStore);
+
+    const persistanceStore = usePersistanceStore();
+    const { exportKnitPattern } = persistanceStore;
+
+    return {
+      time,
+      knitSettings,
+      pattern,
+      knitPattern,
+      trackedRowCount,
+      resetKnitSession,
+      updateKnitSettings,
+      updateTime,
+      exportKnitPattern,
+    };
   },
   watch: {
     pattern() {
@@ -91,15 +109,6 @@ export default {
     knitPattern() {
       this.resetKnitSession({ resetTime: false });
     },
-  },
-  methods: {
-    ...mapActions([
-      'resetKnitSession',
-      'updateKnitSettings',
-      'updateTime',
-      'exportKnitPattern',
-      'resetKnitSession',
-    ]),
   },
 };
 </script>
@@ -111,30 +120,36 @@ export default {
   flex-direction: column;
   justify-content: space-between;
 }
+
 .knit-timer {
   padding: 10px;
   border: 2px solid grey;
   border-radius: 5px;
 }
+
 .row-count {
   font-size: 20px;
   font-weight: bold;
   text-align: center;
   margin-bottom: 5px;
 }
+
 .knit-options {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   padding-right: 20px;
 }
-.knit-options > * {
+
+.knit-options>* {
   margin-top: 5px;
 }
+
 .knit-buttons {
   display: flex;
 }
-.knit-buttons > :first-child {
+
+.knit-buttons> :first-child {
   margin-right: 5px;
 }
 </style>

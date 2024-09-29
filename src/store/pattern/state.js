@@ -1,18 +1,17 @@
+import { defineStore } from 'pinia';
 import actions from './actions';
 import getters from './getters';
-import mutations from './mutations';
 
-const state = {
+const state = () => ({
   dirty: false,
   patternDetails: {
     name: '',
   },
   pattern: [],
-};
+});
 
-export default {
+export const usePatternStore = defineStore('pattern', {
   actions,
   getters,
-  mutations,
   state,
-};
+});

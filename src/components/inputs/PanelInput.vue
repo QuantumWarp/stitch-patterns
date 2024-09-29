@@ -17,6 +17,7 @@ export default {
     type: { type: String, default: 'text' },
     label: { type: String, default: null },
   },
+  emits: ['input'],
 };
 </script>
 
@@ -47,6 +48,7 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 input[type=number] {
+  appearance: textfield;
   -moz-appearance: textfield;
 }
 </style>

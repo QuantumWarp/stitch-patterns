@@ -1,8 +1,7 @@
+import { defineStore } from 'pinia';
 import actions from './actions';
-import getters from './getters';
-import mutations from './mutations';
 
-const state = {
+const state = () => ({
   settings: {
     color: '#000000',
     rotate: false,
@@ -11,11 +10,9 @@ const state = {
   },
   colorPalette: [],
   openPanels: [],
-};
+});
 
-export default {
+export const useSettingsStore = defineStore('settings', {
   actions,
-  getters,
-  mutations,
   state,
-};
+});

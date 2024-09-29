@@ -1,25 +1,31 @@
 import PersistanceHelper from '../../helpers/persistance-helper';
+import { useSettingsStore } from '../settings/state.js';
+import { useKnittingStore } from '../knitting/state.js';
+import { usePatternStore } from '../pattern/state.js';
 
 export default {
-  savedPatterns(state) { return state.savedPatterns; },
-  patternIndexData(state, getters) {
+  patternIndexData() {
+    const patternStore = usePatternStore();
     return {
-      ...getters.patternDetails,
+      ...patternStore.patternDetails,
       saveDate: new Date(),
     };
   },
-  patternData(state, getters) {
+  patternData() {
+    const patternStore = usePatternStore();
     return {
-      details: getters.patternDetails,
-      pattern: PersistanceHelper.compressPattern(getters.sortedPattern),
+      details: patternStore.patternDetails,
+      pattern: PersistanceHelper.compressPattern(patternStore.sortedPattern),
     };
   },
-  sessionData(state, getters) {
+  sessionData() {
+    const settingsStore = useSettingsStore();
+    const knittingStore = useKnittingStore();
     return {
-      openPanels: getters.openPanels,
-      knitData: getters.knitData,
-      settings: getters.settings,
-      patternData: getters.patternData,
+      openPanels: settingsStore.openPanels,
+      knitData: knittingStore.knitData,
+      settings: settingsStore.settings,
+      patternData: this.patternData,
     };
   },
 };

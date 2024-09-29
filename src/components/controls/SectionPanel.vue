@@ -27,6 +27,7 @@ export default {
     name: { type: String, required: true },
     open: { type: Boolean, default: false },
   },
+  emits: ['update:open'],
   data: () => ({
     maxHeightOpen: '0',
   }),
@@ -40,6 +41,7 @@ export default {
 section {
   border-top: 2px solid grey;
 }
+
 .heading {
   display: flex;
   justify-content: center;
@@ -49,14 +51,17 @@ section {
   user-select: none;
   cursor: pointer;
 }
-.open > .heading {
+
+.open>.heading {
   font-weight: bold;
 }
+
 .container {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.2s;
 }
+
 .content {
   padding: 15px 20px;
 }

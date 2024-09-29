@@ -1,22 +1,28 @@
 export default {
-  updatePanelState({ commit }, { panel, open }) {
+  updatePanelState({ panel, open }) {
     const newPanels = open ? [panel] : [];
-    commit('setOpenPanels', newPanels);
+    this.openPanels = newPanels;
   },
-  resetSettings({ commit }) {
-    commit('setSettings', {
+  resetSettings() {
+    this.settings = {
       color: '#000000',
       rotate: false,
       mirrorX: false,
       mirrorY: false,
-    });
-    commit('resetColorPalette');
+    }
+    this.colorPalette = [
+      '#000000',
+      '#ffffff',
+    ];
   },
-  updateSettings({ commit, state }, settingsUpdate) {
+  updateSettings(settingsUpdate) {
     if (settingsUpdate.color) {
-      commit('addToColorPalette', [settingsUpdate.color]);
+      this.colorPalette = [settingsUpdate.color]
+        .concat(this.colorPalette)
+        .filter((val, index, self) => self.indexOf(val) === index)
+        .slice(0, 10);
     }
 
-    commit('setSettings', { ...state.settings, ...settingsUpdate });
+    this.settings = { ...this.settings, ...settingsUpdate };
   },
 };

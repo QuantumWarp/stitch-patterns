@@ -1,10 +1,17 @@
-import Vue from 'vue';
 import App from './App.vue';
-import store from './store/store';
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faDownload, faPen, faTrash, faArrowLeft, faArrowRight, faArrowDown } from '@fortawesome/free-solid-svg-icons';
 
-Vue.config.productionTip = false;
+library.add(faDownload, faPen, faTrash, faArrowLeft, faArrowRight, faArrowDown);
 
-new Vue({
-  store,
-  render: (h) => h(App),
-}).$mount('#app');
+const app = createApp(App);
+
+const pinia = createPinia();
+app.use(pinia);
+
+app.component('FontAwesomeIcon', FontAwesomeIcon);
+
+app.mount('#app');

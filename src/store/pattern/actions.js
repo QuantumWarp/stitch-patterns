@@ -1,39 +1,49 @@
+import { useSettingsStore } from '../settings/state';
 import PatternHelper from '../../helpers/pattern-helper';
 
 export default {
-  updatePatternDetails({ commit, state }, details) {
-    commit('setPatternDetails', { ...state.patternDetails, ...details });
+  updatePatternDetails(details) {
+    this.patternDetails = { ...this.patternDetails, ...details };
   },
-  updatePointColor({ commit, getters }, point) {
-    commit('updatePoint', { ...point, color: getters.settings.color });
-    commit('setDirty', true);
+  updatePointColor(point) {
+    const settingsStore = useSettingsStore();
+    this.updatePoint({ ...point, color: settingsStore.settings.color });
+    this.dirty = true;
   },
-  updatePattern({ commit }, pattern) {
-    commit('setPattern', pattern);
-    commit('setDirty', true);
+  updatePoint({ x, y, color }) {
+    const foundPoint = this.pattern.find(
+      (point) => point.x === x && point.y === y,
+    );
+    foundPoint.color = color;
   },
-  fillPattern({ dispatch, getters }) {
-    const pattern = PatternHelper.createFilledPattern(getters.dimensions, getters.settings.color);
-    dispatch('updatePattern', pattern);
+  updatePattern(pattern) {
+    this.pattern = pattern;
+    this.dirty = true;
   },
-  adjustDimensions({ dispatch, getters }, dimensions) {
+  fillPattern() {
+    const settingsStore = useSettingsStore();
+    const pattern = PatternHelper.createFilledPattern(this.dimensions, settingsStore.settings.color);
+    this.updatePattern(pattern);
+  },
+  adjustDimensions(dimensions) {
     let newHeight = dimensions.height > 80 ? 80 : dimensions.height;
     newHeight = newHeight < 1 ? 30 : newHeight;
     let newWidth = dimensions.width > 80 ? 80 : dimensions.width;
     newWidth = newWidth < 1 ? 30 : newWidth;
 
-    const heightDiff = getters.dimensions.height - newHeight;
-    const widthDiff = getters.dimensions.width - newWidth;
+    const heightDiff = this.dimensions.height - newHeight;
+    const widthDiff = this.dimensions.width - newWidth;
 
     for (let y = 0; y < Math.abs(heightDiff); y += 1) {
-      dispatch('incrementDimension', { side: 'bottom', op: heightDiff < 0 ? 'add' : 'remove' });
+      this.incrementDimension({ side: 'bottom', op: heightDiff < 0 ? 'add' : 'remove' });
     }
 
     for (let x = 0; x < Math.abs(widthDiff); x += 1) {
-      dispatch('incrementDimension', { side: 'right', op: widthDiff < 0 ? 'add' : 'remove' });
+      this.incrementDimension({ side: 'right', op: widthDiff < 0 ? 'add' : 'remove' });
     }
   },
-  incrementDimension({ dispatch, getters }, { side, op }) {
+  incrementDimension({ side, op }) {
+    const settingsStore = useSettingsStore();
     let newPattern;
 
     if (op === 'add') {
@@ -41,39 +51,39 @@ export default {
 
       switch (side) {
         case 'left':
-          if (getters.dimensions.width >= 80) return;
-          additions.length = getters.dimensions.height;
+          if (this.dimensions.width >= 80) return;
+          additions.length = this.dimensions.height;
           additions.fill(0);
           additions = additions.map((val, index) => ({
-            x: getters.bounds.xMin - 1,
-            y: getters.bounds.yMin + index,
+            x: this.bounds.xMin - 1,
+            y: this.bounds.yMin + index,
           }));
           break;
         case 'right':
-          if (getters.dimensions.width >= 80) return;
-          additions.length = getters.dimensions.height;
+          if (this.dimensions.width >= 80) return;
+          additions.length = this.dimensions.height;
           additions.fill(0);
           additions = additions.map((val, index) => ({
-            x: getters.bounds.xMax + 1,
-            y: getters.bounds.yMin + index,
+            x: this.bounds.xMax + 1,
+            y: this.bounds.yMin + index,
           }));
           break;
         case 'top':
-          if (getters.dimensions.height >= 80) return;
-          additions.length = getters.dimensions.width;
+          if (this.dimensions.height >= 80) return;
+          additions.length = this.dimensions.width;
           additions.fill(0);
           additions = additions.map((val, index) => ({
-            x: getters.bounds.xMin + index,
-            y: getters.bounds.yMin - 1,
+            x: this.bounds.xMin + index,
+            y: this.bounds.yMin - 1,
           }));
           break;
         case 'bottom':
-          if (getters.dimensions.height >= 80) return;
-          additions.length = getters.dimensions.width;
+          if (this.dimensions.height >= 80) return;
+          additions.length = this.dimensions.width;
           additions.fill(0);
           additions = additions.map((val, index) => ({
-            x: getters.bounds.xMin + index,
-            y: getters.bounds.yMax + 1,
+            x: this.bounds.xMin + index,
+            y: this.bounds.yMax + 1,
           }));
           break;
         default:
@@ -81,31 +91,31 @@ export default {
       }
       additions = additions.map((point) => ({
         ...point,
-        color: getters.settings.color,
+        color: settingsStore.settings.color,
       }));
-      newPattern = getters.pattern.concat(additions);
+      newPattern = this.pattern.concat(additions);
     } else if (op === 'remove') {
       switch (side) {
         case 'left':
-          if (getters.dimensions.width <= 1) return;
-          newPattern = getters.pattern.filter((point) => point.x !== getters.bounds.xMin);
+          if (this.dimensions.width <= 1) return;
+          newPattern = this.pattern.filter((point) => point.x !== this.bounds.xMin);
           break;
         case 'right':
-          if (getters.dimensions.width <= 1) return;
-          newPattern = getters.pattern.filter((point) => point.x !== getters.bounds.xMax);
+          if (this.dimensions.width <= 1) return;
+          newPattern = this.pattern.filter((point) => point.x !== this.bounds.xMax);
           break;
         case 'top':
-          if (getters.dimensions.height <= 1) return;
-          newPattern = getters.pattern.filter((point) => point.y !== getters.bounds.yMin);
+          if (this.dimensions.height <= 1) return;
+          newPattern = this.pattern.filter((point) => point.y !== this.bounds.yMin);
           break;
         case 'bottom':
-          if (getters.dimensions.height <= 1) return;
-          newPattern = getters.pattern.filter((point) => point.y !== getters.bounds.yMax);
+          if (this.dimensions.height <= 1) return;
+          newPattern = this.pattern.filter((point) => point.y !== this.bounds.yMax);
           break;
         default:
           throw new Error('Invalid side');
       }
     }
-    dispatch('updatePattern', newPattern);
+    this.updatePattern(newPattern);
   },
 };

@@ -31,7 +31,8 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { storeToRefs } from 'pinia';
+import { usePatternStore } from '@/store/pattern/state';
 import PanelButton from '../inputs/PanelButton.vue';
 import PanelInput from '../inputs/PanelInput.vue';
 
@@ -40,6 +41,16 @@ export default {
     PanelButton,
     PanelInput,
   },
+  setup() {
+    const patternStore = usePatternStore();
+    const { dimensions } = storeToRefs(patternStore);
+    const { adjustDimensions } = patternStore;
+
+    return {
+      dimensions,
+      adjustDimensions,
+    };
+  },
   data: () => ({
     form: {
       height: 30,
@@ -47,7 +58,6 @@ export default {
     },
   }),
   computed: {
-    ...mapGetters(['dimensions']),
     potentiallyDangerous() {
       return this.form.height < this.dimensions.height
         || this.form.width < this.dimensions.width;
@@ -62,9 +72,6 @@ export default {
       },
     },
   },
-  methods: {
-    ...mapActions(['adjustDimensions']),
-  },
 };
 </script>
 
@@ -74,17 +81,21 @@ export default {
   flex-direction: column;
   align-items: stretch;
 }
-.dimension-adjuster > *:not(:last-child) {
+
+.dimension-adjuster>*:not(:last-child) {
   margin-bottom: 10px;
 }
+
 .buttons {
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
-.buttons > * {
+
+.buttons>* {
   width: 40%;
 }
+
 .buttons :first-child {
   margin-right: 6px;
 }

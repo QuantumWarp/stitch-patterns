@@ -108,7 +108,7 @@ class PatternHelper {
   static groupBy(array, propFunc) {
     return array.reduce((r, a) => {
       const propVal = propFunc(a);
-      // eslint-disable-next-line no-param-reassign
+       
       r[propVal] = [...r[propVal] || [], a];
       return r;
     }, {});

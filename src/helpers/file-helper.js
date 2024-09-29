@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 class FileHelper {
   static async importRaw(e) {
     return new Promise((resolve) => {

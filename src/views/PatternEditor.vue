@@ -37,6 +37,7 @@ export default {
   flex-direction: row;
   align-items: stretch;
 }
+
 .side-panel {
   width: 400px;
   border-right: 1px solid grey;
@@ -44,11 +45,13 @@ export default {
   display: flex;
   flex-direction: column;
 }
+
 .main-panel {
   padding: 25px;
   flex: 1;
   overflow: scroll;
 }
+
 .app-header {
   display: flex;
   flex-direction: row;
@@ -59,17 +62,21 @@ export default {
   font-weight: bold;
   border-bottom: 2px solid grey;
 }
+
 .app-footer {
   display: flex;
   flex-direction: column;
   align-items: center;
   height: 30px;
 }
+
 .app-footer a {
   text-decoration: none;
 }
+
 img {
   height: 40px;
-  margin-right: 10px;;
+  margin-right: 10px;
+  ;
 }
 </style>

@@ -1,99 +1,112 @@
 import FileHelper from '../../helpers/file-helper';
 import PersistanceHelper from '../../helpers/persistance-helper';
 import PatternHelper from '../../helpers/pattern-helper';
+import { useRootStore } from '../store.js';
+import { useSettingsStore } from '../settings/state.js';
+import { useKnittingStore } from '../knitting/state.js';
+import { usePatternStore } from '../pattern/state.js';
 
 export default {
-  async importPattern({ dispatch }, e) {
+  async importPattern(e) {
     try {
       const patternDataString = await FileHelper.importRaw(e);
       const patternData = JSON.parse(patternDataString);
-      dispatch('initialisePatternData', patternData);
-      dispatch('savePattern');
+      this.initialisePatternData(patternData);
+      this.savePattern();
     } catch {
-      // eslint-disable-next-line no-console
+       
       console.warn('Import failed');
     }
   },
-  initialisePatternData({ commit, dispatch }, patternData) {
+  initialisePatternData(patternData) {
+    const patternStore = usePatternStore();
+    const settingsStore = useSettingsStore();
+
     const pattern = PersistanceHelper.decompressPattern(patternData.pattern);
     const palette = PatternHelper.countColorsForPalette(pattern);
-    commit('setPatternDetails', patternData.details);
-    commit('setPattern', pattern);
-    dispatch('resetSettings');
-    commit('setColorPalette', palette);
-    dispatch('updateSettings', { color: palette[0] });
-    commit('setDirty', false);
+    patternStore.patternDetails = patternData.details;
+    patternStore.pattern = pattern;
+    settingsStore.resetSettings();
+    settingsStore.colorPalette = palette;
+    settingsStore.updateSettings({ color: palette[0] });
+    patternStore.dirty = false;
   },
 
   // Overall persistance
-  loadIndex({ commit }) {
+  loadIndex() {
     let index = localStorage.getItem('index');
     index = index ? JSON.parse(index) : [];
-    commit('setSavedPatterns', index);
+    this.savedPatterns = index;
   },
-  savePattern({ commit, getters }) {
-    const updatedIndex = getters.savedPatterns
-      .filter((x) => x.name !== getters.patternIndexData.name)
-      .concat([getters.patternIndexData]);
-    localStorage.setItem(`pattern: ${getters.patternIndexData.name}`, JSON.stringify(getters.patternData));
+  savePattern() {
+    const patternStore = usePatternStore();
+    const updatedIndex = this.savedPatterns
+      .filter((x) => x.name !== this.patternIndexData.name)
+      .concat([this.patternIndexData]);
+    localStorage.setItem(`pattern: ${this.patternIndexData.name}`, JSON.stringify(this.patternData));
     localStorage.setItem('index', JSON.stringify(updatedIndex));
-    commit('setSavedPatterns', updatedIndex);
-    commit('setDirty', false);
+    this.savedPatterns = updatedIndex;
+    patternStore.dirty = false;
   },
-  loadPattern({ dispatch }, name) {
+  loadPattern(name) {
     const patternDataString = localStorage.getItem(`pattern: ${name}`);
     const patternData = JSON.parse(patternDataString);
-    dispatch('initialisePatternData', patternData);
+    this.initialisePatternData(patternData);
   },
-  deletePattern({ commit, getters }, name) {
-    const updatedIndex = getters.savedPatterns.filter((x) => x.name !== name);
+  deletePattern(name) {
+    const updatedIndex = this.savedPatterns.filter((x) => x.name !== name);
     localStorage.removeItem(`pattern: ${name}`);
     localStorage.setItem('index', JSON.stringify(updatedIndex));
-    commit('setSavedPatterns', updatedIndex);
+    this.savePatterns = updatedIndex;
   },
-  exportKnitPattern({ getters }) {
-    const { name } = getters.patternDetails;
-    const knitString = PersistanceHelper.createKnitString(name, getters.knitPattern);
+  exportKnitPattern() {
+    const knittingStore = useKnittingStore();
+    const { name } = this.patternDetails;
+    const knitString = PersistanceHelper.createKnitString(name, knittingStore.knitPattern);
     FileHelper.download(`${name}.txt`, knitString);
   },
-  exportSavedPattern({ getters }) {
-    const { name } = getters.patternDetails;
+  exportSavedPattern() {
+    const { name } = this.patternDetails;
     const patternDataString = localStorage.getItem(`pattern: ${name}`);
     FileHelper.download(`${name}.json`, patternDataString);
   },
-  exportSavedKnitPattern({ getters }, name) {
+  exportSavedKnitPattern(name) {
     const patternDataString = localStorage.getItem(`pattern: ${name}`);
     const patternData = JSON.parse(patternDataString);
     const pattern = PersistanceHelper.decompressPattern(patternData.pattern);
     const reducedPattern = PatternHelper.reducePattern(pattern);
     const reducedPatternWithSettings = PatternHelper.applyReducePatternSettings(
-      reducedPattern, getters.knitSettings,
+      reducedPattern, this.knitSettings,
     );
     const knitString = PersistanceHelper.createKnitString(name, reducedPatternWithSettings);
     FileHelper.download(`${name}.txt`, knitString);
   },
 
   // Session persistance
-  saveSession({ getters }) {
-    localStorage.setItem('session', JSON.stringify(getters.sessionData));
+  saveSession() {
+    localStorage.setItem('session', JSON.stringify(this.sessionData));
   },
-  loadSession({ commit, dispatch, getters }) {
+  loadSession() {
+    const rootStore = useRootStore();
+    const settingsStore = useSettingsStore();
+    const knittingStore = useKnittingStore();
+
     const sessionDataString = localStorage.getItem('session');
     if (!sessionDataString) {
-      dispatch('reinitialise');
+      rootStore.reinitialise();
       return;
     }
 
     const sessionData = JSON.parse(sessionDataString);
-    commit('setOpenPanels', sessionData.openPanels);
-    commit('setSettings', sessionData.settings);
-    dispatch('initialisePatternData', sessionData.patternData);
-    commit('setKnitSettings', sessionData.knitData.settings);
-    commit('setTime', sessionData.knitData.time);
+    settingsStore.openPanels = sessionData.openPanels;
+    settingsStore.settings = sessionData.settings;
+    this.initialisePatternData(sessionData.patternData);
+    knittingStore.knitSettings = sessionData.knitData.settings;
+    knittingStore.time = sessionData.knitData.time;
     setTimeout(() => {
-      commit('setSelectedStitch', getters.knitPattern[sessionData.knitData.selectedStitch.rowIndex][sessionData.knitData.selectedStitch.stitchIndex]);
+      knittingStore.selectedStitchState = knittingStore.knitPattern[sessionData.knitData.selectedStitch.rowIndex][sessionData.knitData.selectedStitch.stitchIndex];
       if (sessionData.knitData.startStitch) {
-        commit('setStartStitch', getters.knitPattern[sessionData.knitData.startStitch.rowIndex][sessionData.knitData.startStitch.stitchIndex]);
+        knittingStore.startStitch = knittingStore.knitPattern[sessionData.knitData.startStitch.rowIndex][sessionData.knitData.startStitch.stitchIndex];
       }
     });
   },

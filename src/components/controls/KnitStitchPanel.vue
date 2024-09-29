@@ -1,21 +1,23 @@
 <template>
   <div class="knit-panel">
     <div class="knit-panel-header">
-      <PrevIcon
-        v-if="currentRowIndex > 0"
+      <div
         class="icon left"
         @click="currentRowIndex -= 1"
-      />
+      >
+        <font-awesome-icon :icon="['fas', 'arrow-left']" />
+      </div>
 
       <span class="title">
         Row {{ currentRowIndex + 1 }}
       </span>
 
-      <NextIcon
-        v-if="currentRowIndex < knitPattern.length - 1"
+      <div
         class="icon right"
         @click="currentRowIndex += 1"
-      />
+      >
+        <font-awesome-icon :icon="['fas', 'arrow-right']" />
+      </div>
     </div>
 
     <div
@@ -41,14 +43,21 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import PrevIcon from 'vue-material-design-icons/ArrowLeftBold.vue';
-import NextIcon from 'vue-material-design-icons/ArrowRightBold.vue';
+import { storeToRefs } from 'pinia';
+import { useKnittingStore } from '@/store/knitting/state';
 
 export default {
-  components: {
-    PrevIcon,
-    NextIcon,
+  setup() {
+    const knittingStore = useKnittingStore();
+    const { knitPattern, selectedStitch, selectedStitchInfo } = storeToRefs(knittingStore);
+    const { selectStitch } = knittingStore;
+
+    return {
+      knitPattern,
+      selectedStitch,
+      selectStitch,
+      selectedStitchInfo,
+    };
   },
   data: () => ({
     row: 1,
@@ -57,11 +66,6 @@ export default {
     currentRowIndex: 0,
   }),
   computed: {
-    ...mapGetters([
-      'knitPattern',
-      'selectedStitch',
-      'selectedStitchInfo',
-    ]),
     currentRow() {
       return this.knitPattern[this.currentRowIndex];
     },
@@ -74,11 +78,10 @@ export default {
   created() {
     document.addEventListener('keydown', this.keyDownHandler);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     document.removeEventListener('keydown', this.keyDownHandler);
   },
   methods: {
-    ...mapActions(['selectStitch']),
     keyDownHandler(event) {
       if (event.ctrlKey) {
         switch (event.keyCode) {
@@ -152,14 +155,17 @@ export default {
   border-radius: 5px;
   overflow: hidden;
 }
+
 .knit-content {
   overflow-y: scroll;
   height: 382px;
   max-height: 382px;
 }
+
 .knit-content.completed {
   background-color: lightgreen;
 }
+
 .knit-panel-header {
   display: flex;
   align-items: stretch;
@@ -171,7 +177,8 @@ export default {
   user-select: none;
   position: relative;
 }
-.knit-panel-header > .icon {
+
+.knit-panel-header>.icon {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -181,19 +188,24 @@ export default {
   height: 100%;
   width: 35px;
 }
-.knit-panel-header > .icon.left {
+
+.knit-panel-header>.icon.left {
   left: 0;
 }
-.knit-panel-header > .icon.right {
+
+.knit-panel-header>.icon.right {
   right: 0;
 }
-.knit-panel-header > .icon:hover {
+
+.knit-panel-header>.icon:hover {
   background-color: #eee;
 }
-.knit-panel-header > .title {
+
+.knit-panel-header>.title {
   display: flex;
   align-items: center;
 }
+
 .stitch-entry {
   height: 18px;
   padding: 10px 20px;
@@ -203,12 +215,15 @@ export default {
   user-select: none;
   cursor: pointer;
 }
+
 .stitch-entry.selected {
   background-color: plum;
 }
+
 .stitch-entry.complete {
   background-color: lightgreen;
 }
+
 .stitch-color {
   height: 20px;
   width: 20px;

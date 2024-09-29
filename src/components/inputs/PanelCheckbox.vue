@@ -24,6 +24,7 @@ export default {
     label: { type: String, required: true },
     disabled: { type: Boolean, required: false },
   },
+  emits: ['input'],
 };
 </script>
 

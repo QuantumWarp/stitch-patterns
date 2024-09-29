@@ -1,14 +1,13 @@
+import { defineStore } from 'pinia';
 import actions from './actions';
 import getters from './getters';
-import mutations from './mutations';
 
-const state = {
+const state = () => ({
   savedPatterns: [],
-};
+});
 
-export default {
+export const usePersistanceStore = defineStore('persistance', {
   actions,
   getters,
-  mutations,
   state,
-};
+});

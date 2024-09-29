@@ -38,6 +38,7 @@ export default {
   props: {
     value: { type: Number, required: true },
   },
+  emits: ['input'],
   data: () => ({
     stopped: true,
     breakdown: {

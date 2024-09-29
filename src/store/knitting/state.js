@@ -1,8 +1,8 @@
+import { defineStore } from 'pinia';
 import actions from './actions';
 import getters from './getters';
-import mutations from './mutations';
 
-const state = {
+const state = () => ({
   knitSettings: {
     highlightRow: false,
     fromTop: false,
@@ -12,12 +12,11 @@ const state = {
   },
   time: 0,
   startStitch: null,
-  selectedStitch: null,
-};
+  selectedStitchState: null,
+});
 
-export default {
+export const useKnittingStore = defineStore('knitting', {
   actions,
   getters,
-  mutations,
   state,
-};
+});

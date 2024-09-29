@@ -1,30 +1,23 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import { defineStore } from 'pinia';
 
-import knittingStore from './knitting/state';
-import patternStore from './pattern/state';
-import persistanceStore from './persistance/state';
-import settingsStore from './settings/state';
 import PatternHelper from '../helpers/pattern-helper';
 
-Vue.use(Vuex);
+import { usePatternStore } from './pattern/state';
+import { useSettingsStore } from './settings/state';
 
 const actions = {
-  reinitialise({ dispatch }) {
+  reinitialise() {
+    const patternStore = usePatternStore();
+    const settingsStore = useSettingsStore();
+
     const pattern = PatternHelper.createFilledPattern({ height: 30, width: 30 }, '#ffffff');
-    dispatch('resetSettings');
-    dispatch('updatePatternDetails', { name: 'New Pattern' });
-    dispatch('updatePattern', pattern);
-    dispatch('updatePanelState', { panel: 'color', open: true });
+    settingsStore.resetSettings();
+    patternStore.updatePatternDetails({ name: 'New Pattern' });
+    patternStore.updatePattern(pattern);
+    settingsStore.updatePanelState({ panel: 'color', open: true });
   },
 };
 
-export default new Vuex.Store({
+export const useRootStore = defineStore('root', {
   actions,
-  modules: {
-    knitting: knittingStore,
-    pattern: patternStore,
-    persistance: persistanceStore,
-    settings: settingsStore,
-  },
 });
