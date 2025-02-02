@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import type { KnitData, KnitPattern, KnitSettings, Stitch, StitchInfo } from '../models/knit';
 import PatternHelper from '../helpers/pattern-helper';
 import { usePatternStore } from './pattern';
+import { toRaw } from 'vue';
 
 export const useKnittingStore = defineStore('knitting', {
   state: () => ({
@@ -46,7 +47,7 @@ export const useKnittingStore = defineStore('knitting', {
     },
 
     selectedStitchInfo(): StitchInfo {
-      return PatternHelper.createStitchInfo(this.knitPattern, this.selectedStitch);
+      return PatternHelper.createStitchInfo(this.knitPattern, toRaw(this.selectedStitch));
     },
   
     knitData(): KnitData {

@@ -3,9 +3,8 @@
     <label v-if="label">{{ label }}</label>
 
     <input
-      :value="value"
+      v-model="value"
       :type="type || 'string'"
-      @input="$emit('input', ($event.target as HTMLInputElement)?.value)"
     >
   </div>
 </template>
@@ -14,12 +13,11 @@
 import type { InputTypeHTMLAttribute } from 'vue';
 
 defineProps<{
-  value?: string | number,
   type?: InputTypeHTMLAttribute,
   label: string,
 }>();
 
-defineEmits<{ input: [value: string | number] }>();
+const value = defineModel<number>();
 </script>
 
 <style scoped>

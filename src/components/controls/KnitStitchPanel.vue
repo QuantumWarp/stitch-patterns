@@ -3,7 +3,7 @@
     <div class="knit-panel-header">
       <div
         class="icon left"
-        @click="currentRowIndex -= 1"
+        @click="previousRow()"
       >
         <i class="material-icons">arrow_back</i>
       </div>
@@ -14,8 +14,8 @@
 
       <div
         class="icon right"
-        @click="currentRowIndex += 1"
-        >
+        @click="nextRow()"
+      >
         <i class="material-icons">arrow_forward</i>
       </div>
     </div>
@@ -45,7 +45,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useKnittingStore } from '@/store/knitting';
-import { computed, nextTick, onMounted, onUnmounted, ref, useTemplateRef, watch, type CSSProperties } from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, ref, toRaw, useTemplateRef, watch, type CSSProperties } from 'vue';
 import type { Stitch } from '../../models/knit.ts';
 
 const knittingStore = useKnittingStore();
@@ -89,7 +89,6 @@ const keyDownHandler = (event: KeyboardEvent) => {
 };
 
 const nextRow = () => {
-  if (selectedStitchInfo.value.isEndRow) return;
   selectStitch(knitPattern.value[selectedStitchInfo.value.rowIndex + 1][0]);
   scrollStitchIntoView();
 };
@@ -124,7 +123,7 @@ const previousStitch = () => {
 
 const stitchClass = (stitch: Stitch) => {
   return {
-    selected: selectedStitch.value === stitch,
+    selected: toRaw(selectedStitch.value) === stitch,
     complete: currentRowIndex.value < selectedStitchInfo.value.rowIndex
       || (currentRowIndex.value === selectedStitchInfo.value.rowIndex
         && selectedStitchInfo.value.row.indexOf(stitch) < selectedStitchInfo.value.stitchIndex),
@@ -135,7 +134,7 @@ const scrollStitchIntoView = () => {
   nextTick(() => {
     const stitchEl = stitchEntriesEl.value!.find((x) => x.classList.contains('selected'));
     if (stitchEl) {
-      stitchEl.scrollIntoView({ block: 'center' });
+      stitchEl.scrollIntoView({ block: 'center', behavior: 'instant' });
     }
   });
 };
