@@ -3,21 +3,21 @@
     <label v-if="label">{{ label }}</label>
 
     <input
-      :value="value"
-      :type="type"
-      @input="$emit('input', $event.target.value)"
+      v-model="value"
+      :type="type || 'string'"
     >
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    value: { type: [String, Number], default: null },
-    type: { type: String, default: 'text' },
-    label: { type: String, default: null },
-  },
-};
+<script setup lang="ts">
+import type { InputTypeHTMLAttribute } from 'vue';
+
+defineProps<{
+  type?: InputTypeHTMLAttribute,
+  label: string,
+}>();
+
+const value = defineModel<number>();
 </script>
 
 <style scoped>
@@ -47,6 +47,7 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 input[type=number] {
+  appearance: textfield;
   -moz-appearance: textfield;
 }
 </style>

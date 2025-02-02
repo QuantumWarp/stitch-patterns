@@ -25,86 +25,87 @@
   </div>
 </template>
 
-<script>
-import { mapActions, mapGetters } from 'vuex';
+<script setup lang="ts">
+import { storeToRefs } from 'pinia';
+import { usePatternStore } from '@/store/pattern';
+import { useSettingsStore } from '@/store/settings';
+import { useKnittingStore } from '@/store/knitting';
+import { computed, ref } from 'vue';
+import type { Square } from '../models/grid.ts';
 
-export default {
-  data: () => ({
-    mouseDown: false,
-    squareDimensions: { width: 25, height: 20 },
-  }),
-  computed: {
-    ...mapGetters([
-      'pattern',
-      'bounds',
-      'dimensions',
-      'settings',
-      'openPanels',
-      'knitSettings',
-      'selectedStitchInfo',
-    ]),
-    gridStyle() {
-      return {
-        top: `${this.squareDimensions.height * -this.bounds.yMin}px`,
-        left: `${this.squareDimensions.width * -this.bounds.xMin}px`,
-        transform: this.settings.rotate
-          ? `rotate(90deg)
-            translateX(${(this.squareDimensions.height * this.bounds.yMin) - (this.squareDimensions.width * this.bounds.xMin)}px)
-            translateY(${(this.squareDimensions.width * -this.bounds.xMin) - (this.squareDimensions.height * (this.dimensions.height + this.bounds.yMin))}px)`
-          : 'none',
-      };
-    },
-    selectedRowStyle() {
-      const index = this.knitSettings.fromTop
-        ? this.selectedStitchInfo.rowIndex
-        : this.dimensions.height - this.selectedStitchInfo.rowIndex + this.bounds.yMin - 1;
-      return {
-        top: `${this.squareDimensions.height * index}px`,
-        left: `${this.squareDimensions.width * this.bounds.xMin}px`,
-        height: `${this.squareDimensions.height + 1}px`,
-        width: `${this.squareDimensions.width * this.dimensions.width + 2}px`,
-      };
-    },
-    isKnitting() {
-      return this.openPanels.includes('knitting');
-    },
-  },
-  methods: {
-    ...mapActions(['updatePointColor']),
-    getPointStyle(point) {
-      return {
-        backgroundColor: point.color,
-        top: `${this.squareDimensions.height * point.y}px`,
-        height: `${this.squareDimensions.height}px`,
-        left: `${this.squareDimensions.width * point.x}px`,
-        width: `${this.squareDimensions.width}px`,
-      };
-    },
-    colorPoint(e, point) {
-      if (e.buttons !== 1) return;
+const patternStore = usePatternStore();
+const { pattern, bounds, dimensions } = storeToRefs(patternStore);
+const { updatePointColor } = patternStore;
 
-      this.updatePointColor(point);
+const settingsStore = useSettingsStore();
+const { settings, openPanels } = storeToRefs(settingsStore);
 
-      let mirrorPointX = null;
-      if (this.settings.mirrorX) {
-        mirrorPointX = this.dimensions.width - (point.x + 1);
-        const mirrorPoint = this.pattern.find((p) => p.x === mirrorPointX && p.y === point.y);
-        this.updatePointColor(mirrorPoint);
-      }
+const knittingStore = useKnittingStore();
+const { knitSettings, selectedStitchInfo } = storeToRefs(knittingStore);
 
-      let mirrorPointY = null;
-      if (this.settings.mirrorY) {
-        mirrorPointY = this.dimensions.height - (point.y + 1);
-        const mirrorPoint = this.pattern.find((p) => p.x === point.x && p.y === mirrorPointY);
-        this.updatePointColor(mirrorPoint);
-      }
+const squareDimensions = ref({ width: 25, height: 20 });
 
-      if (mirrorPointX !== null && mirrorPointY !== null) {
-        const mirrorPoint = this.pattern.find((p) => p.x === mirrorPointX && p.y === mirrorPointY);
-        this.updatePointColor(mirrorPoint);
-      }
-    },
-  },
+const gridStyle = computed(() => {
+  return {
+    top: `${squareDimensions.value.height * -bounds.value.yMin}px`,
+    left: `${squareDimensions.value.width * -bounds.value.xMin}px`,
+    transform: settings.value.rotate
+      ? `rotate(90deg)
+        translateX(${(squareDimensions.value.height * bounds.value.yMin) - (squareDimensions.value.width * bounds.value.xMin)}px)
+        translateY(${(squareDimensions.value.width * -bounds.value.xMin) - (squareDimensions.value.height * (dimensions.value.height + bounds.value.yMin))}px)`
+      : 'none',
+  };
+});
+
+const selectedRowStyle = computed(() => {
+  const index = knitSettings.value.fromTop
+    ? selectedStitchInfo.value.rowIndex
+    : dimensions.value.height - selectedStitchInfo.value.rowIndex + bounds.value.yMin - 1;
+  return {
+    top: `${squareDimensions.value.height * index}px`,
+    left: `${squareDimensions.value.width * bounds.value.xMin}px`,
+    height: `${squareDimensions.value.height + 1}px`,
+    width: `${squareDimensions.value.width * dimensions.value.width + 2}px`,
+  };
+});
+
+const isKnitting = computed(() => {
+  return openPanels.value.includes('knitting');
+});
+
+const getPointStyle = (point: Square) => {
+  return {
+    backgroundColor: point.color,
+    top: `${squareDimensions.value.height * point.y}px`,
+    height: `${squareDimensions.value.height}px`,
+    left: `${squareDimensions.value.width * point.x}px`,
+    width: `${squareDimensions.value.width}px`,
+  };
+};
+
+const colorPoint = (e: MouseEvent, point: Square) => {
+  if (e.buttons !== 1) return;
+
+  updatePointColor(point);
+
+  let mirrorPointX: number | null = null;
+  if (settings.value.mirrorX) {
+    mirrorPointX = dimensions.value.width - (point.x + 1);
+    const mirrorPoint = pattern.value.find((p) => p.x === mirrorPointX && p.y === point.y)!;
+    updatePointColor(mirrorPoint);
+  }
+
+  let mirrorPointY: number | null = null;
+  if (settings.value.mirrorY) {
+    mirrorPointY = dimensions.value.height - (point.y + 1);
+    const mirrorPoint = pattern.value.find((p) => p.x === point.x && p.y === mirrorPointY)!;
+    updatePointColor(mirrorPoint);
+  }
+
+  if (mirrorPointX !== null && mirrorPointY !== null) {
+    const mirrorPoint = pattern.value.find((p) => p.x === mirrorPointX && p.y === mirrorPointY)!;
+    updatePointColor(mirrorPoint);
+  }
 };
 </script>
 
@@ -114,20 +115,25 @@ export default {
   width: 100%;
   height: 100%;
 }
+
 .grid-pattern.readonly {
   cursor: not-allowed;
 }
+
 .render-area {
   position: absolute;
 }
-.grid-pattern.readonly > .render-area {
+
+.grid-pattern.readonly>.render-area {
   pointer-events: none;
 }
+
 .grid-square {
   position: absolute;
   border: 1px solid grey;
   user-select: none;
 }
+
 .selected-row-overlay {
   position: absolute;
   z-index: 1;

@@ -3,8 +3,8 @@
     <PanelInput
       class="name-input"
       label="Name"
-      :value="form.name"
-      @input="updatePatternDetails({ name: $event })"
+      :value="name"
+      @input="updatePatternDetails({ name: $event.toString() })"
     />
 
     <div class="buttons">
@@ -19,14 +19,12 @@
       <PanelButton
         v-if="patternExists && dirty"
         danger
-        @click="loadPattern(form.name)"
+        @click="loadPattern(name)"
       >
         Reload
       </PanelButton>
 
-      <PanelButton
-        @click="exportSavedPattern(form.name)"
-      >
+      <PanelButton @click="exportSavedPattern()">
         Backup
       </PanelButton>
 
@@ -40,49 +38,35 @@
   </div>
 </template>
 
-<script>
-import { mapActions, mapGetters } from 'vuex';
+<script setup lang="ts">
+import { storeToRefs } from 'pinia';
+import { useRootStore } from '@/store/store';
+import { usePatternStore } from '@/store/pattern';
+import { usePersistanceStore } from '@/store/persistance';
 import PanelButton from '../inputs/PanelButton.vue';
 import PanelInput from '../inputs/PanelInput.vue';
+import { computed, ref, watch } from 'vue';
 
-export default {
-  components: {
-    PanelButton,
-    PanelInput,
-  },
-  data: () => ({
-    form: {
-      name: '',
-    },
-  }),
-  computed: {
-    ...mapGetters([
-      'dirty',
-      'patternDetails',
-      'savedPatterns',
-    ]),
-    patternExists() {
-      return Boolean(this.savedPatterns.find((x) => x.name === this.patternDetails.name));
-    },
-  },
-  watch: {
-    patternDetails: {
-      immediate: true,
-      handler(val) {
-        this.form.name = val.name;
-      },
-    },
-  },
-  methods: {
-    ...mapActions([
-      'savePattern',
-      'loadPattern',
-      'exportSavedPattern',
-      'reinitialise',
-      'updatePatternDetails',
-    ]),
-  },
-};
+const rootStore = useRootStore();
+const { reinitialise } = rootStore;
+
+const patternStore = usePatternStore();
+const { dirty, patternDetails } = storeToRefs(patternStore);
+const { updatePatternDetails } = patternStore;
+
+const persistanceStore = usePersistanceStore();
+const { savedPatterns } = storeToRefs(persistanceStore);
+const { savePattern, loadPattern, exportSavedPattern } = persistanceStore;
+
+const name = ref('');
+
+const patternExists = computed(() => {
+  return Boolean(savedPatterns.value.find((x) => x.name === patternDetails.value.name));
+});
+
+watch(patternDetails, (newVal) => {
+  name.value = newVal.name;
+});
 </script>
 
 <style scoped>
@@ -91,12 +75,14 @@ export default {
   display: flex;
   flex-direction: column;
 }
+
 .buttons {
   margin-top: 10px;
   display: flex;
   justify-content: center;
 }
-.buttons > :not(:last-child) {
+
+.buttons> :not(:last-child) {
   margin-right: 5px;
 }
 </style>

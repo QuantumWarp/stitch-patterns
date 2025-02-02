@@ -20,21 +20,14 @@
   </div>
 </template>
 
-<script>
-import { mapActions, mapGetters } from 'vuex';
+<script setup lang="ts">
+import { storeToRefs } from 'pinia';
+import { useSettingsStore } from '@/store/settings';
 import PanelCheckbox from '../inputs/PanelCheckbox.vue';
 
-export default {
-  components: {
-    PanelCheckbox,
-  },
-  computed: {
-    ...mapGetters(['settings']),
-  },
-  methods: {
-    ...mapActions(['updateSettings']),
-  },
-};
+const settingsStore = useSettingsStore();
+const { settings } = storeToRefs(settingsStore);
+const { updateSettings } = settingsStore;
 </script>
 
 <style scoped>

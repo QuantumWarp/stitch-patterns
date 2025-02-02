@@ -44,17 +44,16 @@
   </div>
 </template>
 
-<script>
-import { mapActions } from 'vuex';
+<script setup lang="ts">
+import { usePatternStore } from '@/store/pattern';
 
-export default {
-  methods: {
-    ...mapActions(['incrementDimension']),
-    adjust(side, op) {
-      this.incrementDimension({ side, op });
-    },
-  },
-};
+
+const patternStore = usePatternStore();
+const { incrementDimension } = patternStore;
+
+const adjust = (side: string, op: string) => {
+  incrementDimension({ side, op });
+}
 </script>
 
 <style scoped>
@@ -64,29 +63,35 @@ export default {
   align-items: center;
   justify-content: center;
 }
+
 .column-adjusters {
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
+
 .row-adjuster {
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
+
 .column-adjuster {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
+
 .row-adjuster :first-child:hover,
 .column-adjuster :first-child:hover {
   background-color: var(--safe-color);
 }
+
 .row-adjuster :last-child:hover,
 .column-adjuster :last-child:hover {
-  background-color:var(--danger-color);
+  background-color: var(--danger-color);
 }
+
 button {
   margin: 1px;
   border-radius: 50%;
@@ -97,6 +102,7 @@ button {
   outline: none;
   user-select: none;
 }
+
 .center {
   position: relative;
   width: 60px;
@@ -104,6 +110,7 @@ button {
   margin: 5px;
   border: 2px solid black;
 }
+
 .center::before {
   content: '';
   position: absolute;
@@ -112,6 +119,7 @@ button {
   height: 100%;
   border: 1px solid black;
 }
+
 .center::after {
   content: '';
   position: absolute;

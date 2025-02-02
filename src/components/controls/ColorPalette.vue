@@ -30,13 +30,12 @@
         :key="index + color"
         class="palette-box"
       >
-        <ArrowDownwardIcon
-          v-if="index === 0"
-          class="selected-pointer"
-        />
+        <div class="selected-pointer">
+          <i class="material-icons" v-if="index === 0">arrow_downward</i>
+        </div>
 
         <button
-          :style="{ backgroundColor: color }"
+          :style="<CSSProperties>{ backgroundColor: color }"
           @click="updateSettings({ color })"
         />
       </div>
@@ -44,36 +43,30 @@
   </div>
 </template>
 
-<script>
-import { mapActions, mapGetters } from 'vuex';
-import ArrowDownwardIcon from 'vue-material-design-icons/ArrowDown.vue';
+<script setup lang="ts">
+import { computed, ref, type CSSProperties } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useSettingsStore } from '@/store/settings';
+import { usePatternStore } from '@/store/pattern';
+
 import PanelButton from '../inputs/PanelButton.vue';
 
-export default {
-  components: {
-    PanelButton,
-    ArrowDownwardIcon,
-  },
-  data: () => ({
-    pickerColor: '#000000',
-  }),
-  computed: {
-    ...mapGetters(['colorPalette']),
-    colorPaletteTen() {
-      const palette = this.colorPalette;
-      while (palette.length < 10) {
-        palette.push('#ffffff');
-      }
-      return palette;
-    },
-  },
-  methods: {
-    ...mapActions([
-      'updateSettings',
-      'fillPattern',
-    ]),
-  },
-};
+const patternStore = usePatternStore();
+const { fillPattern } = patternStore;
+
+const settingsStore = useSettingsStore();
+const { colorPalette } = storeToRefs(settingsStore);
+const { updateSettings } = settingsStore;
+  
+const pickerColor = ref('#000000');
+
+const colorPaletteTen = computed(() => {
+  const palette = colorPalette.value;
+  while (palette.length < 10) {
+    palette.push('#ffffff');
+  }
+  return palette;
+});
 </script>
 
 <style scoped>
@@ -84,31 +77,38 @@ export default {
   align-items: center;
   position: relative;
 }
+
 .palette {
   width: 100%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
+
 .options-div {
   position: relative;
   margin-bottom: 8px;
 }
+
 .options-div :first-child {
   margin-right: 6px;
 }
+
 .new-button {
   width: 120px;
 }
+
 .fill-button {
   width: 80px;
 }
+
 input {
   visibility: hidden;
   position: absolute;
   left: 0px;
   bottom: 0;
 }
+
 .palette-box {
   position: relative;
   min-width: 20%;
@@ -116,6 +116,7 @@ input {
   box-sizing: border-box;
   padding: 5px;
 }
+
 .palette button {
   width: 100%;
   height: 35px;
@@ -125,11 +126,12 @@ input {
   padding: 5px;
   cursor: pointer;
 }
+
 .selected-pointer {
   position: absolute;
   font-size: 40px;
   left: 50%;
-  top: -26px;
+  top: -100%;
   transform: translateX(-50%);
 }
 </style>

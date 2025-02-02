@@ -1,21 +1,23 @@
 <template>
   <div class="knit-panel">
     <div class="knit-panel-header">
-      <PrevIcon
-        v-if="currentRowIndex > 0"
+      <div
         class="icon left"
-        @click="currentRowIndex -= 1"
-      />
+        @click="previousRow()"
+      >
+        <i class="material-icons">arrow_back</i>
+      </div>
 
       <span class="title">
         Row {{ currentRowIndex + 1 }}
       </span>
 
-      <NextIcon
-        v-if="currentRowIndex < knitPattern.length - 1"
+      <div
         class="icon right"
-        @click="currentRowIndex += 1"
-      />
+        @click="nextRow()"
+      >
+        <i class="material-icons">arrow_forward</i>
+      </div>
     </div>
 
     <div
@@ -32,7 +34,7 @@
       >
         <div
           class="stitch-color"
-          :style="{ backgroundColor: stitch.color }"
+          :style="<CSSProperties>{ backgroundColor: stitch.color }"
         />
         <span>{{ stitch.count }}</span>
       </div>
@@ -40,107 +42,101 @@
   </div>
 </template>
 
-<script>
-import { mapActions, mapGetters } from 'vuex';
-import PrevIcon from 'vue-material-design-icons/ArrowLeftBold.vue';
-import NextIcon from 'vue-material-design-icons/ArrowRightBold.vue';
+<script setup lang="ts">
+import { storeToRefs } from 'pinia';
+import { useKnittingStore } from '@/store/knitting';
+import { computed, nextTick, onMounted, onUnmounted, ref, toRaw, useTemplateRef, watch, type CSSProperties } from 'vue';
+import type { Stitch } from '../../models/knit.ts';
 
-export default {
-  components: {
-    PrevIcon,
-    NextIcon,
-  },
-  data: () => ({
-    row: 1,
-    rowCount: 0,
-    time: 0,
-    currentRowIndex: 0,
-  }),
-  computed: {
-    ...mapGetters([
-      'knitPattern',
-      'selectedStitch',
-      'selectedStitchInfo',
-    ]),
-    currentRow() {
-      return this.knitPattern[this.currentRowIndex];
-    },
-  },
-  watch: {
-    selectedStitch() {
-      this.currentRowIndex = this.selectedStitchInfo.rowIndex;
-    },
-  },
-  created() {
-    document.addEventListener('keydown', this.keyDownHandler);
-  },
-  beforeDestroy() {
-    document.removeEventListener('keydown', this.keyDownHandler);
-  },
-  methods: {
-    ...mapActions(['selectStitch']),
-    keyDownHandler(event) {
-      if (event.ctrlKey) {
-        switch (event.keyCode) {
-          case 39: this.nextRow(); break;
-          case 37: this.previousRow(); break;
-          default: break;
-        }
-      } else {
-        switch (event.keyCode) {
-          case 40: this.nextStitch(); break;
-          case 38: this.previousStitch(); break;
-          default: break;
-        }
-      }
-    },
-    nextRow() {
-      if (this.selectedStitchInfo.isEndRow) return;
-      this.selectStitch(this.knitPattern[this.selectedStitchInfo.rowIndex + 1][0]);
-      this.scrollStitchIntoView();
-    },
-    previousRow() {
-      if (this.selectedStitchInfo.isStartRow) return;
-      const previousRow = this.knitPattern[this.selectedStitchInfo.rowIndex - 1];
-      this.selectStitch(previousRow[previousRow.length - 1]);
-      this.scrollStitchIntoView();
-    },
-    nextStitch() {
-      if (this.selectedStitchInfo.isEndStitch && this.selectedStitchInfo.isEndRow) return;
-      if (this.selectedStitchInfo.isEndStitch) {
-        this.selectStitch(this.knitPattern[this.selectedStitchInfo.rowIndex + 1][0]);
-      } else {
-        this.selectStitch(this.selectedStitchInfo.row[this.selectedStitchInfo.stitchIndex + 1]);
-      }
-      this.scrollStitchIntoView();
-    },
-    previousStitch() {
-      if (this.selectedStitchInfo.isStartStitch && this.selectedStitchInfo.isStartRow) return;
-      if (this.selectedStitchInfo.isStartStitch) {
-        const previousRow = this.knitPattern[this.selectedStitchInfo.rowIndex - 1];
-        this.selectStitch(previousRow[previousRow.length - 1]);
-      } else {
-        this.selectStitch(this.selectedStitchInfo.row[this.selectedStitchInfo.stitchIndex - 1]);
-      }
-      this.scrollStitchIntoView();
-    },
-    stitchClass(stitch) {
-      return {
-        selected: this.selectedStitch === stitch,
-        complete: this.currentRowIndex < this.selectedStitchInfo.rowIndex
-          || (this.currentRowIndex === this.selectedStitchInfo.rowIndex
-            && this.selectedStitchInfo.row.indexOf(stitch) < this.selectedStitchInfo.stitchIndex),
-      };
-    },
-    scrollStitchIntoView() {
-      this.$nextTick(() => {
-        const stitchEl = this.$refs.stitchEntries.find((x) => x.classList.contains('selected'));
-        if (stitchEl) {
-          stitchEl.scrollIntoView({ block: 'center' });
-        }
-      });
-    },
-  },
+const knittingStore = useKnittingStore();
+const { knitPattern, selectedStitch, selectedStitchInfo } = storeToRefs(knittingStore);
+const { selectStitch } = knittingStore;
+
+const stitchEntriesEl = useTemplateRef('stitchEntries');
+
+const currentRowIndex = ref(0);
+
+const currentRow = computed(() => {
+  return knitPattern.value[currentRowIndex.value];
+});
+
+watch(selectedStitch, () => {
+  currentRowIndex.value = selectedStitchInfo.value.rowIndex;
+})
+
+onMounted(() => {
+  document.addEventListener('keydown', keyDownHandler);
+})
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', keyDownHandler);
+})
+
+const keyDownHandler = (event: KeyboardEvent) => {
+  if (event.ctrlKey) {
+    switch (event.key) {
+      case 'ArrowRight': nextRow(); break;
+      case 'ArrowLeft': previousRow(); break;
+      default: break;
+    }
+  } else {
+    switch (event.key) {
+      case 'ArrowDown': nextStitch(); break;
+      case 'ArrowUp': previousStitch(); break;
+      default: break;
+    }
+  }
+};
+
+const nextRow = () => {
+  selectStitch(knitPattern.value[selectedStitchInfo.value.rowIndex + 1][0]);
+  scrollStitchIntoView();
+};
+
+const previousRow = () => {
+  if (selectedStitchInfo.value.isStartRow) return;
+  const previousRow = knitPattern.value[selectedStitchInfo.value.rowIndex - 1];
+  selectStitch(previousRow[previousRow.length - 1]);
+  scrollStitchIntoView();
+};
+
+const nextStitch = () => {
+  if (selectedStitchInfo.value.isEndStitch && selectedStitchInfo.value.isEndRow) return;
+  if (selectedStitchInfo.value.isEndStitch) {
+    selectStitch(knitPattern.value[selectedStitchInfo.value.rowIndex + 1][0]);
+  } else {
+    selectStitch(selectedStitchInfo.value.row[selectedStitchInfo.value.stitchIndex + 1]);
+  }
+  scrollStitchIntoView();
+};
+
+const previousStitch = () => {
+  if (selectedStitchInfo.value.isStartStitch && selectedStitchInfo.value.isStartRow) return;
+  if (selectedStitchInfo.value.isStartStitch) {
+    const previousRow = knitPattern.value[selectedStitchInfo.value.rowIndex - 1];
+    selectStitch(previousRow[previousRow.length - 1]);
+  } else {
+    selectStitch(selectedStitchInfo.value.row[selectedStitchInfo.value.stitchIndex - 1]);
+  }
+  scrollStitchIntoView();
+};
+
+const stitchClass = (stitch: Stitch) => {
+  return {
+    selected: toRaw(selectedStitch.value) === stitch,
+    complete: currentRowIndex.value < selectedStitchInfo.value.rowIndex
+      || (currentRowIndex.value === selectedStitchInfo.value.rowIndex
+        && selectedStitchInfo.value.row.indexOf(stitch) < selectedStitchInfo.value.stitchIndex),
+  };
+};
+
+const scrollStitchIntoView = () => {
+  nextTick(() => {
+    const stitchEl = stitchEntriesEl.value!.find((x) => x.classList.contains('selected'));
+    if (stitchEl) {
+      stitchEl.scrollIntoView({ block: 'center', behavior: 'instant' });
+    }
+  });
 };
 </script>
 
@@ -152,14 +148,17 @@ export default {
   border-radius: 5px;
   overflow: hidden;
 }
+
 .knit-content {
   overflow-y: scroll;
   height: 382px;
   max-height: 382px;
 }
+
 .knit-content.completed {
   background-color: lightgreen;
 }
+
 .knit-panel-header {
   display: flex;
   align-items: stretch;
@@ -171,7 +170,8 @@ export default {
   user-select: none;
   position: relative;
 }
-.knit-panel-header > .icon {
+
+.knit-panel-header>.icon {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -181,19 +181,24 @@ export default {
   height: 100%;
   width: 35px;
 }
-.knit-panel-header > .icon.left {
+
+.knit-panel-header>.icon.left {
   left: 0;
 }
-.knit-panel-header > .icon.right {
+
+.knit-panel-header>.icon.right {
   right: 0;
 }
-.knit-panel-header > .icon:hover {
+
+.knit-panel-header>.icon:hover {
   background-color: #eee;
 }
-.knit-panel-header > .title {
+
+.knit-panel-header>.title {
   display: flex;
   align-items: center;
 }
+
 .stitch-entry {
   height: 18px;
   padding: 10px 20px;
@@ -203,12 +208,15 @@ export default {
   user-select: none;
   cursor: pointer;
 }
+
 .stitch-entry.selected {
   background-color: plum;
 }
+
 .stitch-entry.complete {
   background-color: lightgreen;
 }
+
 .stitch-color {
   height: 20px;
   width: 20px;

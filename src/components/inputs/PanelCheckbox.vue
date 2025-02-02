@@ -12,19 +12,19 @@
       :disabled="disabled"
       :checked="value"
       @click="$event.stopPropagation()"
-      @input="$emit('input', $event.target.checked)"
+      @input="$emit('input', ($event.target as HTMLInputElement)?.checked)"
     >
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    value: { type: Boolean, default: false },
-    label: { type: String, required: true },
-    disabled: { type: Boolean, required: false },
-  },
-};
+<script setup lang="ts">
+defineProps<{
+  value?: boolean,
+  label: string,
+  disabled?: boolean,
+}>();
+
+defineEmits<{ input: [value: boolean] }>();
 </script>
 
 <style scoped>
