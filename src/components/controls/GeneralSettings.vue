@@ -20,26 +20,14 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useSettingsStore } from '@/store/settings/state';
 import PanelCheckbox from '../inputs/PanelCheckbox.vue';
 
-export default {
-  components: {
-    PanelCheckbox,
-  },
-  setup() {
-    const settingsStore = useSettingsStore();
-    const { settings } = storeToRefs(settingsStore);
-    const { updateSettings } = settingsStore;
-
-    return {
-      settings,
-      updateSettings,
-    };
-  },
-};
+const settingsStore = useSettingsStore();
+const { settings } = storeToRefs(settingsStore);
+const { updateSettings } = settingsStore;
 </script>
 
 <style scoped>

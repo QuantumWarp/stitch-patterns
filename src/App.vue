@@ -4,40 +4,36 @@
   </div>
 </template>
 
-<script>
-import { useRootStore } from './store/store';
-import { usePersistanceStore } from './store/persistance/state';
-import { useKnittingStore } from './store/knitting/state';
-import { usePatternStore } from './store/pattern/state';
-import { useSettingsStore } from './store/settings/state';
-import PatternEditor from './views/PatternEditor.vue';
+<script setup lang="ts">
+import { useRootStore } from '@/store/store';
+import { usePersistanceStore } from '@/store/persistance/state';
+import { useKnittingStore } from '@/store/knitting/state';
+import { usePatternStore } from '@/store/pattern/state';
+import { useSettingsStore } from '@/store/settings/state';
+import PatternEditor from '@/views/PatternEditor.vue';
+import { onMounted } from 'vue';
 
-export default {
-  components: {
-    PatternEditor,
-  },
-  setup() {
-    const rootStore = useRootStore();
-    const persistanceStore = usePersistanceStore();
-    const knittingStore = useKnittingStore();
-    const patternStore = usePatternStore();
-    const settingsStore = useSettingsStore();
+onMounted(() => {
+  const rootStore = useRootStore();
+  const persistanceStore = usePersistanceStore();
+  const knittingStore = useKnittingStore();
+  const patternStore = usePatternStore();
+  const settingsStore = useSettingsStore();
 
-    let saveSessionTimeout;
-    const delayedSave = () => {
-      clearTimeout(saveSessionTimeout);
-      saveSessionTimeout = setTimeout(() => {
-        persistanceStore.saveSession();
-      }, 500);
-    }
+  let saveSessionTimeout: number | undefined;
+  const delayedSave = () => {
+    clearTimeout(saveSessionTimeout);
+    saveSessionTimeout = setTimeout(() => {
+      persistanceStore.saveSession();
+    }, 500);
+  }
 
-    rootStore.$subscribe(delayedSave);
-    persistanceStore.$subscribe(delayedSave);
-    knittingStore.$subscribe(delayedSave);
-    patternStore.$subscribe(delayedSave);
-    settingsStore.$subscribe(delayedSave);
-  },
-};
+  rootStore.$subscribe(delayedSave);
+  persistanceStore.$subscribe(delayedSave);
+  knittingStore.$subscribe(delayedSave);
+  patternStore.$subscribe(delayedSave);
+  settingsStore.$subscribe(delayedSave);
+});
 </script>
 
 <style>

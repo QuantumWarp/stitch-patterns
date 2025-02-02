@@ -19,16 +19,9 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import GridControls from '../components/GridControls.vue';
 import GridPattern from '../components/GridPattern.vue';
-
-export default {
-  components: {
-    GridControls,
-    GridPattern,
-  },
-};
 </script>
 
 <style scoped>

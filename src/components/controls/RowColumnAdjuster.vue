@@ -44,22 +44,16 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { usePatternStore } from '@/store/pattern/state';
 
-export default {
-  methods: {
-    setup() {
-      const patternStore = usePatternStore();
-      const { incrementDimension } = patternStore;
 
-      return { incrementDimension };
-    },
-    adjust(side, op) {
-      this.incrementDimension({ side, op });
-    },
-  },
-};
+const patternStore = usePatternStore();
+const { incrementDimension } = patternStore;
+
+const adjust = (side: string, op: string) => {
+  incrementDimension({ side, op });
+}
 </script>
 
 <style scoped>

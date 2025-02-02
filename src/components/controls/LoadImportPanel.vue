@@ -37,20 +37,20 @@
           @click="$event.stopPropagation()"
         >
           <div class="icon">
-            <font-awesome-icon
+            <!-- <font-awesome-icon
               :icon="['fas', 'download']"
               title="Export"
               @click="exportSavedKnitPattern(pattern.name)"
-            />
+            /> -->
           </div>
 
 
           <div class="icon">
-            <font-awesome-icon
+            <!-- <font-awesome-icon
               :icon="['fas', 'pen']"
               title="Export Knit"
               @click="exportSavedKnitPattern(pattern.name)"
-            />
+            /> -->
           </div>
 
 
@@ -67,43 +67,24 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { onMounted, useTemplateRef } from 'vue';
 import { storeToRefs } from 'pinia';
 import { usePersistanceStore } from '@/store/persistance/state';
 import PanelButton from '../inputs/PanelButton.vue';
 
-export default {
-  components: {
-    PanelButton,
-  },
-  setup() {
-    const persistanceStore = usePersistanceStore();
-    const { savedPatterns } = storeToRefs(persistanceStore);
-    const { loadIndex, loadPattern, importPattern, deletePattern, updateSettings, exportSavedKnitPattern } = persistanceStore;
+const persistanceStore = usePersistanceStore();
+const { savedPatterns } = storeToRefs(persistanceStore);
+const { loadIndex, loadPattern, importPattern, deletePattern } = persistanceStore;
 
-    return {
-      savedPatterns,
-      loadIndex,
-      loadPattern,
-      importPattern,
-      deletePattern,
-      updateSettings,
-      exportSavedKnitPattern,
-    };
-  },
-  data: () => ({
-    uploadReady: true,
-  }),
-  created() {
-    this.loadIndex();
-  },
-  methods: {
-    async runImport(e) {
-      await this.importPattern(e);
-      this.$refs.importInput.type = 'text';
-      this.$refs.importInput.type = 'file';
-    },
-  },
+const importInputEl = useTemplateRef('importInput')
+
+onMounted(() => loadIndex());
+
+const runImport = async (e: Event) => {
+  await importPattern(e);
+  importInputEl.value!.type = 'text';
+  importInputEl.value!.type = 'file';
 };
 </script>
 

@@ -7,13 +7,9 @@
   </button>
 </template>
 
-<script>
-export default {
-  props: {
-    danger: { type: Boolean, default: false },
-  },
-  emits: ['click'],
-};
+<script setup lang="ts">
+defineProps<{ danger?: boolean }>();
+defineEmits<{ click: [$event: MouseEvent] }>();
 </script>
 
 <style scoped>

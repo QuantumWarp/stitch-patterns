@@ -1,13 +1,14 @@
 import PatternHelper from '../../helpers/pattern-helper';
-import { usePatternStore } from '../pattern/state.js';
+import type { KnitPattern } from '../../models/knit';
+import { usePatternStore } from '../pattern/state';
 
 export default {
-  trackedRowCount() {
+  trackedRowCount(): number {
     if (this.time === 0) return 1;
     const difference = this.selectedStitchInfo.rowIndex - this.startStitchInfo.rowIndex;
     return difference >= 0 ? difference + 1 : 1;
   },
-  knitPattern() {
+  knitPattern(): KnitPattern {
     return PatternHelper.applyReducePatternSettings(
       this.defaultKnitPattern,
       this.knitSettings,

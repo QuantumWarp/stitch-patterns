@@ -50,7 +50,7 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useSettingsStore } from '@/store/settings/state';
 import { usePersistanceStore } from '@/store/persistance/state';
@@ -63,37 +63,16 @@ import KnitSession from './controls/KnitSession.vue';
 import KnitStitchPanel from './controls/KnitStitchPanel.vue';
 import LoadImportPanel from './controls/LoadImportPanel.vue';
 import SectionPanel from './controls/SectionPanel.vue';
+import { onBeforeMount } from 'vue';
 
-export default {
-  components: {
-    PrimaryInfo,
-    ColorPalette,
-    GeneralSettings,
-    DimensionAdjuster,
-    RowColumnAdjuster,
-    KnitSession,
-    KnitStitchPanel,
-    LoadImportPanel,
-    SectionPanel,
-  },
-  setup() {
-    const settingsStore = useSettingsStore();
-    const { openPanels } = storeToRefs(settingsStore);
-    const { updatePanelState } = settingsStore;
+const settingsStore = useSettingsStore();
+const { openPanels } = storeToRefs(settingsStore);
+const { updatePanelState } = settingsStore;
 
-    const persistanceStore = usePersistanceStore();
-    const { loadSession } = persistanceStore;
+const persistanceStore = usePersistanceStore();
+const { loadSession } = persistanceStore;
 
-    return {
-      openPanels,
-      loadSession,
-      updatePanelState,
-    };
-  },
-  created() {
-    this.loadSession();
-  },
-};
+onBeforeMount(() => loadSession());
 </script>
 
 <style scoped>

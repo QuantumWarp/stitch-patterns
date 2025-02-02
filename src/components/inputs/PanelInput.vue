@@ -4,21 +4,22 @@
 
     <input
       :value="value"
-      :type="type"
-      @input="$emit('input', $event.target.value)"
+      :type="type || 'string'"
+      @input="$emit('input', ($event.target as HTMLInputElement)?.value)"
     >
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    value: { type: [String, Number], default: null },
-    type: { type: String, default: 'text' },
-    label: { type: String, default: null },
-  },
-  emits: ['input'],
-};
+<script setup lang="ts">
+import type { InputTypeHTMLAttribute } from 'vue';
+
+defineProps<{
+  value?: string | number,
+  type?: InputTypeHTMLAttribute,
+  label: string,
+}>();
+
+defineEmits<{ input: [value: string | number] }>();
 </script>
 
 <style scoped>

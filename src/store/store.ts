@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 
-import PatternHelper from '../helpers/pattern-helper';
+import PatternHelper from '@/helpers/pattern-helper';
 
 import { usePatternStore } from './pattern/state';
 import { useSettingsStore } from './settings/state';

@@ -1,13 +1,13 @@
 <template>
   <div class="dimension-adjuster">
     <PanelInput
-      v-model="form.height"
+      v-model="height"
       type="number"
       label="Height"
     />
 
     <PanelInput
-      v-model="form.width"
+      v-model="width"
       type="number"
       label="Width"
     />
@@ -15,7 +15,7 @@
     <div class="buttons">
       <PanelButton
         :danger="potentiallyDangerous"
-        @click="adjustDimensions(form)"
+        @click="adjustDimensions({ height, width })"
       >
         Apply
       </PanelButton>
@@ -30,49 +30,29 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { usePatternStore } from '@/store/pattern/state';
 import PanelButton from '../inputs/PanelButton.vue';
 import PanelInput from '../inputs/PanelInput.vue';
+import { computed, ref, watch } from 'vue';
 
-export default {
-  components: {
-    PanelButton,
-    PanelInput,
-  },
-  setup() {
-    const patternStore = usePatternStore();
-    const { dimensions } = storeToRefs(patternStore);
-    const { adjustDimensions } = patternStore;
+const patternStore = usePatternStore();
+const { dimensions } = storeToRefs(patternStore);
+const { adjustDimensions } = patternStore;
 
-    return {
-      dimensions,
-      adjustDimensions,
-    };
-  },
-  data: () => ({
-    form: {
-      height: 30,
-      width: 30,
-    },
-  }),
-  computed: {
-    potentiallyDangerous() {
-      return this.form.height < this.dimensions.height
-        || this.form.width < this.dimensions.width;
-    },
-  },
-  watch: {
-    dimensions: {
-      immediate: true,
-      handler(val) {
-        this.form.height = val.height;
-        this.form.width = val.width;
-      },
-    },
-  },
-};
+const height = ref(30);
+const width = ref(30);
+
+const potentiallyDangerous = computed(() => {
+  return height.value < dimensions.value.height
+    || width.value < dimensions.value.width;
+});
+
+watch(dimensions, (newDimensions) => {
+  height.value = newDimensions.height;
+  width.value = newDimensions.width;
+})
 </script>
 
 <style scoped>

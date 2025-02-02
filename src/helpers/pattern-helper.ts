@@ -1,5 +1,9 @@
-class PatternHelper {
-  static createFilledPattern(dimensions, color) {
+import type { Dimensions } from "../models/dimensions";
+import type { GridSquares } from "../models/grid";
+import type { KnitPattern, KnitRow, KnitSettings, Stitch } from "../models/knit";
+
+export default class PatternHelper {
+  static createFilledPattern(dimensions: Dimensions, color: string) {
     const pattern = [];
     for (let x = 0; x < dimensions.width; x += 1) {
       for (let y = 0; y < dimensions.height; y += 1) {
@@ -9,7 +13,7 @@ class PatternHelper {
     return pattern;
   }
 
-  static getDimensionsFromSortedPatten(sortedPattern) {
+  static getDimensionsFromSortedPatten(sortedPattern: GridSquares) {
     const firstPoint = sortedPattern[0];
     const lastPoint = sortedPattern[sortedPattern.length - 1];
     return {
@@ -18,8 +22,8 @@ class PatternHelper {
     };
   }
 
-  static countColorsForPalette(pattern) {
-    const colorDict = {};
+  static countColorsForPalette(pattern: GridSquares) {
+    const colorDict: Record<string, number> = {};
     pattern.forEach((point) => {
       if (!colorDict[point.color]) {
         colorDict[point.color] = 0;
@@ -37,7 +41,7 @@ class PatternHelper {
     return orderedColors;
   }
 
-  static createStitchInfo(knitPattern, targetStitch) {
+  static createStitchInfo(knitPattern: KnitPattern, targetStitch: Stitch) {
     const selectedRow = knitPattern.find(
       (row) => Boolean(row.find(
         (stitch) => stitch === targetStitch,
@@ -57,12 +61,12 @@ class PatternHelper {
     };
   }
 
-  static applyReducePatternSettings(reducedPattern, {
+  static applyReducePatternSettings(reducedPattern: KnitPattern, {
     fromTop,
     fromRight,
     reverseEven,
     doubleStitch,
-  }) {
+  }: KnitSettings) {
     let finalPattern = [...reducedPattern];
     if (fromTop) {
       finalPattern = finalPattern.reverse();
@@ -79,13 +83,13 @@ class PatternHelper {
     return finalPattern;
   }
 
-  static reducePattern(pattern) {
+  static reducePattern(pattern: GridSquares) {
     return PatternHelper
       .sortedRows(pattern)
       .map((x) => PatternHelper.reduceSortedRow(x));
   }
 
-  static reduceSortedRow(sortedRow) {
+  static reduceSortedRow(sortedRow: GridSquares) {
     return sortedRow.reduce((r, a) => {
       const lastEntry = r[r.length - 1];
       if (lastEntry && lastEntry.color === a.color) {
@@ -94,25 +98,23 @@ class PatternHelper {
         r.push({ color: a.color, count: 1 });
       }
       return r;
-    }, []);
+    }, [] as KnitRow);
   }
 
-  static sortedRows(pattern) {
+  static sortedRows(pattern: GridSquares) {
     const groupedRows = PatternHelper.groupBy(pattern, (pt) => pt.y);
     return Object.keys(groupedRows)
-      .map((x) => groupedRows[x])
+      .map((x) => groupedRows[Number(x)])
       .sort((a, b) => (a[0].y > b[0].y ? -1 : 1))
       .map((row) => row.sort((a, b) => (a.x > b.x ? 1 : -1)));
   }
 
-  static groupBy(array, propFunc) {
+  static groupBy<T, TVal extends string | number>(array: T[], propFunc: (entry: T) => TVal) {
     return array.reduce((r, a) => {
       const propVal = propFunc(a);
        
       r[propVal] = [...r[propVal] || [], a];
       return r;
-    }, {});
+    }, {} as Record<TVal, T[]>);
   }
 }
-
-export default PatternHelper;

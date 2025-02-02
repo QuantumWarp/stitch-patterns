@@ -38,7 +38,7 @@
         </div>
 
         <button
-          :style="{ backgroundColor: color }"
+          :style="<CSSProperties>{ backgroundColor: color }"
           @click="updateSettings({ color })"
         />
       </div>
@@ -46,44 +46,30 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { computed, ref, type CSSProperties } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useSettingsStore } from '@/store/settings/state';
 import { usePatternStore } from '@/store/pattern/state';
 
 import PanelButton from '../inputs/PanelButton.vue';
 
-export default {
-  components: {
-    PanelButton,
-  },
-  setup() {
-    const patternStore = usePatternStore();
-    const { fillPattern } = patternStore;
+const patternStore = usePatternStore();
+const { fillPattern } = patternStore;
 
-    const settingsStore = useSettingsStore();
-    const { colorPalette } = storeToRefs(settingsStore);
-    const { updateSettings } = settingsStore;
+const settingsStore = useSettingsStore();
+const { colorPalette } = storeToRefs(settingsStore);
+const { updateSettings } = settingsStore;
+  
+const pickerColor = ref('#000000');
 
-    return {
-      colorPalette,
-      updateSettings,
-      fillPattern,
-    };
-  },
-  data: () => ({
-    pickerColor: '#000000',
-  }),
-  computed: {
-    colorPaletteTen() {
-      const palette = this.colorPalette;
-      while (palette.length < 10) {
-        palette.push('#ffffff');
-      }
-      return palette;
-    },
-  },
-};
+const colorPaletteTen = computed(() => {
+  const palette = colorPalette.value;
+  while (palette.length < 10) {
+    palette.push('#ffffff');
+  }
+  return palette;
+});
 </script>
 
 <style scoped>

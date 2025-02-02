@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import actions from './actions';
 import getters from './getters';
+import type { Stitch } from '../../models/knit';
 
 const state = () => ({
   knitSettings: {
@@ -11,7 +12,7 @@ const state = () => ({
     doubleStitch: true,
   },
   time: 0,
-  startStitch: null,
+  startStitch: null as Stitch | null,
   selectedStitchState: null,
 });
 

@@ -63,7 +63,7 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useKnittingStore } from '@/store/knitting/state';
 import { usePatternStore } from '@/store/pattern/state';
@@ -72,45 +72,20 @@ import { usePersistanceStore } from '@/store/persistance/state';
 import PanelButton from '../inputs/PanelButton.vue';
 import PanelCheckbox from '../inputs/PanelCheckbox.vue';
 import PanelTimer from '../inputs/PanelTimer.vue';
+import { watch } from 'vue';
 
-export default {
-  components: {
-    PanelButton,
-    PanelCheckbox,
-    PanelTimer,
-  },
-  setup() {
-    const knittingStore = useKnittingStore();
-    const { time, knitSettings, knitPattern, trackedRowCount } = storeToRefs(knittingStore);
-    const { resetKnitSession, updateKnitSettings, updateTime } = knittingStore;
+const knittingStore = useKnittingStore();
+const { time, knitSettings, knitPattern, trackedRowCount } = storeToRefs(knittingStore);
+const { resetKnitSession, updateKnitSettings, updateTime } = knittingStore;
 
-    const patternStore = usePatternStore();
-    const { pattern } = storeToRefs(patternStore);
+const patternStore = usePatternStore();
+const { pattern } = storeToRefs(patternStore);
 
-    const persistanceStore = usePersistanceStore();
-    const { exportKnitPattern } = persistanceStore;
+const persistanceStore = usePersistanceStore();
+const { exportKnitPattern } = persistanceStore;
 
-    return {
-      time,
-      knitSettings,
-      pattern,
-      knitPattern,
-      trackedRowCount,
-      resetKnitSession,
-      updateKnitSettings,
-      updateTime,
-      exportKnitPattern,
-    };
-  },
-  watch: {
-    pattern() {
-      this.resetKnitSession();
-    },
-    knitPattern() {
-      this.resetKnitSession({ resetTime: false });
-    },
-  },
-};
+watch(pattern, () => resetKnitSession());
+watch(knitPattern, () => resetKnitSession({ resetTime: false }));
 </script>
 
 <style scoped>

@@ -34,7 +34,7 @@
       >
         <div
           class="stitch-color"
-          :style="{ backgroundColor: stitch.color }"
+          :style="<CSSProperties>{ backgroundColor: stitch.color }"
         />
         <span>{{ stitch.count }}</span>
       </div>
@@ -42,108 +42,102 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useKnittingStore } from '@/store/knitting/state';
+import { computed, nextTick, onMounted, onUnmounted, ref, useTemplateRef, watch, type CSSProperties } from 'vue';
+import type { Stitch } from '../../models/knit.ts';
 
-export default {
-  setup() {
-    const knittingStore = useKnittingStore();
-    const { knitPattern, selectedStitch, selectedStitchInfo } = storeToRefs(knittingStore);
-    const { selectStitch } = knittingStore;
+const knittingStore = useKnittingStore();
+const { knitPattern, selectedStitch, selectedStitchInfo } = storeToRefs(knittingStore);
+const { selectStitch } = knittingStore;
 
-    return {
-      knitPattern,
-      selectedStitch,
-      selectStitch,
-      selectedStitchInfo,
-    };
-  },
-  data: () => ({
-    row: 1,
-    rowCount: 0,
-    time: 0,
-    currentRowIndex: 0,
-  }),
-  computed: {
-    currentRow() {
-      return this.knitPattern[this.currentRowIndex];
-    },
-  },
-  watch: {
-    selectedStitch() {
-      this.currentRowIndex = this.selectedStitchInfo.rowIndex;
-    },
-  },
-  created() {
-    document.addEventListener('keydown', this.keyDownHandler);
-  },
-  beforeUnmount() {
-    document.removeEventListener('keydown', this.keyDownHandler);
-  },
-  methods: {
-    keyDownHandler(event) {
-      if (event.ctrlKey) {
-        switch (event.keyCode) {
-          case 39: this.nextRow(); break;
-          case 37: this.previousRow(); break;
-          default: break;
-        }
-      } else {
-        switch (event.keyCode) {
-          case 40: this.nextStitch(); break;
-          case 38: this.previousStitch(); break;
-          default: break;
-        }
-      }
-    },
-    nextRow() {
-      if (this.selectedStitchInfo.isEndRow) return;
-      this.selectStitch(this.knitPattern[this.selectedStitchInfo.rowIndex + 1][0]);
-      this.scrollStitchIntoView();
-    },
-    previousRow() {
-      if (this.selectedStitchInfo.isStartRow) return;
-      const previousRow = this.knitPattern[this.selectedStitchInfo.rowIndex - 1];
-      this.selectStitch(previousRow[previousRow.length - 1]);
-      this.scrollStitchIntoView();
-    },
-    nextStitch() {
-      if (this.selectedStitchInfo.isEndStitch && this.selectedStitchInfo.isEndRow) return;
-      if (this.selectedStitchInfo.isEndStitch) {
-        this.selectStitch(this.knitPattern[this.selectedStitchInfo.rowIndex + 1][0]);
-      } else {
-        this.selectStitch(this.selectedStitchInfo.row[this.selectedStitchInfo.stitchIndex + 1]);
-      }
-      this.scrollStitchIntoView();
-    },
-    previousStitch() {
-      if (this.selectedStitchInfo.isStartStitch && this.selectedStitchInfo.isStartRow) return;
-      if (this.selectedStitchInfo.isStartStitch) {
-        const previousRow = this.knitPattern[this.selectedStitchInfo.rowIndex - 1];
-        this.selectStitch(previousRow[previousRow.length - 1]);
-      } else {
-        this.selectStitch(this.selectedStitchInfo.row[this.selectedStitchInfo.stitchIndex - 1]);
-      }
-      this.scrollStitchIntoView();
-    },
-    stitchClass(stitch) {
-      return {
-        selected: this.selectedStitch === stitch,
-        complete: this.currentRowIndex < this.selectedStitchInfo.rowIndex
-          || (this.currentRowIndex === this.selectedStitchInfo.rowIndex
-            && this.selectedStitchInfo.row.indexOf(stitch) < this.selectedStitchInfo.stitchIndex),
-      };
-    },
-    scrollStitchIntoView() {
-      this.$nextTick(() => {
-        const stitchEl = this.$refs.stitchEntries.find((x) => x.classList.contains('selected'));
-        if (stitchEl) {
-          stitchEl.scrollIntoView({ block: 'center' });
-        }
-      });
-    },
-  },
+const stitchEntriesEl = useTemplateRef('stitchEntries');
+
+const currentRowIndex = ref(0);
+
+const currentRow = computed(() => {
+  return knitPattern.value[currentRowIndex.value];
+});
+
+watch(selectedStitch, () => {
+  currentRowIndex.value = selectedStitchInfo.value.rowIndex;
+})
+
+onMounted(() => {
+  document.addEventListener('keydown', keyDownHandler);
+})
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', keyDownHandler);
+})
+
+const keyDownHandler = (event: KeyboardEvent) => {
+  if (event.ctrlKey) {
+    switch (event.key) {
+      case 'ArrowRight': nextRow(); break;
+      case 'ArrowLeft': previousRow(); break;
+      default: break;
+    }
+  } else {
+    switch (event.key) {
+      case 'ArrowDown': nextStitch(); break;
+      case 'ArrowUp': previousStitch(); break;
+      default: break;
+    }
+  }
+};
+
+const nextRow = () => {
+  if (selectedStitchInfo.value.isEndRow) return;
+  selectStitch(knitPattern.value[selectedStitchInfo.value.rowIndex + 1][0]);
+  scrollStitchIntoView();
+};
+
+const previousRow = () => {
+  if (selectedStitchInfo.value.isStartRow) return;
+  const previousRow = knitPattern.value[selectedStitchInfo.value.rowIndex - 1];
+  selectStitch(previousRow[previousRow.length - 1]);
+  scrollStitchIntoView();
+};
+
+const nextStitch = () => {
+  if (selectedStitchInfo.value.isEndStitch && selectedStitchInfo.value.isEndRow) return;
+  if (selectedStitchInfo.value.isEndStitch) {
+    selectStitch(knitPattern.value[selectedStitchInfo.value.rowIndex + 1][0]);
+  } else {
+    selectStitch(selectedStitchInfo.value.row[selectedStitchInfo.value.stitchIndex + 1]);
+  }
+  scrollStitchIntoView();
+};
+
+const previousStitch = () => {
+  if (selectedStitchInfo.value.isStartStitch && selectedStitchInfo.value.isStartRow) return;
+  if (selectedStitchInfo.value.isStartStitch) {
+    const previousRow = knitPattern.value[selectedStitchInfo.value.rowIndex - 1];
+    selectStitch(previousRow[previousRow.length - 1]);
+  } else {
+    selectStitch(selectedStitchInfo.value.row[selectedStitchInfo.value.stitchIndex - 1]);
+  }
+  scrollStitchIntoView();
+};
+
+const stitchClass = (stitch: Stitch) => {
+  return {
+    selected: selectedStitch.value === stitch,
+    complete: currentRowIndex.value < selectedStitchInfo.value.rowIndex
+      || (currentRowIndex.value === selectedStitchInfo.value.rowIndex
+        && selectedStitchInfo.value.row.indexOf(stitch) < selectedStitchInfo.value.stitchIndex),
+  };
+};
+
+const scrollStitchIntoView = () => {
+  nextTick(() => {
+    const stitchEl = stitchEntriesEl.value!.find((x) => x.classList.contains('selected'));
+    if (stitchEl) {
+      stitchEl.scrollIntoView({ block: 'center' });
+    }
+  });
 };
 </script>
 

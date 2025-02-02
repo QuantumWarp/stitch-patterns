@@ -3,7 +3,7 @@
     <PanelInput
       class="name-input"
       label="Name"
-      :value="form.name"
+      :value="name"
       @input="updatePatternDetails({ name: $event })"
     />
 
@@ -19,12 +19,12 @@
       <PanelButton
         v-if="patternExists && dirty"
         danger
-        @click="loadPattern(form.name)"
+        @click="loadPattern(name)"
       >
         Reload
       </PanelButton>
 
-      <PanelButton @click="exportSavedPattern(form.name)">
+      <PanelButton @click="exportSavedPattern()">
         Backup
       </PanelButton>
 
@@ -38,61 +38,35 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useRootStore } from '@/store/store';
 import { usePatternStore } from '@/store/pattern/state';
 import { usePersistanceStore } from '@/store/persistance/state';
 import PanelButton from '../inputs/PanelButton.vue';
 import PanelInput from '../inputs/PanelInput.vue';
+import { computed, ref, watch } from 'vue';
 
-export default {
-  components: {
-    PanelButton,
-    PanelInput,
-  },
-  setup() {
-    const rootStore = useRootStore();
-    const { reinitialise } = rootStore;
+const rootStore = useRootStore();
+const { reinitialise } = rootStore;
 
-    const patternStore = usePatternStore();
-    const { dirty, patternDetails } = storeToRefs(patternStore);
-    const { updatePatternDetails } = patternStore;
+const patternStore = usePatternStore();
+const { dirty, patternDetails } = storeToRefs(patternStore);
+const { updatePatternDetails } = patternStore;
 
-    const persistanceStore = usePersistanceStore();
-    const { savedPatterns } = storeToRefs(persistanceStore);
-    const { savePattern, loadPattern, exportSavedPattern } = persistanceStore;
+const persistanceStore = usePersistanceStore();
+const { savedPatterns } = storeToRefs(persistanceStore);
+const { savePattern, loadPattern, exportSavedPattern } = persistanceStore;
 
-    return {
-      dirty,
-      patternDetails,
-      savedPatterns,
-      savePattern,
-      loadPattern,
-      exportSavedPattern,
-      reinitialise,
-      updatePatternDetails,
-    };
-  },
-  data: () => ({
-    form: {
-      name: '',
-    },
-  }),
-  computed: {
-    patternExists() {
-      return Boolean(this.savedPatterns.find((x) => x.name === this.patternDetails.name));
-    },
-  },
-  watch: {
-    patternDetails: {
-      immediate: true,
-      handler(val) {
-        this.form.name = val.name;
-      },
-    },
-  },
-};
+const name = ref('');
+
+const patternExists = computed(() => {
+  return Boolean(savedPatterns.value.find((x) => x.name === patternDetails.value.name));
+});
+
+watch(patternDetails, (newVal) => {
+  name.value = newVal.name;
+});
 </script>
 
 <style scoped>

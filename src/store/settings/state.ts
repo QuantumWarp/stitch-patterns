@@ -8,8 +8,8 @@ const state = () => ({
     mirrorX: false,
     mirrorY: false,
   },
-  colorPalette: [],
-  openPanels: [],
+  colorPalette: [] as string[],
+  openPanels: [] as string[],
 });
 
 export const useSettingsStore = defineStore('settings', {

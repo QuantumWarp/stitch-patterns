@@ -1,7 +1,10 @@
+import type { Dimensions } from '../models/dimensions';
+import type { GridSquares } from '../models/grid';
+import type { KnitPattern } from '../models/knit';
 import PatternHelper from './pattern-helper';
 
-class PersistanceHelper {
-  static colorString(color) {
+export default class PersistanceHelper {
+  static colorString(color: string) {
     switch (color) {
       case '#ffffff': return 'White';
       case '#000000': return 'Black';
@@ -9,7 +12,7 @@ class PersistanceHelper {
     }
   }
 
-  static createKnitString(name, reducedPatternWithSettings) {
+  static createKnitString(name: string, reducedPatternWithSettings: KnitPattern) {
     let text = `-------- ${name} --------\r\n\r\n`;
 
     reducedPatternWithSettings.forEach((row, index) => {
@@ -24,11 +27,11 @@ class PersistanceHelper {
     return text;
   }
 
-  static compressPattern(sortedPattern) {
-    const colorDict = {};
+  static compressPattern(sortedPattern: GridSquares) {
+    const colorDict: Record<string, string> = {};
     let patternString = '';
 
-    let previousColorAlias;
+    let previousColorAlias: string = '';
     let colorCount = 0;
 
     sortedPattern.forEach((point) => {
@@ -58,7 +61,9 @@ class PersistanceHelper {
     };
   }
 
-  static decompressPattern({ dim, col, pat }) {
+  static decompressPattern({ dim, col, pat }: {
+    dim: Dimensions
+  }) {
     const splitPat = pat.split(',');
     const blankPattern = PatternHelper.createFilledPattern(dim, '#ffffff');
 
@@ -79,5 +84,3 @@ class PersistanceHelper {
     return pattern;
   }
 }
-
-export default PersistanceHelper;

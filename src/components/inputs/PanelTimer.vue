@@ -28,80 +28,76 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue';
 import PanelButton from './PanelButton.vue';
 
-export default {
-  components: {
-    PanelButton,
-  },
-  props: {
-    value: { type: Number, required: true },
-  },
-  emits: ['input'],
-  data: () => ({
-    stopped: true,
-    breakdown: {
-      days: 0,
-      hours: '00',
-      minutes: '00',
-      seconds: '00',
-    },
-  }),
-  watch: {
-    value: {
-      immediate: true,
-      handler() {
-        let time = this.value;
-        this.breakdown.days = Math.floor(time / 86400000);
-        time %= 86400000;
-        const hours = Math.floor(time / 3600000);
-        this.breakdown.hours = hours < 10 ? `0${hours}` : hours;
-        time %= 3600000;
-        const minutes = Math.floor(time / 60000);
-        this.breakdown.minutes = minutes < 10 ? `0${minutes}` : minutes;
-        time %= 60000;
-        const seconds = Math.floor(time / 1000);
-        this.breakdown.seconds = seconds < 10 ? `0${seconds}` : seconds;
+const { value } = defineProps<{ value: number }>();
+const emit = defineEmits<{ input: [value: number] }>();
 
-        if (this.value === 0) {
-          clearTimeout(this.timeout);
-          this.stopped = true;
-        }
-      },
-    },
-  },
-  methods: {
-    start() {
-      this.valueAtLastStart = this.value;
-      this.lastStartDate = Date.now();
-      this.$emit('input', this.value + 1);
-      this.setupNextTick(this.value);
-      this.stopped = false;
-    },
-    stop() {
-      clearTimeout(this.timeout);
-      this.processTick();
-      this.stopped = true;
-    },
-    reset() {
-      this.valueAtLastStart = 0;
-      this.lastStartDate = Date.now();
-      this.$emit('input', 0);
-    },
-    setupNextTick(val) {
-      const millisToWait = 1001 - (val % 1000);
-      this.timeout = setTimeout(() => {
-        const nextVal = this.processTick();
-        this.setupNextTick(nextVal);
-      }, millisToWait);
-    },
-    processTick() {
-      const nextValue = this.valueAtLastStart + (Date.now() - this.lastStartDate);
-      this.$emit('input', nextValue);
-      return nextValue;
-    },
-  },
+const stopped = ref(true);
+const breakdown = ref({
+  days: 0,
+  hours: '00',
+  minutes: '00',
+  seconds: '00',
+});
+
+const valueAtLastStart = ref(value);
+const lastStartDate = ref(0);
+const timeout = ref<number>();
+
+watchEffect(() => {
+  let time = value;
+  breakdown.value.days = Math.floor(time / 86400000);
+  time %= 86400000;
+  const hours = Math.floor(time / 3600000);
+  breakdown.value.hours = hours < 10 ? `0${hours}` : hours.toString();
+  time %= 3600000;
+  const minutes = Math.floor(time / 60000);
+  breakdown.value.minutes = minutes < 10 ? `0${minutes}` : minutes.toString();
+  time %= 60000;
+  const seconds = Math.floor(time / 1000);
+  breakdown.value.seconds = seconds < 10 ? `0${seconds}` : seconds.toString();
+
+  if (value === 0) {
+    clearTimeout(timeout.value);
+    stopped.value = true;
+  }
+});
+
+const start = () => {
+  valueAtLastStart.value = value;
+  lastStartDate.value = Date.now();
+  emit('input', value + 1);
+  setupNextTick(value);
+  stopped.value = false;
+};
+
+const stop = () => {
+  clearTimeout(timeout.value);
+  processTick();
+  stopped.value = true;
+};
+
+const reset = () => {
+  valueAtLastStart.value = 0;
+  lastStartDate.value = Date.now();
+  emit('input', 0);
+};
+
+const setupNextTick = (val: number) => {
+  const millisToWait = 1001 - (val % 1000);
+  timeout.value = setTimeout(() => {
+    const nextVal = processTick();
+    setupNextTick(nextVal);
+  }, millisToWait);
+};
+
+const processTick = () => {
+  const nextValue = valueAtLastStart.value + (Date.now() - lastStartDate.value);
+  emit('input', nextValue);
+  return nextValue;
 };
 </script>
 
