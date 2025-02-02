@@ -52,8 +52,8 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { useSettingsStore } from '@/store/settings/state';
-import { usePersistanceStore } from '@/store/persistance/state';
+import { useSettingsStore } from '@/store/settings';
+import { usePersistanceStore } from '@/store/persistance';
 import PrimaryInfo from './controls/PrimaryInfo.vue';
 import ColorPalette from './controls/ColorPalette.vue';
 import GeneralSettings from './controls/GeneralSettings.vue';

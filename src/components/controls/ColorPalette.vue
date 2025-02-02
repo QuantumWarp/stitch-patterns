@@ -31,10 +31,7 @@
         class="palette-box"
       >
         <div class="selected-pointer">
-          <font-awesome-icon
-            v-if="index === 0"
-            :icon="['fas', 'arrow-down']"
-          />
+          <i class="material-icons" v-if="index === 0">arrow_downward</i>
         </div>
 
         <button
@@ -49,8 +46,8 @@
 <script setup lang="ts">
 import { computed, ref, type CSSProperties } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useSettingsStore } from '@/store/settings/state';
-import { usePatternStore } from '@/store/pattern/state';
+import { useSettingsStore } from '@/store/settings';
+import { usePatternStore } from '@/store/pattern';
 
 import PanelButton from '../inputs/PanelButton.vue';
 

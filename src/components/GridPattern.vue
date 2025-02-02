@@ -27,9 +27,9 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { usePatternStore } from '@/store/pattern/state';
-import { useSettingsStore } from '@/store/settings/state';
-import { useKnittingStore } from '@/store/knitting/state';
+import { usePatternStore } from '@/store/pattern';
+import { useSettingsStore } from '@/store/settings';
+import { useKnittingStore } from '@/store/knitting';
 import { computed, ref } from 'vue';
 import type { Square } from '../models/grid.ts';
 
@@ -91,19 +91,19 @@ const colorPoint = (e: MouseEvent, point: Square) => {
   let mirrorPointX: number | null = null;
   if (settings.value.mirrorX) {
     mirrorPointX = dimensions.value.width - (point.x + 1);
-    const mirrorPoint = pattern.value.find((p) => p.x === mirrorPointX && p.y === point.y);
+    const mirrorPoint = pattern.value.find((p) => p.x === mirrorPointX && p.y === point.y)!;
     updatePointColor(mirrorPoint);
   }
 
   let mirrorPointY: number | null = null;
   if (settings.value.mirrorY) {
     mirrorPointY = dimensions.value.height - (point.y + 1);
-    const mirrorPoint = pattern.value.find((p) => p.x === point.x && p.y === mirrorPointY);
+    const mirrorPoint = pattern.value.find((p) => p.x === point.x && p.y === mirrorPointY)!;
     updatePointColor(mirrorPoint);
   }
 
   if (mirrorPointX !== null && mirrorPointY !== null) {
-    const mirrorPoint = pattern.value.find((p) => p.x === mirrorPointX && p.y === mirrorPointY);
+    const mirrorPoint = pattern.value.find((p) => p.x === mirrorPointX && p.y === mirrorPointY)!;
     updatePointColor(mirrorPoint);
   }
 };

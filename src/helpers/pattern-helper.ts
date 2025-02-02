@@ -1,6 +1,6 @@
 import type { Dimensions } from "../models/dimensions";
 import type { GridSquares } from "../models/grid";
-import type { KnitPattern, KnitRow, KnitSettings, Stitch } from "../models/knit";
+import type { KnitPattern, KnitRow, KnitSettings, Stitch, StitchInfo } from "../models/knit";
 
 export default class PatternHelper {
   static createFilledPattern(dimensions: Dimensions, color: string) {
@@ -41,13 +41,17 @@ export default class PatternHelper {
     return orderedColors;
   }
 
-  static createStitchInfo(knitPattern: KnitPattern, targetStitch: Stitch) {
+  static createStitchInfo(knitPattern: KnitPattern, targetStitch: Stitch): StitchInfo {
     const selectedRow = knitPattern.find(
       (row) => Boolean(row.find(
         (stitch) => stitch === targetStitch,
       )),
     );
-    if (!selectedRow) return {};
+    if (!selectedRow) return {
+      row: [], stitchIndex: 0,
+      isStartStitch: false, isEndStitch: false,
+      rowIndex: 0, isStartRow: false, isEndRow: false
+    };
     const stitchIndex = selectedRow.indexOf(targetStitch);
     const rowIndex = knitPattern.indexOf(selectedRow);
     return {

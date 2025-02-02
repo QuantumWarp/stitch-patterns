@@ -1,6 +1,6 @@
-import type { Dimensions } from '../models/dimensions';
 import type { GridSquares } from '../models/grid';
 import type { KnitPattern } from '../models/knit';
+import type { CompressedPattern } from '../models/pattern';
 import PatternHelper from './pattern-helper';
 
 export default class PersistanceHelper {
@@ -27,7 +27,7 @@ export default class PersistanceHelper {
     return text;
   }
 
-  static compressPattern(sortedPattern: GridSquares) {
+  static compressPattern(sortedPattern: GridSquares): CompressedPattern {
     const colorDict: Record<string, string> = {};
     let patternString = '';
 
@@ -61,19 +61,17 @@ export default class PersistanceHelper {
     };
   }
 
-  static decompressPattern({ dim, col, pat }: {
-    dim: Dimensions
-  }) {
+  static decompressPattern({ dim, col, pat }: CompressedPattern) {
     const splitPat = pat.split(',');
     const blankPattern = PatternHelper.createFilledPattern(dim, '#ffffff');
 
-    let left;
-    let color;
+    let left: number | null;
+    let color: string;
 
     const pattern = blankPattern.map((point) => {
       if (!left) {
-        const split = splitPat.shift().split('-');
-        color = Object.keys(col).find((x) => col[x] === split[0]);
+        const split = splitPat.shift()!.split('-');
+        color = Object.keys(col).find((x) => col[x] === split[0])!;
         left = Number(split[1]);
       }
       const newPoint = { ...point, color };

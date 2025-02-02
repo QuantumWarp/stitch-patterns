@@ -37,29 +37,12 @@
           @click="$event.stopPropagation()"
         >
           <div class="icon">
-            <!-- <font-awesome-icon
-              :icon="['fas', 'download']"
-              title="Export"
-              @click="exportSavedKnitPattern(pattern.name)"
-            /> -->
+            <i class="material-icons" title="Export" @click="exportSavedKnitPattern(pattern.name)">download</i>
           </div>
 
 
           <div class="icon">
-            <!-- <font-awesome-icon
-              :icon="['fas', 'pen']"
-              title="Export Knit"
-              @click="exportSavedKnitPattern(pattern.name)"
-            /> -->
-          </div>
-
-
-          <div class="icon">
-            <font-awesome-icon
-              :icon="['fas', 'trash']"
-              title="Delete"
-              @click="deletePattern(pattern.name)"
-            />
+            <i class="material-icons" title="Delete" @click="deletePattern(pattern.name)">delete</i>
           </div>
         </div>
       </div>
@@ -70,19 +53,19 @@
 <script setup lang="ts">
 import { onMounted, useTemplateRef } from 'vue';
 import { storeToRefs } from 'pinia';
-import { usePersistanceStore } from '@/store/persistance/state';
+import { usePersistanceStore } from '@/store/persistance';
 import PanelButton from '../inputs/PanelButton.vue';
 
 const persistanceStore = usePersistanceStore();
 const { savedPatterns } = storeToRefs(persistanceStore);
-const { loadIndex, loadPattern, importPattern, deletePattern } = persistanceStore;
+const { loadIndex, loadPattern, importPattern, deletePattern, exportSavedKnitPattern } = persistanceStore;
 
 const importInputEl = useTemplateRef('importInput')
 
 onMounted(() => loadIndex());
 
 const runImport = async (e: Event) => {
-  await importPattern(e);
+  await importPattern(e as InputEvent);
   importInputEl.value!.type = 'text';
   importInputEl.value!.type = 'file';
 };

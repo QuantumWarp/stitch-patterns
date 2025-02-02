@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { useSettingsStore } from '@/store/settings/state';
+import { useSettingsStore } from '@/store/settings';
 import PanelCheckbox from '../inputs/PanelCheckbox.vue';
 
 const settingsStore = useSettingsStore();

@@ -5,7 +5,7 @@
         class="icon left"
         @click="currentRowIndex -= 1"
       >
-        <font-awesome-icon :icon="['fas', 'arrow-left']" />
+        <i class="material-icons">arrow_back</i>
       </div>
 
       <span class="title">
@@ -15,8 +15,8 @@
       <div
         class="icon right"
         @click="currentRowIndex += 1"
-      >
-        <font-awesome-icon :icon="['fas', 'arrow-right']" />
+        >
+        <i class="material-icons">arrow_forward</i>
       </div>
     </div>
 
@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { useKnittingStore } from '@/store/knitting/state';
+import { useKnittingStore } from '@/store/knitting';
 import { computed, nextTick, onMounted, onUnmounted, ref, useTemplateRef, watch, type CSSProperties } from 'vue';
 import type { Stitch } from '../../models/knit.ts';
 

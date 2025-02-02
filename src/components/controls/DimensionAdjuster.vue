@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { usePatternStore } from '@/store/pattern/state';
+import { usePatternStore } from '@/store/pattern';
 import PanelButton from '../inputs/PanelButton.vue';
 import PanelInput from '../inputs/PanelInput.vue';
 import { computed, ref, watch } from 'vue';

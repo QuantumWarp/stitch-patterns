@@ -6,10 +6,10 @@
 
 <script setup lang="ts">
 import { useRootStore } from '@/store/store';
-import { usePersistanceStore } from '@/store/persistance/state';
-import { useKnittingStore } from '@/store/knitting/state';
-import { usePatternStore } from '@/store/pattern/state';
-import { useSettingsStore } from '@/store/settings/state';
+import { usePersistanceStore } from '@/store/persistance';
+import { useKnittingStore } from '@/store/knitting';
+import { usePatternStore } from '@/store/pattern';
+import { useSettingsStore } from '@/store/settings';
 import PatternEditor from '@/views/PatternEditor.vue';
 import { onMounted } from 'vue';
 

@@ -4,7 +4,7 @@
       class="name-input"
       label="Name"
       :value="name"
-      @input="updatePatternDetails({ name: $event })"
+      @input="updatePatternDetails({ name: $event.toString() })"
     />
 
     <div class="buttons">
@@ -41,8 +41,8 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useRootStore } from '@/store/store';
-import { usePatternStore } from '@/store/pattern/state';
-import { usePersistanceStore } from '@/store/persistance/state';
+import { usePatternStore } from '@/store/pattern';
+import { usePersistanceStore } from '@/store/persistance';
 import PanelButton from '../inputs/PanelButton.vue';
 import PanelInput from '../inputs/PanelInput.vue';
 import { computed, ref, watch } from 'vue';
