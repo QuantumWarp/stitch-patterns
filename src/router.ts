@@ -1,4 +1,4 @@
-import { createMemoryHistory, createRouter } from 'vue-router';
+import { createWebHistory, createRouter } from 'vue-router';
 
 import UserEdit from './views/UserEdit.vue';
 import UserExample from './views/UserExample.vue';
@@ -9,7 +9,7 @@ import AdminKnit from './views/AdminKnit.vue';
 
 
 export const router = createRouter({
-  history: createMemoryHistory(),
+  history: createWebHistory(),
   routes: [
     { path: '/', redirect: '/admin/edit' },
     { path: '/user/examples', component: UserExample },

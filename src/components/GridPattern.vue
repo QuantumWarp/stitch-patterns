@@ -33,12 +33,14 @@ import { useKnittingStore } from '@/store/knitting';
 import { computed, ref } from 'vue';
 import type { Square } from '../models/grid.ts';
 
+defineProps<{ isKnitting?: boolean }>();
+
 const patternStore = usePatternStore();
 const { pattern, bounds, dimensions } = storeToRefs(patternStore);
 const { updatePointColor } = patternStore;
 
 const settingsStore = useSettingsStore();
-const { settings, openPanels } = storeToRefs(settingsStore);
+const { settings } = storeToRefs(settingsStore);
 
 const knittingStore = useKnittingStore();
 const { knitSettings, selectedStitchInfo } = storeToRefs(knittingStore);
@@ -67,10 +69,6 @@ const selectedRowStyle = computed(() => {
     height: `${squareDimensions.value.height + 1}px`,
     width: `${squareDimensions.value.width * dimensions.value.width + 2}px`,
   };
-});
-
-const isKnitting = computed(() => {
-  return openPanels.value.includes('knitting');
 });
 
 const getPointStyle = (point: Square) => {

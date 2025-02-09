@@ -43,7 +43,7 @@ export const useKnittingStore = defineStore('knitting', {
     },
   
     selectedStitch(): Stitch {
-      return this.selectedStitchState || this.knitPattern[0][0];
+      return this.selectedStitchState || this.knitPattern[0]?.[0];
     },
 
     selectedStitchInfo(): StitchInfo {

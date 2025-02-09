@@ -10,15 +10,9 @@ export const useSettingsStore = defineStore('settings', {
       mirrorY: false,
     } as Settings,
     colorPalette: [] as string[],
-    openPanels: [] as string[],
   }),
 
   actions: {
-    updatePanelState({ panel, open }: { panel: string, open: boolean }) {
-      const newPanels = open ? [panel] : [];
-      this.openPanels = newPanels;
-    },
-
     resetSettings() {
       this.settings = {
         color: '#000000',
