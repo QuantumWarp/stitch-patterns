@@ -1,0 +1,3 @@
+<template>
+  Admin Knit
+</template>

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <PatternEditor />
+    <RouterView  />
   </div>
 </template>
 
@@ -10,7 +10,7 @@ import { usePersistanceStore } from '@/store/persistance';
 import { useKnittingStore } from '@/store/knitting';
 import { usePatternStore } from '@/store/pattern';
 import { useSettingsStore } from '@/store/settings';
-import PatternEditor from '@/views/PatternEditor.vue';
+import { RouterView } from 'vue-router';
 import { onMounted } from 'vue';
 
 onMounted(() => {
