@@ -4,36 +4,8 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { useRootStore } from '@/store/store';
-import { usePersistanceStore } from '@/store/persistance';
-import { useKnittingStore } from '@/store/knitting';
-import { usePatternStore } from '@/bin/pattern';
-import { useSettingsStore } from '@/bin/settings';
+<script setup lang="ts">;
 import { RouterView } from 'vue-router';
-import { onMounted } from 'vue';
-
-onMounted(() => {
-  const rootStore = useRootStore();
-  const persistanceStore = usePersistanceStore();
-  const knittingStore = useKnittingStore();
-  const patternStore = usePatternStore();
-  const settingsStore = useSettingsStore();
-
-  let saveSessionTimeout: number | undefined;
-  const delayedSave = () => {
-    clearTimeout(saveSessionTimeout);
-    saveSessionTimeout = setTimeout(() => {
-      persistanceStore.saveSession();
-    }, 500);
-  }
-
-  rootStore.$subscribe(delayedSave);
-  persistanceStore.$subscribe(delayedSave);
-  knittingStore.$subscribe(delayedSave);
-  patternStore.$subscribe(delayedSave);
-  settingsStore.$subscribe(delayedSave);
-});
 </script>
 
 <style>

@@ -1,3 +1,0 @@
-<template>
-  User Submit
-</template>

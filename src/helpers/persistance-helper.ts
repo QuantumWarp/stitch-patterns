@@ -1,6 +1,5 @@
-import type { GridSquares } from '../models/grid';
 import type { KnitPattern } from '../models/knit';
-import type { CompressedPattern } from '../models/pattern';
+import type { CompressedPattern, PatternSquare } from '../models/pattern';
 import PatternHelper from './pattern-helper';
 
 export default class PersistanceHelper {
@@ -19,7 +18,7 @@ export default class PersistanceHelper {
       const isEven = (index + 1) % 2 === 0;
       text += `-------- Row ${index + 1} --------${(isEven) ? ' (Even)' : ''}\r\n`;
       row.forEach((entry) => {
-        text += `Knit ${entry.count}: ${this.colorString(entry.color)}\r\n`;
+        text += `Knit ${entry.count}: ${this.colorString(entry.colorIndex)}\r\n`;
       });
       text += '\r\n';
     });
@@ -27,7 +26,7 @@ export default class PersistanceHelper {
     return text;
   }
 
-  static compressPattern(sortedPattern: GridSquares): CompressedPattern {
+  static compressPattern(sortedPattern: PatternSquare[]): CompressedPattern {
     const colorDict: Record<string, string> = {};
     let patternString = '';
 
@@ -35,11 +34,11 @@ export default class PersistanceHelper {
     let colorCount = 0;
 
     sortedPattern.forEach((point) => {
-      let colorAlias = colorDict[point.color];
+      let colorAlias = colorDict[point.colorIndex];
 
       if (!colorAlias) {
-        colorDict[point.color] = `${Object.keys(colorDict).length + 1}`;
-        colorAlias = colorDict[point.color];
+        colorDict[point.colorIndex] = `${Object.keys(colorDict).length + 1}`;
+        colorAlias = colorDict[point.colorIndex];
       }
 
       if (!previousColorAlias || previousColorAlias === colorAlias) {
@@ -63,7 +62,7 @@ export default class PersistanceHelper {
 
   static decompressPattern({ dim, col, pat }: CompressedPattern) {
     const splitPat = pat.split(',');
-    const blankPattern = PatternHelper.createFilledPattern(dim, '#ffffff');
+    const blankPattern = PatternHelper.createFilledPattern(dim, 0);
 
     let left: number | null;
     let color: string;

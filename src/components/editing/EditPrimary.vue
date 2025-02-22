@@ -8,11 +8,11 @@
     />
 
     <div class="buttons">
-      <PanelButton @click="savePattern">
+      <PanelButton @click="savePattern(pattern); router.push('/admin/list')">
         Save
       </PanelButton>
 
-      <PanelButton @click="savePattern" danger>
+      <PanelButton danger @click="router.push('/admin/list')">
         Cancel
       </PanelButton>
     </div>
@@ -20,13 +20,11 @@
 </template>
 
 <script setup lang="ts">
-import { usePersistanceStore } from '@/store/persistance.ts';
 import PanelButton from '../inputs/PanelButton.vue';
 import PanelInput from '../inputs/PanelInput.vue';
 import type { Pattern } from '../../models/pattern.ts';
-
-const persistanceStore = usePersistanceStore();
-const { savePattern } = persistanceStore;
+import { savePattern } from '../../storage/pattern.storage.ts';
+import { router } from '@/router.ts'
 
 const emit = defineEmits<{ onUpdate: [pattern: Pattern] }>();
 const { pattern } = defineProps<{ pattern: Pattern }>();

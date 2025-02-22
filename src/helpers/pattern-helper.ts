@@ -1,6 +1,5 @@
-import type { Dimensions } from "../models/dimensions";
-import type { GridSquares } from "../models/grid";
-import type { KnitPattern, KnitRow, KnitSettings, Stitch, StitchInfo } from "../models/knit";
+import type { KnitPattern, KnitRow, KnitSettings } from "../models/knit";
+import type { Dimensions, PatternSquare } from "../models/pattern";
 
 export default class PatternHelper {
   static createFilledPattern(dimensions: Dimensions, colorIndex: number) {
@@ -13,7 +12,7 @@ export default class PatternHelper {
     return pattern;
   }
 
-  static getDimensionsFromSortedPatten(sortedPattern: GridSquares) {
+  static getDimensionsFromSortedPatten(sortedPattern: PatternSquare[]) {
     const firstPoint = sortedPattern[0];
     const lastPoint = sortedPattern[sortedPattern.length - 1];
     return {
@@ -22,13 +21,13 @@ export default class PatternHelper {
     };
   }
 
-  static countColorsForPalette(pattern: GridSquares) {
+  static countColorsForPalette(pattern: PatternSquare[]) {
     const colorDict: Record<string, number> = {};
     pattern.forEach((point) => {
-      if (!colorDict[point.color]) {
-        colorDict[point.color] = 0;
+      if (!colorDict[point.colorIndex]) {
+        colorDict[point.colorIndex] = 0;
       }
-      colorDict[point.color] += 1;
+      colorDict[point.colorIndex] += 1;
     });
     let orderedColors = Object.keys(colorDict)
       .sort((a, b) => (colorDict[a] < colorDict[b] ? 1 : -1));
@@ -39,30 +38,6 @@ export default class PatternHelper {
     }
 
     return orderedColors;
-  }
-
-  static createStitchInfo(knitPattern: KnitPattern, targetStitch: Stitch): StitchInfo {
-    const selectedRow = knitPattern.find(
-      (row) => Boolean(row.find(
-        (stitch) => stitch === targetStitch,
-      )),
-    );
-    if (!selectedRow) return {
-      row: [], stitchIndex: 0,
-      isStartStitch: false, isEndStitch: false,
-      rowIndex: 0, isStartRow: false, isEndRow: false
-    };
-    const stitchIndex = selectedRow.indexOf(targetStitch);
-    const rowIndex = knitPattern.indexOf(selectedRow);
-    return {
-      row: selectedRow,
-      stitchIndex,
-      isStartStitch: stitchIndex === 0,
-      isEndStitch: stitchIndex === selectedRow.length - 1,
-      rowIndex,
-      isStartRow: rowIndex === 0,
-      isEndRow: rowIndex === knitPattern.length - 1,
-    };
   }
 
   static applyReducePatternSettings(reducedPattern: KnitPattern, {
@@ -87,25 +62,25 @@ export default class PatternHelper {
     return finalPattern;
   }
 
-  static reducePattern(pattern: GridSquares) {
+  static reducePattern(squares: PatternSquare[]) {
     return PatternHelper
-      .sortedRows(pattern)
+      .sortedRows(squares)
       .map((x) => PatternHelper.reduceSortedRow(x));
   }
 
-  static reduceSortedRow(sortedRow: GridSquares) {
+  static reduceSortedRow(sortedRow: PatternSquare[]) {
     return sortedRow.reduce((r, a) => {
       const lastEntry = r[r.length - 1];
-      if (lastEntry && lastEntry.color === a.color) {
+      if (lastEntry && lastEntry.colorIndex === a.colorIndex) {
         lastEntry.count += 1;
       } else {
-        r.push({ color: a.color, count: 1 });
+        r.push({ colorIndex: a.colorIndex, count: 1 });
       }
       return r;
     }, [] as KnitRow);
   }
 
-  static sortedRows(pattern: GridSquares) {
+  static sortedRows(pattern: PatternSquare[]) {
     const groupedRows = PatternHelper.groupBy(pattern, (pt) => pt.y);
     return Object.keys(groupedRows)
       .map((x) => groupedRows[Number(x)])

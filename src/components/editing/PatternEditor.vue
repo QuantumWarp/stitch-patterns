@@ -99,10 +99,4 @@ const colorPoint = (e: MouseEvent, point: PatternSquare) => {
   border: 1px solid grey;
   user-select: none;
 }
-
-.selected-row-overlay {
-  position: absolute;
-  z-index: 1;
-  box-shadow: 0px 0px 120px 50px #bbb;
-}
 </style>

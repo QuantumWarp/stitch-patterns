@@ -1,9 +1,3 @@
-import type { Dimensions } from "./dimensions";
-
-export interface PatternDetails {
-  name: string;
-}
-
 export interface CompressedPattern {
   dim: Dimensions;
   col: Record<string, string>;
@@ -11,10 +5,16 @@ export interface CompressedPattern {
 }
 
 export interface Pattern {
+  id: string;
   name: string;
   colors: string[],
   dimensions: Dimensions;
   squares: PatternSquare[];
+}
+
+export interface Dimensions {
+  width: number;
+  height: number;
 }
 
 export interface PatternSquare {

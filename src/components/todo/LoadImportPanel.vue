@@ -53,7 +53,7 @@
 <script setup lang="ts">
 import { onMounted, useTemplateRef } from 'vue';
 import { storeToRefs } from 'pinia';
-import { usePersistanceStore } from '@/store/persistance';
+import { usePersistanceStore } from '@/bin/store/pattern';
 import PanelButton from '../inputs/PanelButton.vue';
 
 const persistanceStore = usePersistanceStore();

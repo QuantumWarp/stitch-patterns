@@ -19,24 +19,19 @@
     </template>
 
     <AdminListTile
-      v-for="pattern in savedPatterns"
-      :key="pattern.name"
-      :name="pattern.name"
+      v-for="pattern in patterns"
+      :key="pattern.id"
+      :pattern="pattern"
     />
   </AdminLayout>
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount } from 'vue';
 import AdminLayout from '../components/AdminLayout.vue';
-import { usePersistanceStore } from '../store/persistance.ts';
 import AdminListTile from '../components/listing/AdminListTile.vue';
-import { storeToRefs } from 'pinia';
 import PanelButton from '../components/inputs/PanelButton.vue';
+import { getPatterns } from '../storage/pattern.storage.ts';
+import { computed } from 'vue';
 
-const persistanceStore = usePersistanceStore();
-const { savedPatterns } = storeToRefs(persistanceStore); 
-const { loadSession } = persistanceStore;
-
-onBeforeMount(() => loadSession());
+const patterns = computed(() => getPatterns());
 </script>
