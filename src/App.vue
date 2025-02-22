@@ -8,8 +8,8 @@
 import { useRootStore } from '@/store/store';
 import { usePersistanceStore } from '@/store/persistance';
 import { useKnittingStore } from '@/store/knitting';
-import { usePatternStore } from '@/store/pattern';
-import { useSettingsStore } from '@/store/settings';
+import { usePatternStore } from '@/bin/pattern';
+import { useSettingsStore } from '@/bin/settings';
 import { RouterView } from 'vue-router';
 import { onMounted } from 'vue';
 

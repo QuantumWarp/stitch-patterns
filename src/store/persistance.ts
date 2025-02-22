@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
 import type { CompressedPattern, PatternDetails } from '../models/pattern';
-import { usePatternStore } from './pattern';
+import { usePatternStore } from '../bin/pattern';
 import PersistanceHelper from '../helpers/persistance-helper';
-import { useSettingsStore } from './settings';
+import { useSettingsStore } from '../bin/settings';
 import { useKnittingStore } from './knitting';
 import FileHelper from '../helpers/file-helper';
 import PatternHelper from '../helpers/pattern-helper';
@@ -34,7 +34,6 @@ export const usePersistanceStore = defineStore('persistance', {
       const settingsStore = useSettingsStore();
       const knittingStore = useKnittingStore();
       return {
-        openPanels: settingsStore.openPanels,
         knitData: knittingStore.knitData,
         settings: settingsStore.settings,
         patternData: this.patternData,
@@ -85,12 +84,6 @@ export const usePersistanceStore = defineStore('persistance', {
       localStorage.setItem('index', JSON.stringify(updatedIndex));
       this.savedPatterns = updatedIndex;
       patternStore.dirty = false;
-    },
-
-    loadPattern(name: string) {
-      const patternDataString = localStorage.getItem(`pattern: ${name}`)!;
-      const patternData = JSON.parse(patternDataString);
-      this.initialisePatternData(patternData);
     },
 
     deletePattern(name: string) {
@@ -145,7 +138,6 @@ export const usePersistanceStore = defineStore('persistance', {
       }
   
       const sessionData = JSON.parse(sessionDataString);
-      settingsStore.openPanels = sessionData.openPanels;
       settingsStore.settings = sessionData.settings;
       this.initialisePatternData(sessionData.patternData);
       knittingStore.knitSettings = sessionData.knitData.settings;

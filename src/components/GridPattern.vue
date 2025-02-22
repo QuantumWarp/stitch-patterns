@@ -27,8 +27,8 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { usePatternStore } from '@/store/pattern';
-import { useSettingsStore } from '@/store/settings';
+import { usePatternStore } from '@/bin/pattern.ts';
+import { useSettingsStore } from '@/bin/settings.ts';
 import { useKnittingStore } from '@/store/knitting';
 import { computed, ref } from 'vue';
 import type { Square } from '../models/grid.ts';

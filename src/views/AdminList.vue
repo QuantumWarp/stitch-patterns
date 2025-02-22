@@ -30,7 +30,7 @@
 import { onBeforeMount } from 'vue';
 import AdminLayout from '../components/AdminLayout.vue';
 import { usePersistanceStore } from '../store/persistance.ts';
-import AdminListTile from '../components/AdminListTile.vue';
+import AdminListTile from '../components/listing/AdminListTile.vue';
 import { storeToRefs } from 'pinia';
 import PanelButton from '../components/inputs/PanelButton.vue';
 

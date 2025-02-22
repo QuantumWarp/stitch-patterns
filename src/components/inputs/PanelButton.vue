@@ -14,6 +14,7 @@ defineEmits<{ click: [$event: MouseEvent] }>();
 
 <style scoped>
 button {
+  min-width: 80px;
   background-color: white;
   border: none;
   color: white;

@@ -66,7 +66,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useKnittingStore } from '@/store/knitting';
-import { usePatternStore } from '@/store/pattern';
+import { usePatternStore } from '@/bin/pattern';
 import { usePersistanceStore } from '@/store/persistance';
 
 import PanelButton from '../inputs/PanelButton.vue';

@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { usePatternStore } from '@/store/pattern';
+import { usePatternStore } from '@/bin/pattern';
 
 
 const patternStore = usePatternStore();

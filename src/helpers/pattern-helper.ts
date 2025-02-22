@@ -3,11 +3,11 @@ import type { GridSquares } from "../models/grid";
 import type { KnitPattern, KnitRow, KnitSettings, Stitch, StitchInfo } from "../models/knit";
 
 export default class PatternHelper {
-  static createFilledPattern(dimensions: Dimensions, color: string) {
+  static createFilledPattern(dimensions: Dimensions, colorIndex: number) {
     const pattern = [];
     for (let x = 0; x < dimensions.width; x += 1) {
       for (let y = 0; y < dimensions.height; y += 1) {
-        pattern.push({ x, y, color });
+        pattern.push({ x, y, colorIndex });
       }
     }
     return pattern;
