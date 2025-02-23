@@ -1,83 +1,82 @@
-import type { KnitPattern } from '../models/knit';
-import type { CompressedPattern, PatternSquare } from '../models/pattern';
+import type { CompressedPattern, Pattern } from '../models/pattern';
+import { savePattern } from '../storage/pattern.storage';
+import FileHelper from './file-helper';
 import PatternHelper from './pattern-helper';
+import { v4 as uuid } from 'uuid';
 
-export default class PersistanceHelper {
-  static colorString(color: string) {
-    switch (color) {
-      case '#ffffff': return 'White';
-      case '#000000': return 'Black';
-      default: return color;
+export function exportPattern(pattern: Pattern) {
+  const compPattern = compressPattern(pattern);
+  FileHelper.download(`${pattern.name || "pattern"}.json`, JSON.stringify(compPattern));
+}
+
+export async function importPattern(e: InputEvent) {
+  try {
+    const compPatternString = await FileHelper.importRaw(e);
+    const compPattern = JSON.parse(compPatternString);
+    const pattern = decompressPattern(compPattern);
+    pattern.id = uuid();
+    savePattern(pattern);
+  } catch {
+    console.warn('Import failed');
+  }
+}
+
+function compressPattern(pattern: Pattern): CompressedPattern {
+  const { squares, ...compPattern } = pattern;
+  const sortedSquares = squares.sort((a, b) => {
+    if (a.x === b.x) return a.y > b.y ? 1 : -1;
+    return a.x > b.x ? 1 : -1;
+  })
+
+  let patternString = '';
+  let previousColorIndex = sortedSquares[0].colorIndex;
+  let colorCount = 0;
+
+  sortedSquares.forEach((square) => {
+    const isSame = previousColorIndex === square.colorIndex;
+
+    if (isSame) {
+      colorCount += 1;
+    } else {
+      patternString += colorString(previousColorIndex, colorCount) + ",";
+      colorCount = 1;
+      previousColorIndex = square.colorIndex;
     }
-  }
+  });
 
-  static createKnitString(name: string, reducedPatternWithSettings: KnitPattern) {
-    let text = `-------- ${name} --------\r\n\r\n`;
+  patternString += colorString(previousColorIndex, colorCount);
 
-    reducedPatternWithSettings.forEach((row, index) => {
-      const isEven = (index + 1) % 2 === 0;
-      text += `-------- Row ${index + 1} --------${(isEven) ? ' (Even)' : ''}\r\n`;
-      row.forEach((entry) => {
-        text += `Knit ${entry.count}: ${this.colorString(entry.colorIndex)}\r\n`;
-      });
-      text += '\r\n';
-    });
+  return { ...compPattern, patternString };
+}
 
-    return text;
-  }
+function colorString(colorIndex: number, count: number) {
+  if (count < 3) return Array(count).fill(colorIndex);
+  return colorIndex + "-" + count;
+}
 
-  static compressPattern(sortedPattern: PatternSquare[]): CompressedPattern {
-    const colorDict: Record<string, string> = {};
-    let patternString = '';
+function decompressPattern(compPattern: CompressedPattern): Pattern {
+  const { patternString, ...pattern } = compPattern;
+  const splitPat = patternString.split(',');
+  let squares = PatternHelper.createFilledPattern(pattern.dimensions, 0);
+  const sortedSquares = squares.sort((a, b) => {
+    if (a.x === b.x) return a.y > b.y ? 1 : -1;
+    return a.x > b.x ? 1 : -1;
+  })
 
-    let previousColorAlias: string = '';
-    let colorCount = 0;
+  let left: number | null;
+  let colorIndex: number;
 
-    sortedPattern.forEach((point) => {
-      let colorAlias = colorDict[point.colorIndex];
+  squares = sortedSquares.map((point) => {
+    if (!left) {
+      const nextEntry = splitPat.shift()!;
+      const dashed = nextEntry.includes('-');
+      colorIndex = Number(dashed ? nextEntry.split('-')[0] : nextEntry[0]);
+      left = Number(dashed ? nextEntry.split('-')[1] : nextEntry.length);
+    }
+    left -= 1;
+    return { ...point, colorIndex };
+  });
+  console.log(squares)
 
-      if (!colorAlias) {
-        colorDict[point.colorIndex] = `${Object.keys(colorDict).length + 1}`;
-        colorAlias = colorDict[point.colorIndex];
-      }
-
-      if (!previousColorAlias || previousColorAlias === colorAlias) {
-        colorCount += 1;
-      } else {
-        patternString += `${previousColorAlias}-${colorCount},`;
-        colorCount = 1;
-      }
-
-      previousColorAlias = colorAlias;
-    });
-
-    patternString += `${previousColorAlias}-${colorCount}`;
-
-    return {
-      dim: PatternHelper.getDimensionsFromSortedPatten(sortedPattern),
-      col: colorDict,
-      pat: patternString,
-    };
-  }
-
-  static decompressPattern({ dim, col, pat }: CompressedPattern) {
-    const splitPat = pat.split(',');
-    const blankPattern = PatternHelper.createFilledPattern(dim, 0);
-
-    let left: number | null;
-    let color: string;
-
-    const pattern = blankPattern.map((point) => {
-      if (!left) {
-        const split = splitPat.shift()!.split('-');
-        color = Object.keys(col).find((x) => col[x] === split[0])!;
-        left = Number(split[1]);
-      }
-      const newPoint = { ...point, color };
-      left -= 1;
-      return newPoint;
-    });
-
-    return pattern;
-  }
+  return { ...pattern, squares };
 }

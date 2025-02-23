@@ -36,7 +36,7 @@ import type { Pattern } from '../models/pattern.ts';
 import { getPattern } from '../storage/pattern.storage.ts';
 import KnitSettingsPanel from '../components/knitting/KnitSettingsPanel.vue';
 import KnitPrimary from '../components/knitting/KnitPrimary.vue';
-import SectionHeader from '../components/SectionHeader.vue';
+import SectionHeader from '../components/common/SectionHeader.vue';
 
 const session = ref<KnitSession>();
 const pattern = ref<Pattern>();

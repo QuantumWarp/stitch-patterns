@@ -1,11 +1,11 @@
 export default class FileHelper {
-  static async importRaw(e: InputEvent) {
+  static async importRaw(e: InputEvent): Promise<string> {
     return new Promise((resolve) => {
       const file = (e.target as HTMLInputElement)?.files?.[0];
       if (!file) return;
       const reader = new FileReader();
       reader.onload = (evt: ProgressEvent<FileReader>) => {
-        resolve(evt.target?.result);
+        resolve(evt.target?.result as string);
       };
       reader.readAsText(file);
     });

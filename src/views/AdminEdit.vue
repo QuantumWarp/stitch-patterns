@@ -1,7 +1,7 @@
 <template>
   <AdminLayout>
     <template v-slot:sidenav>
-      <EditPrimary :pattern="pattern" />
+      <EditPrimary v-model:pattern="pattern" />
 
       <SectionHeader name="Colours" />
       <ColorPalette
@@ -9,8 +9,15 @@
         v-model:settings="settings"
       />
 
-      <!-- <DimensionAdjuster />
-      <RowColumnAdjuster /> -->
+      <SectionHeader name="Dimensions" />
+      <DimensionAdjuster
+        v-model:pattern="pattern"
+        :settings="settings"
+      />
+      <RowColumnAdjuster
+        v-model:pattern="pattern"
+        :settings="settings"
+      />
 
       <SectionHeader name="Other" />
       <EditSettings
@@ -37,10 +44,12 @@ import EditPrimary from '../components/editing/EditPrimary.vue';
 import type { Pattern } from '../models/pattern.ts';
 import PatternHelper from '../helpers/pattern-helper.ts';
 import type { Settings } from '../models/settings.ts';
-import SectionHeader from '../components/SectionHeader.vue';
+import SectionHeader from '../components/common/SectionHeader.vue';
 import { v4 as uuid } from 'uuid';
 import { useRoute  } from 'vue-router';
 import { getPattern } from '../storage/pattern.storage.ts';
+import DimensionAdjuster from '../components/editing/DimensionAdjuster.vue';
+import RowColumnAdjuster from '../components/editing/RowColumnAdjuster.vue';
 
 const defaultPattern = () => ({
   id: uuid(),

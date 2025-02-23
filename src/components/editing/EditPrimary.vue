@@ -4,7 +4,7 @@
       class="name-input"
       label="Name"
       :value="pattern.name"
-      @input="emit('onUpdate', { ...pattern, name: $event.toString() })"
+      @input="pattern = { ...pattern, name: $event.target.value.toString() }"
     />
 
     <div class="buttons">
@@ -26,8 +26,7 @@ import type { Pattern } from '../../models/pattern.ts';
 import { savePattern } from '../../storage/pattern.storage.ts';
 import { router } from '@/router.ts'
 
-const emit = defineEmits<{ onUpdate: [pattern: Pattern] }>();
-const { pattern } = defineProps<{ pattern: Pattern }>();
+const pattern = defineModel<Pattern>("pattern", { required: true });
 </script>
 
 <style scoped>
