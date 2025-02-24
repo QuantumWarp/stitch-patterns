@@ -1,13 +1,13 @@
-import { createWebHistory, createRouter } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 
 import AdminList from './views/AdminList.vue';
 import AdminEdit from './views/AdminEdit.vue';
 import AdminKnit from './views/AdminKnit.vue';
 
 export const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes: [
-    { path: '/', redirect: '/admin/edit' },
+    { path: '/', redirect: '/admin/list' },
     { path: '/admin/list', component: AdminList },
     { path: '/admin/edit/:id?', component: AdminEdit },
     { path: '/admin/knit/:id?', component: AdminKnit },
