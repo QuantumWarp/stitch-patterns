@@ -1,21 +1,33 @@
 <template>
   <div class="dimension-adjuster">
-    <PanelInput
-      v-model="height"
-      type="number"
-      label="Height"
-    />
+    <div v-if="manualAdjuster" class="manual-input">
+      <PanelInput
+        :model-value="height.toString()"
+        @update:model-value="height = Number($event)"
+        type="number"
+        label="Height"
+      />
 
-    <PanelInput
-      v-model="width"
-      type="number"
-      label="Width"
-    />
+      <PanelInput
+        :model-value="width.toString()"
+        @update:model-value="width = Number($event)"
+        type="number"
+        label="Width"
+      />
+    </div>
 
     <div class="buttons">
       <PanelButton
+        v-if="!manualAdjuster"
+        @click="manualAdjuster = true"
+      >
+        Manual
+      </PanelButton>
+
+      <PanelButton
+        v-if="manualAdjuster"
         :danger="potentiallyDangerous"
-        @click="adjustDimensions({ height, width })"
+        @click="adjustDimensions({ height, width }); manualAdjuster = false"
       >
         Apply
       </PanelButton>
@@ -40,6 +52,7 @@ import type { Settings } from '../../models/settings.ts';
 const pattern = defineModel<Pattern>("pattern", { required: true });
 const { settings } = defineProps<{ settings: Settings}>();
 
+const manualAdjuster = ref(false);
 const height = ref(pattern.value.dimensions.height);
 const width = ref(pattern.value.dimensions.width);
 
@@ -78,7 +91,14 @@ const adjustDimensions = (dimensions: Dimensions) => {
 </script>
 
 <style scoped>
+.manual-input {
+  padding: 0px 40px 15px 40px;
+  display: flex;
+  gap: 10px;
+}
+
 .dimension-adjuster {
+  padding: 20px 0px 0px 0px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -92,13 +112,6 @@ const adjustDimensions = (dimensions: Dimensions) => {
   display: flex;
   flex-direction: row;
   justify-content: center;
-}
-
-.buttons>* {
-  width: 40%;
-}
-
-.buttons :first-child {
-  margin-right: 6px;
+  gap: 6px;
 }
 </style>

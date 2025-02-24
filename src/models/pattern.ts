@@ -1,7 +1,12 @@
 export interface LegacyCompressedPattern {
-  dim: Dimensions;
-  col: Record<string, string>;
-  pat: string;
+  details: {
+    name: string;
+  };
+  pattern: {
+    dim: Dimensions;
+    col: Record<string, string>;
+    pat: string;
+  };
 }
 
 export interface Pattern {

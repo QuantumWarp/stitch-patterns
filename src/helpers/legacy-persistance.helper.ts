@@ -1,23 +1,40 @@
-import type { LegacyCompressedPattern } from '../models/pattern';
+import type { CompressedPattern, LegacyCompressedPattern, Pattern, PatternSquare } from '../models/pattern';
 import PatternHelper from './pattern-helper';
+import { v4 as uuid } from 'uuid';
 
-export function legacyImportPattern({ dim, col, pat }: LegacyCompressedPattern) {
+export function isLegacyPattern(compPattern: CompressedPattern) {
+  const test = compPattern as unknown as LegacyCompressedPattern;
+  return Boolean(test.details);
+}
+
+export function legacyImportPattern(compPattern: CompressedPattern): Pattern {
+  const legacyPattern = compPattern as unknown as LegacyCompressedPattern;
+  const { pattern } = legacyPattern;
+  const { pat, dim, col } = pattern;
+
   const splitPat = pat.split(',');
-  const blankPattern = PatternHelper.createFilledPattern(dim, 0);
+  const blankSquares = PatternHelper.createFilledPattern(dim, 0);
 
   let left: number | null;
-  let color: string;
+  let colorIndex: number;
+  const colors = Object.keys(col);
 
-  const pattern = blankPattern.map((point) => {
+  const squares = blankSquares.map((point) => {
     if (!left) {
       const split = splitPat.shift()!.split('-');
-      color = Object.keys(col).find((x) => col[x] === split[0])!;
+      colorIndex = Object.values(col).indexOf(split[0]);
       left = Number(split[1]);
     }
-    const newPoint = { ...point, color };
+    const newPoint: PatternSquare = { ...point, colorIndex };
     left -= 1;
     return newPoint;
   });
 
-  return pattern;
+  return {
+    id: uuid(),
+    name: legacyPattern.details.name,
+    dimensions: dim,
+    colors: colors,
+    squares
+  };
 }

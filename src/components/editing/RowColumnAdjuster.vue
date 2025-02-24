@@ -121,6 +121,7 @@ const adjust = (side: string, op: string) => {
 
 <style scoped>
 .row-column-adjuster {
+  padding: 20px 10px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -171,7 +172,7 @@ button {
   width: 60px;
   height: 60px;
   margin: 5px;
-  border: 2px solid black;
+  border: 2px solid var(--color-text);
 }
 
 .center::before {
@@ -180,7 +181,7 @@ button {
   box-sizing: border-box;
   left: calc(50% - 1px);
   height: 100%;
-  border: 1px solid black;
+  border: 1px solid var(--color-text);
 }
 
 .center::after {
@@ -189,6 +190,6 @@ button {
   box-sizing: border-box;
   top: calc(50% - 1px);
   width: 100%;
-  border: 1px solid black;
+  border: 1px solid var(--color-text);
 }
 </style>

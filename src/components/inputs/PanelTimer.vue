@@ -111,7 +111,6 @@ const processTick = () => {
   margin-bottom: 5px;
 }
 .value > * {
-  background-color: white;
   text-align: center;
   width: 100%;
 }

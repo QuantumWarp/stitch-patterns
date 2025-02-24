@@ -52,7 +52,18 @@
     <div class="knit-buttons">
       <PanelButton
         danger
-        @click="session = { ...session, time: 0 }"
+        @click="session = {
+          ...session,
+          time: 0,
+          rowIndex: 0,
+          stitchIndex: 0,
+          settings: {
+            fromTop: false,
+            fromRight: false,
+            reverseEven: true,
+            doubleStitch: true,
+          }
+        }"
       >
         Reset Knit
       </PanelButton>

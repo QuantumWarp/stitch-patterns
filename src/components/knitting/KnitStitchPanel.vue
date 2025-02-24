@@ -3,6 +3,7 @@
     <div class="knit-panel-header">
       <div
         class="icon left"
+        :style="{ visibility: session.rowIndex === 0 ? 'hidden' : 'visible' }"
         @click="previousRow()"
       >
         <i class="material-icons">arrow_back</i>
@@ -14,6 +15,7 @@
 
       <div
         class="icon right"
+        :style="{ visibility: session.rowIndex === knitPattern.length - 1 ? 'hidden' : 'visible' }"
         @click="nextRow()"
       >
         <i class="material-icons">arrow_forward</i>
@@ -87,9 +89,10 @@ const previousStitch = () => {
   const isStartStitch = session.value.stitchIndex === 0;
   if (isStartRow && isStartStitch) return;
   if (isStartStitch) {
-    selectStitch(session.value.rowIndex - 1, 0);
+    const previousRow = knitPattern.value[session.value.rowIndex - 1];
+    selectStitch(session.value.rowIndex - 1, previousRow.length - 1);
   } else {
-    selectStitch(session.value.rowIndex - 1, session.value.stitchIndex - 1);
+    selectStitch(session.value.rowIndex, session.value.stitchIndex - 1);
   }
   scrollStitchIntoView();
 };
@@ -107,18 +110,12 @@ onMounted(() => document.addEventListener('keydown', keyDownHandler));
 onUnmounted(() => document.removeEventListener('keydown', keyDownHandler));
 
 const keyDownHandler = (event: KeyboardEvent) => {
-  if (event.ctrlKey) {
-    switch (event.key) {
-      case 'ArrowRight': nextRow(); break;
-      case 'ArrowLeft': previousRow(); break;
-      default: break;
-    }
-  } else {
-    switch (event.key) {
-      case 'ArrowDown': nextStitch(); break;
-      case 'ArrowUp': previousStitch(); break;
-      default: break;
-    }
+  switch (event.key) {
+    case 'ArrowLeft': previousRow(); break;
+    case 'ArrowRight': nextRow(); break;
+    case 'ArrowDown': nextStitch(); break;
+    case 'ArrowUp': previousStitch(); break;
+    default: break;
   }
 };
 
@@ -143,7 +140,7 @@ const scrollStitchIntoView = () => {
 }
 
 .knit-content {
-  overflow-y: scroll;
+  overflow-y: auto;
   height: 382px;
   max-height: 382px;
 }
@@ -205,9 +202,15 @@ const scrollStitchIntoView = () => {
 .stitch-entry.selected {
   background-color: plum;
 }
+#app.dark .stitch-entry.selected {
+  background-color: lightcoral;
+}
 
 .stitch-entry.complete {
   background-color: lightgreen;
+}
+#app.dark .stitch-entry.complete {
+  background-color: #4CAF50;
 }
 
 .stitch-color {

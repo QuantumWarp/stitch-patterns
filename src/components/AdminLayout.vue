@@ -1,3 +1,8 @@
+<script setup lang="ts">
+import DarkToggle from './common/DarkToggle.vue';
+
+</script>
+
 <template>
   <div class="pattern-editor">
     <div class="side-panel">
@@ -11,7 +16,8 @@
       </div>
 
       <div class="app-footer">
-        © {{ new Date().getFullYear() }} - John Lowther
+        <DarkToggle />
+        <div>© {{ new Date().getFullYear() }} - John Lowther</div>
       </div>
     </div>
 
@@ -35,11 +41,14 @@
   display: flex;
   flex-direction: column;
 }
+.dark .side-panel {
+  box-shadow: 3px 0px 10px rgb(48, 48, 48);
+}
 
 .main-panel {
   padding: 25px;
   flex: 1;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .app-header {
@@ -61,9 +70,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 30px;
+  margin-bottom: 15px;
 }
-
 .app-footer a {
   text-decoration: none;
 }
@@ -71,5 +79,8 @@
 img {
   height: 40px;
   margin-right: 10px;
+}
+.dark img {
+  filter: invert(1);
 }
 </style>

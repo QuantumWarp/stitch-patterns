@@ -70,6 +70,6 @@ const getPointStyle = (point: PatternSquare) => {
 .selected-row-overlay {
   position: absolute;
   z-index: 1;
-  box-shadow: 0px 0px 120px 50px #bbb;
+  box-shadow: 0px 0px 60px 30px grey;
 }
 </style>

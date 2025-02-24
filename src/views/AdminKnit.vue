@@ -43,7 +43,7 @@ const pattern = ref<Pattern>();
 
 // Save session
 const saveSessionTimeout = ref<number>();
-watch(() => session, delayedSave)
+watch(session, delayedSave)
 
 function delayedSave() {
   clearTimeout(saveSessionTimeout.value);
@@ -60,30 +60,29 @@ watch(() => route.params.id, loadSession, { immediate: true });
 function loadSession() {
   const existingSession = getKnittingSession();
 
-  if (!route.params.id && !existingSession) {
+  if ((route.params.id === existingSession?.patternId) || (!route.params.id && existingSession)) {
+    session.value = existingSession;
+    pattern.value = getPattern(existingSession.patternId);
+  } else if (route.params.id) {
+    session.value = {
+      patternId: route.params.id as string,
+      time: 0,
+      rowIndex: 0,
+      stitchIndex: 0,
+      settings: {
+        fromTop: false,
+        fromRight: false,
+        reverseEven: true,
+        doubleStitch: true,
+      }
+    }
+    pattern.value = getPattern(route.params.id as string);
+  } else {
     router.push("/admin/list");
     return;
   }
 
-  if (existingSession?.patternId === route.params.id) {
-    session.value = existingSession;
-    return;
-  }
-
-  session.value = {
-    patternId: route.params.id as string,
-    time: 0,
-    rowIndex: 0,
-    stitchIndex: 0,
-    settings: {
-      fromTop: false,
-      fromRight: false,
-      reverseEven: true,
-      doubleStitch: true,
-    }
-  }
-
-  pattern.value = getPattern(route.params.id as string);
+  history.replaceState({}, "", "/admin/knit");
 }
 </script>
 

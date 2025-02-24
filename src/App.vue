@@ -12,13 +12,20 @@ import { RouterView } from 'vue-router';
 :root {
   --safe-color: #4CAF50;
   --danger-color: rgb(255, 83, 83);
+  --color-background: rgb(240, 240, 240);
+  --color-text: #000;
+}
+:root #app.dark {
+  --color-text: #fff;
+  --color-background: #212121;
 }
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+  color: var(--color-text);
+  background-color: var(--color-background);
 }
 
 html,

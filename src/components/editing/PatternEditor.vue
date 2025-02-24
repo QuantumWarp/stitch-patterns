@@ -1,13 +1,15 @@
 <template>
-  <div class="grid-pattern" :style="gridStyle">
-    <div
-      v-for="point in pattern.squares"
-      :key="`${point.x}-${point.y}`"
-      class="grid-square"
-      :style="getPointStyle(point)"
-      @mousedown="colorPoint($event, point)"
-      @mouseover="colorPoint($event, point)"
-    />
+  <div class="grid-container">
+    <div class="grid-pattern" :style="gridStyle">
+      <div
+        v-for="point in pattern.squares"
+        :key="`${point.x}-${point.y}`"
+        class="grid-square"
+        :style="getPointStyle(point)"
+        @mousedown="colorPoint($event, point)"
+        @mouseover="colorPoint($event, point)"
+      />
+    </div>
   </div>
 </template>
 
@@ -26,13 +28,11 @@ const squareDimensions = ref({ width: 25, height: 20 });
 
 const gridStyle = computed(() => {
   return {
-    top: `${squareDimensions.value.height}px`,
-    left: `${squareDimensions.value.width}px`,
-    transform: settings.rotate
-      ? `rotate(90deg)
-        translateX(${(squareDimensions.value.height) - (squareDimensions.value.width)}px)
-        translateY(${(squareDimensions.value.width) - (squareDimensions.value.height * (pattern.dimensions.height))}px)`
-      : 'none',
+    width: `${squareDimensions.value.width * pattern.dimensions.width}px`,
+    height: `${squareDimensions.value.height * pattern.dimensions.height}px`,
+    transformOrigin: `bottom left`,
+    top: settings.rotate ?  `-${squareDimensions.value.height * pattern.dimensions.height}px` : 0,
+    transform: settings.rotate ? `rotate(90deg)` : 'none',
   };
 });
 
@@ -88,6 +88,11 @@ const colorPoint = (e: MouseEvent, point: PatternSquare) => {
 </script>
 
 <style scoped>
+.grid-container {
+  position: relative;
+  padding: 10px;
+}
+
 .grid-pattern {
   position: relative;
   width: 100%;

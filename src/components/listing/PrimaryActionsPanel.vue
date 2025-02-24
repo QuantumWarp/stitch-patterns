@@ -1,39 +1,70 @@
 <template>
-  <RouterLink to="/admin/edit">
-    <PanelButton>
-      New
-    </PanelButton>
-  </RouterLink>
+  <div class="primary-actions">
+    <div class="create">
+      <RouterLink to="/admin/edit">
+        <PanelButton>
+          New
+        </PanelButton>
+      </RouterLink>
 
-    <PanelButton @click="$refs.importInput.click()">
-      Import
-    </PanelButton>
+      <PanelButton @click="importInputEl!.click()">
+        Import
+      </PanelButton>
+    </div>
 
-  <RouterLink to="/admin/knit">
-    <PanelButton>
-      Knit Session
-    </PanelButton>
-  </RouterLink>
-  
-  <input
-    v-if="runImport"
-    ref="importInput"
-    style="display: none;"
-    type="file"
-    @change="runImport"
-  >
+    <div class="session" v-if="sessionInProgress">
+      <span>You have a knitting session in progress.</span>
+
+      <RouterLink to="/admin/knit">
+        <PanelButton>
+          Resume
+        </PanelButton>
+      </RouterLink>
+    </div>
+    
+    <input
+      v-if="runImport"
+      ref="importInput"
+      style="display: none;"
+      type="file"
+      multiple
+      @change="runImport"
+    >
+  </div>
 </template>
 
 <script setup lang="ts">
-import { useTemplateRef } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 import PanelButton from '../inputs/PanelButton.vue';
-import { importPattern } from '../../helpers/persistance-helper.ts';
+import { importPatterns } from '../../helpers/persistance-helper.ts';
+import { getKnittingSession } from '../../storage/knitting.storage.ts';
 
 const importInputEl = useTemplateRef('importInput')
+const knitSession = computed(() =>  getKnittingSession());
+const emit = defineEmits<{ refresh: [] }>();
+const sessionInProgress = Boolean(knitSession.value?.rowIndex || knitSession.value?.stitchIndex)
 
 const runImport = async (e: Event) => {
-  await importPattern(e as InputEvent);
-  importInputEl.value!.type = 'text';
-  importInputEl.value!.type = 'file';
+  await importPatterns(e as InputEvent);
+  emit('refresh');
 };
 </script>
+
+<style scoped>
+.primary-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.create {
+  padding: 30px;
+  display: flex;
+  gap: 6px;
+}
+.session {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px
+}
+</style>

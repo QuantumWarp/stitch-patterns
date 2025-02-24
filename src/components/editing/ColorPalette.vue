@@ -3,7 +3,7 @@
     <div class="options-div">
       <PanelButton
         v-if="pattern.colors.length < 10"
-        @click="$refs.colorpicker.click()"
+        @click="editIndex = pattern.colors.length; colorPickerEl!.click()"
       >
         Add
       </PanelButton>
@@ -27,7 +27,7 @@
         ref="colorpicker"
         v-model="pickerColor"
         type="color"
-        @change="addColor()"
+        @change="editColor()"
       >
     </div>
 
@@ -38,7 +38,7 @@
         class="palette-entry"
         @click="settings = { ...settings, colorIndex: index }"
       >
-        <div class="palette-color" :style="<CSSProperties>{ backgroundColor: color }" />
+        <div class="palette-color" :style="<CSSProperties>{ backgroundColor: color }" @click="editIndex = index; colorPickerEl!.click()" />
         <div v-if="settings.colorIndex === index" class="palette-selected">{{ "< Selected" }}</div>
         <div v-if="settings.colorIndex !== index" class="palette-select">{{ "< Select" }}</div>
       </div>
@@ -47,21 +47,31 @@
 </template>
 
 <script setup lang="ts">
-import { ref, type CSSProperties } from 'vue';
+import { ref, useTemplateRef, type CSSProperties } from 'vue';
 
 import PanelButton from '../inputs/PanelButton.vue';
 import type { Settings } from '../../models/settings.ts';
 import type { Pattern } from '../../models/pattern.ts';
 
+const colorPickerEl = useTemplateRef('colorpicker')
+
 const pattern = defineModel<Pattern>("pattern", { required: true });
 const settings = defineModel<Settings>("settings", { required: true });
 
 const pickerColor = ref("#000000");
+const editIndex = ref<number>();
 
-const addColor = () => {
-  const colors = pattern.value.colors.concat(pickerColor.value);
+const editColor = () => {
+  if (editIndex.value === undefined) return;
+  const colors = [...pattern.value.colors];
+  if (editIndex.value === colors.length) {
+    colors.push(pickerColor.value);
+  } else {
+    colors[editIndex.value] = pickerColor.value;
+  }
   pattern.value = { ...pattern.value, colors };
-  settings.value = { ...settings.value, colorIndex: colors.length - 1 };
+  settings.value = { ...settings.value, colorIndex: editIndex.value };
+  editIndex.value = undefined;
 };
 
 const deleteColor = () => {
@@ -71,7 +81,11 @@ const deleteColor = () => {
 };
 
 const fillColor = () => {
- // TODO Fill
+  pattern.value = {
+    ...pattern.value,
+    squares: pattern.value.squares
+      .map((square) => ({ ...square, colorIndex: settings.value.colorIndex }))
+  };
 };
 </script>
 

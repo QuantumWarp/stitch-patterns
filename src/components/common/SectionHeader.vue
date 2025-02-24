@@ -16,8 +16,9 @@ defineProps<{ name: string }>();
   font-size: 20px;
   padding: 5px;
   background-color: lightgray;
-  user-select: none;
-  cursor: pointer;
   font-weight: bold;
+}
+#app.dark .heading {
+  background-color: dimgray;
 }
 </style>

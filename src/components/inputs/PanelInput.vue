@@ -17,7 +17,7 @@ defineProps<{
   label: string,
 }>();
 
-const value = defineModel<number>();
+const value = defineModel<string>();
 </script>
 
 <style scoped>
@@ -36,10 +36,17 @@ input {
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
+  color: var(--color-text)
+}
+#app.dark input {
+  background-color: grey;
 }
 input:focus {
   border: 1px solid #888;
   outline: none;
+}
+#app.dark input:focus {
+  border-color: white;
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

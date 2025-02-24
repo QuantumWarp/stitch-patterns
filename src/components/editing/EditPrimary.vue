@@ -3,12 +3,12 @@
     <PanelInput
       class="name-input"
       label="Name"
-      :value="pattern.name"
+      :model-value="pattern.name"
       @input="pattern = { ...pattern, name: $event.target.value.toString() }"
     />
 
     <div class="buttons">
-      <PanelButton @click="savePattern(pattern); router.push('/admin/list')">
+      <PanelButton @click="save">
         Save
       </PanelButton>
 
@@ -27,6 +27,12 @@ import { savePattern } from '../../storage/pattern.storage.ts';
 import { router } from '@/router.ts'
 
 const pattern = defineModel<Pattern>("pattern", { required: true });
+
+function save() {
+  const newPattern = { ...pattern.value, name: pattern.value.name.trim() || "New Pattern" };
+  savePattern(newPattern);
+  router.push('/admin/list')
+}
 </script>
 
 <style scoped>

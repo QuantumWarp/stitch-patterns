@@ -1,6 +1,8 @@
 <template>
   <div class="primary-info">
-    {{ pattern.name }}
+    <div class="title">
+      {{ pattern.name }}
+    </div>
 
     <div class="buttons">
       <PanelButton @click="$router.push('/admin/list')">
@@ -22,6 +24,13 @@ const { pattern } = defineProps<{ pattern: Pattern }>();
   padding: 25px 10px;
   display: flex;
   flex-direction: column;
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0px 20px 0px;
+  font-size: 40px;
 }
 
 .buttons {

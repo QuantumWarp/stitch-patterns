@@ -1,6 +1,7 @@
 import type { CompressedPattern, Pattern } from '../models/pattern';
 import { savePattern } from '../storage/pattern.storage';
 import FileHelper from './file-helper';
+import { isLegacyPattern, legacyImportPattern } from './legacy-persistance.helper';
 import PatternHelper from './pattern-helper';
 import { v4 as uuid } from 'uuid';
 
@@ -9,15 +10,23 @@ export function exportPattern(pattern: Pattern) {
   FileHelper.download(`${pattern.name || "pattern"}.json`, JSON.stringify(compPattern));
 }
 
-export async function importPattern(e: InputEvent) {
+export async function importPatterns(e: InputEvent) {
+  const files = (e.target as HTMLInputElement)?.files;
+  if (!files) return;
+  for (const file of files) {
+    await importPattern(file);
+  }
+}
+
+export async function importPattern(file: File) {
   try {
-    const compPatternString = await FileHelper.importRaw(e);
+    const compPatternString = await FileHelper.importRaw(file);
     const compPattern = JSON.parse(compPatternString);
     const pattern = decompressPattern(compPattern);
     pattern.id = uuid();
     savePattern(pattern);
-  } catch {
-    console.warn('Import failed');
+  } catch (e) {
+    console.warn('Import failed', e);
   }
 }
 
@@ -55,6 +64,10 @@ function colorString(colorIndex: number, count: number) {
 }
 
 function decompressPattern(compPattern: CompressedPattern): Pattern {
+  if (isLegacyPattern(compPattern)) {
+    return legacyImportPattern(compPattern);
+  }
+
   const { patternString, ...pattern } = compPattern;
   const splitPat = patternString.split(',');
   let squares = PatternHelper.createFilledPattern(pattern.dimensions, 0);
@@ -76,7 +89,6 @@ function decompressPattern(compPattern: CompressedPattern): Pattern {
     left -= 1;
     return { ...point, colorIndex };
   });
-  console.log(squares)
 
   return { ...pattern, squares };
 }

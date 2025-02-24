@@ -54,11 +54,11 @@ import RowColumnAdjuster from '../components/editing/RowColumnAdjuster.vue';
 const defaultPattern = () => ({
   id: uuid(),
   name: '',
-  colors: ["#ffffff", "red"],
+  colors: ["#000000", "#ffffff"],
   dimensions: { width: 20, height: 20 },
   squares: PatternHelper.createFilledPattern(
     { width: 20, height: 20 },
-    0
+    1
   )
 });
 
