@@ -4,7 +4,6 @@ import type { CompressedPattern, Pattern } from '@/models/pattern';
 import { savePattern } from '@/storage/pattern.storage';
 import { FileHelper } from '@/helpers/file.helper';
 import { PatternHelper } from '@/helpers/pattern.helper';
-import { isLegacyPattern, legacyImportPattern } from '@/helpers/legacy-persistance.helper';
 
 export function exportPattern(pattern: Pattern) {
   const compPattern = compressPattern(pattern);
@@ -65,10 +64,6 @@ function colorString(colorIndex: number, count: number) {
 }
 
 function decompressPattern(compPattern: CompressedPattern): Pattern {
-  if (isLegacyPattern(compPattern)) {
-    return legacyImportPattern(compPattern);
-  }
-
   const { patternString, ...pattern } = compPattern;
   const splitPat = patternString.split(',');
   let squares = PatternHelper.createFilledPattern(pattern.dimensions, 0);
