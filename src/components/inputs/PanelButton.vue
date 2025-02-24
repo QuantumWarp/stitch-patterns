@@ -14,9 +14,9 @@ defineEmits<{ click: [$event: MouseEvent] }>();
 
 <style scoped>
 button {
+  min-width: 80px;
   background-color: white;
   border: none;
-  color: white;
   text-align: center;
   text-decoration: none;
   display: inline-block;
@@ -27,6 +27,10 @@ button {
   outline: none;
   user-select: none;
   transition: color 0.2s, background-color 0.2s;
+}
+#app.dark button:not(:hover) {
+  background-color: dimgray;
+  color: white;
 }
 button:hover {
   background-color: var(--safe-color);

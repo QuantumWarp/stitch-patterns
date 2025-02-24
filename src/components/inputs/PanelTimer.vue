@@ -66,7 +66,7 @@ watchEffect(() => {
   }
 });
 
-const start = () => {
+function start() {
   valueAtLastStart.value = value;
   lastStartDate.value = Date.now();
   emit('input', value + 1);
@@ -74,19 +74,19 @@ const start = () => {
   stopped.value = false;
 };
 
-const stop = () => {
+function stop() {
   clearTimeout(timeout.value);
   processTick();
   stopped.value = true;
 };
 
-const reset = () => {
+function reset() {
   valueAtLastStart.value = 0;
   lastStartDate.value = Date.now();
   emit('input', 0);
 };
 
-const setupNextTick = (val: number) => {
+function setupNextTick(val: number) {
   const millisToWait = 1001 - (val % 1000);
   timeout.value = setTimeout(() => {
     const nextVal = processTick();
@@ -94,7 +94,7 @@ const setupNextTick = (val: number) => {
   }, millisToWait);
 };
 
-const processTick = () => {
+function processTick() {
   const nextValue = valueAtLastStart.value + (Date.now() - lastStartDate.value);
   emit('input', nextValue);
   return nextValue;
@@ -111,7 +111,6 @@ const processTick = () => {
   margin-bottom: 5px;
 }
 .value > * {
-  background-color: white;
   text-align: center;
   width: 100%;
 }

@@ -1,3 +1,8 @@
+<script setup lang="ts">
+import DarkToggle from './common/DarkToggle.vue';
+
+</script>
+
 <template>
   <div class="pattern-editor">
     <div class="side-panel">
@@ -6,23 +11,21 @@
         Stitch Patterns
       </div>
 
-      <GridControls />
+      <div class="app-sidenav">
+        <slot name="sidenav"></slot>
+      </div>
 
       <div class="app-footer">
-        <a href="https://quantumwss.com">© 2020 - John Lowther</a>
+        <DarkToggle />
+        <div>© {{ new Date().getFullYear() }} - John Lowther</div>
       </div>
     </div>
 
     <div class="main-panel">
-      <GridPattern />
+      <slot></slot>
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import GridControls from '../components/GridControls.vue';
-import GridPattern from '../components/GridPattern.vue';
-</script>
 
 <style scoped>
 .pattern-editor {
@@ -38,11 +41,14 @@ import GridPattern from '../components/GridPattern.vue';
   display: flex;
   flex-direction: column;
 }
+.dark .side-panel {
+  box-shadow: 3px 0px 10px rgb(48, 48, 48);
+}
 
 .main-panel {
   padding: 25px;
   flex: 1;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .app-header {
@@ -56,13 +62,16 @@ import GridPattern from '../components/GridPattern.vue';
   border-bottom: 2px solid grey;
 }
 
+.app-sidenav {
+  flex: 1;
+}
+
 .app-footer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 30px;
+  margin-bottom: 15px;
 }
-
 .app-footer a {
   text-decoration: none;
 }
@@ -70,6 +79,8 @@ import GridPattern from '../components/GridPattern.vue';
 img {
   height: 40px;
   margin-right: 10px;
-  ;
+}
+.dark img {
+  filter: invert(1);
 }
 </style>

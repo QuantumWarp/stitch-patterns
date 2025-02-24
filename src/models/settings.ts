@@ -1,5 +1,5 @@
-export interface Settings {
-  color: string;
+export interface EditSettings {
+  colorIndex: number;
   rotate: boolean;
   mirrorX: boolean;
   mirrorY: boolean;

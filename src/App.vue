@@ -1,52 +1,31 @@
 <template>
   <div id="app">
-    <PatternEditor />
+    <RouterView  />
   </div>
 </template>
 
-<script setup lang="ts">
-import { useRootStore } from '@/store/store';
-import { usePersistanceStore } from '@/store/persistance';
-import { useKnittingStore } from '@/store/knitting';
-import { usePatternStore } from '@/store/pattern';
-import { useSettingsStore } from '@/store/settings';
-import PatternEditor from '@/views/PatternEditor.vue';
-import { onMounted } from 'vue';
-
-onMounted(() => {
-  const rootStore = useRootStore();
-  const persistanceStore = usePersistanceStore();
-  const knittingStore = useKnittingStore();
-  const patternStore = usePatternStore();
-  const settingsStore = useSettingsStore();
-
-  let saveSessionTimeout: number | undefined;
-  const delayedSave = () => {
-    clearTimeout(saveSessionTimeout);
-    saveSessionTimeout = setTimeout(() => {
-      persistanceStore.saveSession();
-    }, 500);
-  }
-
-  rootStore.$subscribe(delayedSave);
-  persistanceStore.$subscribe(delayedSave);
-  knittingStore.$subscribe(delayedSave);
-  patternStore.$subscribe(delayedSave);
-  settingsStore.$subscribe(delayedSave);
-});
+<script setup lang="ts">;
+import { RouterView } from 'vue-router';
 </script>
 
 <style>
 :root {
   --safe-color: #4CAF50;
   --danger-color: rgb(255, 83, 83);
+  --color-background: rgb(240, 240, 240);
+  --color-text: #000;
+}
+:root #app.dark {
+  --color-text: #fff;
+  --color-background: #212121;
 }
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+  color: var(--color-text);
+  background-color: var(--color-background);
 }
 
 html,
