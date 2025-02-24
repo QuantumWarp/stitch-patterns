@@ -1,13 +1,14 @@
-import type { CompressedPattern, Pattern } from '../models/pattern';
-import { savePattern } from '../storage/pattern.storage';
-import FileHelper from './file-helper';
-import { isLegacyPattern, legacyImportPattern } from './legacy-persistance.helper';
-import PatternHelper from './pattern-helper';
-import { v4 as uuid } from 'uuid';
+
+import { v4 as uuid } from 'uuid';;
+import type { CompressedPattern, Pattern } from '@/models/pattern';
+import { savePattern } from '@/storage/pattern.storage';
+import { FileHelper } from '@/helpers/file.helper';
+import { PatternHelper } from '@/helpers/pattern.helper';
+import { isLegacyPattern, legacyImportPattern } from '@/helpers/legacy-persistance.helper';
 
 export function exportPattern(pattern: Pattern) {
   const compPattern = compressPattern(pattern);
-  FileHelper.download(`${pattern.name || "pattern"}.json`, JSON.stringify(compPattern));
+  FileHelper.download(`${pattern.name || 'pattern'}.json`, JSON.stringify(compPattern));
 }
 
 export async function importPatterns(e: InputEvent) {

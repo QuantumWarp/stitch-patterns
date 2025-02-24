@@ -17,11 +17,13 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { Pattern } from '../../models/pattern.ts';
-import { createPatternImage } from '../../helpers/pattern-image-helper.ts';
-import { exportPattern } from '../../helpers/persistance-helper.ts';
-import { deletePattern } from '../../storage/pattern.storage.ts';
-import PanelButton from '../inputs/PanelButton.vue';
+
+import PanelButton from '@/components//inputs/PanelButton.vue';
+
+import type { Pattern } from '@/models/pattern.ts';
+import { createPatternImage } from '@/helpers/pattern-image.helper.ts';
+import { exportPattern } from '@/helpers/persistance.helper.ts';
+import { deletePattern } from '@/storage/pattern.storage.ts';
 
 const { pattern } = defineProps<{ pattern: Pattern }>();
 const emit = defineEmits<{ refresh: [] }>();

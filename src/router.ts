@@ -4,7 +4,6 @@ import AdminList from './views/AdminList.vue';
 import AdminEdit from './views/AdminEdit.vue';
 import AdminKnit from './views/AdminKnit.vue';
 
-
 export const router = createRouter({
   history: createWebHistory(),
   routes: [

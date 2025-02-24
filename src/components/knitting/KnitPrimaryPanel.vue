@@ -13,8 +13,9 @@
 </template>
 
 <script setup lang="ts">
-import PanelButton from '../inputs/PanelButton.vue';
-import type { Pattern } from '../../models/pattern.ts';
+import PanelButton from '@/components/inputs/PanelButton.vue';
+
+import type { Pattern } from '@/models/pattern.ts';
 
 const { pattern } = defineProps<{ pattern: Pattern }>();
 </script>
@@ -37,9 +38,6 @@ const { pattern } = defineProps<{ pattern: Pattern }>();
   margin-top: 10px;
   display: flex;
   justify-content: center;
-}
-
-.buttons > :not(:last-child) {
-  margin-right: 5px;
+  gap: 6px;
 }
 </style>

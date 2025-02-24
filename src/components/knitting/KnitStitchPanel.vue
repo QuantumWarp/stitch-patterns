@@ -29,7 +29,7 @@
         v-for="(stitch, index) in selectedRow"
         :key="Object.values(stitch).concat([index]).join('-')"
         ref="stitchEntries"
-        :class="stitchClass(session.rowIndex, index)"
+        :class="stitchClass(index)"
         class="stitch-entry"
         @click="selectStitch(session.rowIndex, index)"
       >
@@ -45,34 +45,35 @@
 
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onUnmounted, useTemplateRef, type CSSProperties } from 'vue';
-import type { KnitSession } from '../../models/knit.ts';
-import type { Pattern } from '../../models/pattern.ts';
-import { createKnitPattern } from '../../helpers/knitting-helper.ts';
 
-const session = defineModel<KnitSession>("session", { required: true });
+import type { KnitSession } from '@/models/knit.ts';
+import type { Pattern } from '@/models/pattern.ts';
+import { createKnitPattern } from '@/helpers/knitting.helper.ts';
+
+const session = defineModel<KnitSession>('session', { required: true });
 const { pattern } = defineProps<{ pattern: Pattern }>();
 
 const knitPattern = computed(() => createKnitPattern(pattern, session.value.settings));
 const selectedRow = computed(() => knitPattern.value[session.value.rowIndex]);
 
-const selectStitch = (row: number, index: number) => {
+function selectStitch(row: number, index: number) {
   session.value = {
     ...session.value, rowIndex: row, stitchIndex: index
   };
 };
 
-const nextRow = () => {
+function nextRow() {
   selectStitch(session.value.rowIndex + 1, 0);
   scrollStitchIntoView();
 };
 
-const previousRow = () => {
+function previousRow() {
   if (session.value.rowIndex === 0) return;
   selectStitch(session.value.rowIndex - 1, 0);
   scrollStitchIntoView();
 };
 
-const nextStitch = () => {
+function nextStitch() {
   const isEndRow = session.value.rowIndex === pattern.dimensions.height - 1;
   const isEndStitch = session.value.stitchIndex === selectedRow.value.length - 1;
   if (isEndStitch && isEndRow) return;
@@ -84,7 +85,7 @@ const nextStitch = () => {
   scrollStitchIntoView();
 };
 
-const previousStitch = () => {
+function previousStitch() {
   const isStartRow = session.value.rowIndex === 0;
   const isStartStitch = session.value.stitchIndex === 0;
   if (isStartRow && isStartStitch) return;
@@ -97,7 +98,7 @@ const previousStitch = () => {
   scrollStitchIntoView();
 };
 
-const stitchClass = (row: number, index: number) => {
+function stitchClass(index: number) {
   return {
     selected: session.value.stitchIndex === index,
     complete: session.value.stitchIndex > index
@@ -109,7 +110,7 @@ const stitchEntriesEl = useTemplateRef('stitchEntries');
 onMounted(() => document.addEventListener('keydown', keyDownHandler));
 onUnmounted(() => document.removeEventListener('keydown', keyDownHandler));
 
-const keyDownHandler = (event: KeyboardEvent) => {
+function keyDownHandler(event: KeyboardEvent) {
   switch (event.key) {
     case 'ArrowLeft': previousRow(); break;
     case 'ArrowRight': nextRow(); break;
@@ -119,7 +120,7 @@ const keyDownHandler = (event: KeyboardEvent) => {
   }
 };
 
-const scrollStitchIntoView = () => {
+function scrollStitchIntoView() {
   nextTick(() => {
     if (!stitchEntriesEl.value) return;
     const stitchEl = stitchEntriesEl.value.find((x: Element) => x.classList.contains('selected'));

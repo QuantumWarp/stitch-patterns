@@ -45,13 +45,13 @@
 </template>
 
 <script setup lang="ts">
-import type { Dimensions, Pattern, PatternSquare } from '../../models/pattern.ts';
-import type { Settings } from '../../models/settings.ts';
+import type { Dimensions, Pattern, PatternSquare } from '@/models/pattern.ts';
+import type { EditSettings } from '@/models/settings.ts';
 
-const pattern = defineModel<Pattern>("pattern", { required: true });
-const { settings } = defineProps<{ settings: Settings }>();
+const pattern = defineModel<Pattern>('pattern', { required: true });
+const { settings } = defineProps<{ settings: EditSettings }>();
 
-const adjust = (side: string, op: string) => {
+function adjust(side: string, op: string) {
   const { colorIndex } = settings;
   let existingSquares = pattern.value.squares;
   let dimensions: Dimensions = pattern.value.dimensions;
@@ -115,7 +115,7 @@ const adjust = (side: string, op: string) => {
     ...pattern.value,
     dimensions,
     squares: existingSquares.concat(newSquares),
-  }
+  };
 }
 </script>
 

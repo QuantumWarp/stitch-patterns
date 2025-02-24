@@ -1,4 +1,4 @@
-export interface Settings {
+export interface EditSettings {
   colorIndex: number;
   rotate: boolean;
   mirrorX: boolean;

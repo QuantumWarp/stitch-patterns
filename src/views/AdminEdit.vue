@@ -20,51 +20,49 @@
       />
 
       <SectionHeader name="Other" />
-      <EditSettings
-        :settings="settings"
-        @on-update="settings = $event"
-      />
+      <EditSettingsPanel v-model:settings="settings" />
     </template>
 
     <PatternEditor
+      v-model:pattern="pattern"
       :settings="settings"
-      :pattern="pattern"
-      @on-update="pattern = $event"
     />
   </AdminLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import AdminLayout from '../components/AdminLayout.vue';
-import PatternEditor from '../components/editing/PatternEditor.vue';
-import ColorPalette from '../components/editing/ColorPalette.vue';
-import EditSettings from '../components/editing/EditSettings.vue';
-import EditPrimary from '../components/editing/EditPrimary.vue';
-import type { Pattern } from '../models/pattern.ts';
-import PatternHelper from '../helpers/pattern-helper.ts';
-import type { Settings } from '../models/settings.ts';
-import SectionHeader from '../components/common/SectionHeader.vue';
-import { v4 as uuid } from 'uuid';
 import { useRoute  } from 'vue-router';
-import { getPattern } from '../storage/pattern.storage.ts';
-import DimensionAdjuster from '../components/editing/DimensionAdjuster.vue';
-import RowColumnAdjuster from '../components/editing/RowColumnAdjuster.vue';
+import { v4 as uuid } from 'uuid';
+
+import AdminLayout from '@/components/AdminLayout.vue';
+import PatternEditor from '@/components/editing/PatternEditor.vue';
+import ColorPalette from '@/components/editing/ColorPalettePanel.vue';
+import EditSettingsPanel from '@/components/editing/EditSettingsPanel.vue';
+import EditPrimary from '@/components/editing/EditPrimaryPanel.vue';
+import SectionHeader from '@/components/common/PanelHeader.vue';
+import DimensionAdjuster from '@/components/editing/DimensionsPanel.vue';
+import RowColumnAdjuster from '@/components/editing/RowColumnPanel.vue';
+
+import type { Pattern } from '@/models/pattern.ts';
+import type { EditSettings } from '@/models/settings.ts';
+import { PatternHelper } from '@/helpers/pattern.helper.ts';
+import { getPattern } from '@/storage/pattern.storage.ts';
 
 const defaultPattern = () => ({
   id: uuid(),
   name: '',
-  colors: ["#000000", "#ffffff"],
-  dimensions: { width: 20, height: 20 },
+  colors: ['#000000', '#ffffff'],
+  dimensions: { width: 30, height: 30 },
   squares: PatternHelper.createFilledPattern(
-    { width: 20, height: 20 },
-    1
+    { width: 30, height: 30 },
+    1,
   )
 });
 
 const pattern = ref<Pattern>(defaultPattern());
 
-const settings = ref<Settings>({
+const settings = ref<EditSettings>({
   colorIndex: 0,
   mirrorX: false,
   mirrorY: false,

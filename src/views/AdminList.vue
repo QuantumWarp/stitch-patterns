@@ -18,11 +18,13 @@
 </template>
 
 <script setup lang="ts">
-import AdminLayout from '../components/AdminLayout.vue';
-import AdminListTile from '../components/listing/AdminListTile.vue';
-import PrimaryActionsPanel from '../components/listing/PrimaryActionsPanel.vue';
-import { getPatterns } from '../storage/pattern.storage.ts';
 import { ref } from 'vue';
+
+import AdminLayout from '@/components/AdminLayout.vue';
+import AdminListTile from '@/components/listing/AdminListTile.vue';
+import PrimaryActionsPanel from '@/components/listing/PrimaryActionsPanel.vue';
+
+import { getPatterns } from '@/storage/pattern.storage.ts';
 
 const patterns = ref(getPatterns());
 

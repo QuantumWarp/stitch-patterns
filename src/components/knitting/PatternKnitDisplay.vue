@@ -15,11 +15,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';;
-import type { Pattern, PatternSquare } from '../../models/pattern.ts';
-import type { KnitSession } from '../../models/knit.ts';
+import { computed, ref } from 'vue';
 
-const session = defineModel<KnitSession>("session", { required: true });
+import type { Pattern, PatternSquare } from '@/models/pattern.ts';
+import type { KnitSession } from '@/models/knit.ts';
+
+const session = defineModel<KnitSession>('session', { required: true });
 const { pattern } = defineProps<{ pattern: Pattern }>();
 
 const squareDimensions = ref({ width: 25, height: 20 });
@@ -43,7 +44,7 @@ const selectedRowStyle = computed(() => {
   };
 });
 
-const getPointStyle = (point: PatternSquare) => {
+function getPointStyle(point: PatternSquare) {
   return {
     backgroundColor: pattern.colors[point.colorIndex],
     top: `${squareDimensions.value.height * point.y}px`,

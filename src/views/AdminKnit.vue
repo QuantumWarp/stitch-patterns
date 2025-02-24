@@ -25,18 +25,21 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import AdminLayout from '../components/AdminLayout.vue';
-import KnitStitchPanel from '../components/knitting/KnitStitchPanel.vue';
-import { getKnittingSession, saveKnittingSession } from '../storage/knitting.storage.ts';
-import type { KnitSession } from '../models/knit.ts';
 import { useRoute } from 'vue-router';
-import { router } from '../router.ts';
-import PatternKnitDisplay from '../components/knitting/PatternKnitDisplay.vue';
-import type { Pattern } from '../models/pattern.ts';
-import { getPattern } from '../storage/pattern.storage.ts';
-import KnitSettingsPanel from '../components/knitting/KnitSettingsPanel.vue';
-import KnitPrimary from '../components/knitting/KnitPrimary.vue';
-import SectionHeader from '../components/common/SectionHeader.vue';
+
+import AdminLayout from '@/components/AdminLayout.vue';
+import KnitStitchPanel from '@/components/knitting/KnitStitchPanel.vue';
+import PatternKnitDisplay from '@/components/knitting/PatternKnitDisplay.vue';
+import KnitSettingsPanel from '@/components/knitting/KnitSettingsPanel.vue';
+import KnitPrimary from '@/components/knitting/KnitPrimaryPanel.vue';
+import SectionHeader from '@/components/common/PanelHeader.vue';
+
+import type { KnitSession } from '@/models/knit.ts';
+import type { Pattern } from '@/models/pattern.ts';
+import { router } from '@/router.ts';
+import { getPattern } from '@/storage/pattern.storage.ts';
+import { getKnittingSession, saveKnittingSession } from '@/storage/knitting.storage.ts';
+import { defaultKnitSession } from '../helpers/knitting.helper.ts';
 
 const session = ref<KnitSession>();
 const pattern = ref<Pattern>();
@@ -66,23 +69,15 @@ function loadSession() {
   } else if (route.params.id) {
     session.value = {
       patternId: route.params.id as string,
-      time: 0,
-      rowIndex: 0,
-      stitchIndex: 0,
-      settings: {
-        fromTop: false,
-        fromRight: false,
-        reverseEven: true,
-        doubleStitch: true,
-      }
+      ...defaultKnitSession(),
     }
     pattern.value = getPattern(route.params.id as string);
   } else {
-    router.push("/admin/list");
+    router.push('/admin/list');
     return;
   }
 
-  history.replaceState({}, "", "/admin/knit");
+  history.replaceState({}, '', '/admin/knit');
 }
 </script>
 

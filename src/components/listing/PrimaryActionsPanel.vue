@@ -35,16 +35,18 @@
 
 <script setup lang="ts">
 import { computed, useTemplateRef } from 'vue';
-import PanelButton from '../inputs/PanelButton.vue';
-import { importPatterns } from '../../helpers/persistance-helper.ts';
-import { getKnittingSession } from '../../storage/knitting.storage.ts';
 
-const importInputEl = useTemplateRef('importInput')
+import PanelButton from '@/components/inputs/PanelButton.vue';
+
+import { importPatterns } from '@/helpers/persistance.helper.ts';
+import { getKnittingSession } from '@/storage/knitting.storage.ts';
+
+const importInputEl = useTemplateRef('importInput');
 const knitSession = computed(() =>  getKnittingSession());
 const emit = defineEmits<{ refresh: [] }>();
-const sessionInProgress = Boolean(knitSession.value?.rowIndex || knitSession.value?.stitchIndex)
+const sessionInProgress = Boolean(knitSession.value?.rowIndex || knitSession.value?.stitchIndex);
 
-const runImport = async (e: Event) => {
+async function runImport(e: Event) {
   await importPatterns(e as InputEvent);
   emit('refresh');
 };

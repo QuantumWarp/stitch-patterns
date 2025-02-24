@@ -1,6 +1,6 @@
-import type { CompressedPattern, LegacyCompressedPattern, Pattern, PatternSquare } from '../models/pattern';
-import PatternHelper from './pattern-helper';
 import { v4 as uuid } from 'uuid';
+import type { CompressedPattern, LegacyCompressedPattern, Pattern, PatternSquare } from '@/models/pattern';
+import { PatternHelper } from './pattern.helper';
 
 export function isLegacyPattern(compPattern: CompressedPattern) {
   const test = compPattern as unknown as LegacyCompressedPattern;

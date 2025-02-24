@@ -52,18 +52,7 @@
     <div class="knit-buttons">
       <PanelButton
         danger
-        @click="session = {
-          ...session,
-          time: 0,
-          rowIndex: 0,
-          stitchIndex: 0,
-          settings: {
-            fromTop: false,
-            fromRight: false,
-            reverseEven: true,
-            doubleStitch: true,
-          }
-        }"
+        @click="session = { ...session, ...defaultKnitSession() }"
       >
         Reset Knit
       </PanelButton>
@@ -72,12 +61,14 @@
 </template>
 
 <script setup lang="ts">
-import type { KnitSession } from '../../models/knit.ts';
-import PanelButton from '../inputs/PanelButton.vue';
-import PanelCheckbox from '../inputs/PanelCheckbox.vue';
-import PanelTimer from '../inputs/PanelTimer.vue';
+import PanelButton from '@/components/inputs/PanelButton.vue';
+import PanelCheckbox from '@/components/inputs/PanelCheckbox.vue';
+import PanelTimer from '@/components/inputs/PanelTimer.vue';
 
-const session = defineModel<KnitSession>("session", { required: true });
+import type { KnitSession } from '@/models/knit.ts';
+import { defaultKnitSession } from '@/helpers/knitting.helper.ts';
+
+const session = defineModel<KnitSession>('session', { required: true });
 </script>
 
 <style scoped>

@@ -20,18 +20,19 @@
 </template>
 
 <script setup lang="ts">
-import PanelButton from '../inputs/PanelButton.vue';
-import PanelInput from '../inputs/PanelInput.vue';
-import type { Pattern } from '../../models/pattern.ts';
-import { savePattern } from '../../storage/pattern.storage.ts';
-import { router } from '@/router.ts'
+import PanelButton from '@/components/inputs/PanelButton.vue';
+import PanelInput from '@/components/inputs/PanelInput.vue';
 
-const pattern = defineModel<Pattern>("pattern", { required: true });
+import { router } from '@/router.ts'
+import type { Pattern } from '@/models/pattern.ts';
+import { savePattern } from '@/storage/pattern.storage.ts';
+
+const pattern = defineModel<Pattern>('pattern', { required: true });
 
 function save() {
-  const newPattern = { ...pattern.value, name: pattern.value.name.trim() || "New Pattern" };
+  const newPattern = { ...pattern.value, name: pattern.value.name.trim() || 'New Pattern' };
   savePattern(newPattern);
-  router.push('/admin/list')
+  router.push('/admin/list');
 }
 </script>
 

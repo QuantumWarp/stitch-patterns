@@ -1,7 +1,7 @@
-import type { KnitPattern, KnitRow, KnitSettings } from "../models/knit";
-import type { Dimensions, PatternSquare } from "../models/pattern";
+import type { KnitPattern, KnitRow, KnitSettings } from '@/models/knit';
+import type { Dimensions, PatternSquare } from '@/models/pattern';
 
-export default class PatternHelper {
+export class PatternHelper {
   static createFilledPattern(dimensions: Dimensions, colorIndex: number) {
     const pattern = [];
     for (let x = 0; x < dimensions.width; x += 1) {

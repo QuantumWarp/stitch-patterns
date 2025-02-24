@@ -43,14 +43,16 @@
 </template>
 
 <script setup lang="ts">
-import PanelButton from '../inputs/PanelButton.vue';
-import PanelInput from '../inputs/PanelInput.vue';
 import { computed, ref } from 'vue';
-import type { Dimensions, Pattern } from '../../models/pattern.ts';
-import type { Settings } from '../../models/settings.ts';
 
-const pattern = defineModel<Pattern>("pattern", { required: true });
-const { settings } = defineProps<{ settings: Settings}>();
+import PanelButton from '@/components/inputs/PanelButton.vue';
+import PanelInput from '@/components/inputs/PanelInput.vue';
+
+import type { Dimensions, Pattern } from '@/models/pattern.ts';
+import type { EditSettings } from '@/models/settings.ts';
+
+const pattern = defineModel<Pattern>('pattern', { required: true });
+const { settings } = defineProps<{ settings: EditSettings}>();
 
 const manualAdjuster = ref(false);
 const height = ref(pattern.value.dimensions.height);
@@ -61,7 +63,7 @@ const potentiallyDangerous = computed(() => {
     || width.value < pattern.value.dimensions.width;
 });
 
-const adjustDimensions = (dimensions: Dimensions) => {
+function adjustDimensions(dimensions: Dimensions) {
   let newSquares = pattern.value.squares;
 
   if (width.value > pattern.value.dimensions.width) {

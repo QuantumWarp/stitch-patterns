@@ -49,42 +49,46 @@
 <script setup lang="ts">
 import { ref, useTemplateRef, type CSSProperties } from 'vue';
 
-import PanelButton from '../inputs/PanelButton.vue';
-import type { Settings } from '../../models/settings.ts';
-import type { Pattern } from '../../models/pattern.ts';
+import PanelButton from '@/components/inputs/PanelButton.vue';
+
+import type { EditSettings } from '@/models/settings.ts';
+import type { Pattern } from '@/models/pattern.ts';
 
 const colorPickerEl = useTemplateRef('colorpicker')
 
-const pattern = defineModel<Pattern>("pattern", { required: true });
-const settings = defineModel<Settings>("settings", { required: true });
+const pattern = defineModel<Pattern>('pattern', { required: true });
+const settings = defineModel<EditSettings>('settings', { required: true });
 
-const pickerColor = ref("#000000");
+const pickerColor = ref('#000000');
 const editIndex = ref<number>();
 
-const editColor = () => {
+function editColor() {
   if (editIndex.value === undefined) return;
+
   const colors = [...pattern.value.colors];
+
   if (editIndex.value === colors.length) {
     colors.push(pickerColor.value);
   } else {
     colors[editIndex.value] = pickerColor.value;
   }
+
   pattern.value = { ...pattern.value, colors };
   settings.value = { ...settings.value, colorIndex: editIndex.value };
   editIndex.value = undefined;
 };
 
-const deleteColor = () => {
+function deleteColor() {
   const colors = pattern.value.colors.slice(0, pattern.value.colors.length - 1);
   pattern.value = { ...pattern.value, colors };
   settings.value = { ...settings.value, colorIndex: colors.length - 1 };
 };
 
-const fillColor = () => {
+function fillColor() {
   pattern.value = {
     ...pattern.value,
     squares: pattern.value.squares
-      .map((square) => ({ ...square, colorIndex: settings.value.colorIndex }))
+      .map((square) => ({ ...square, colorIndex: settings.value.colorIndex })),
   };
 };
 </script>
@@ -99,10 +103,9 @@ const fillColor = () => {
 }
 .options-div {
   position: relative;
+  display: flex;
+  gap: 6px;
   margin-bottom: 8px;
-}
-.options-div :not(:last-child) {
-  margin-right: 6px;
 }
 input {
   visibility: hidden;

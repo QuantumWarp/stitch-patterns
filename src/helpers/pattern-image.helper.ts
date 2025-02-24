@@ -1,4 +1,4 @@
-import type { Pattern } from "../models/pattern";
+import type { Pattern } from '@/models/pattern';
 
 const pixelSize = { width: 25 / 5, height: 20 / 5 };
 
