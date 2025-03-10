@@ -76,8 +76,6 @@ function loadSession() {
     router.push('/admin/list');
     return;
   }
-
-  history.replaceState({}, '', '/admin/knit');
 }
 </script>
 
